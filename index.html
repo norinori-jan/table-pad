@@ -32,7 +32,17 @@ th.on{background:var(--blue);color:#fff}
 #toast{position:fixed;left:50%;bottom:150px;transform:translateX(-50%);background:#000c;color:#fff;padding:9px 14px;border-radius:20px;font-size:13px;z-index:20;display:none;max-width:90%}
 #views{display:flex;gap:6px;padding:8px 12px 0}
 #views button{flex:1;font-weight:700}#views button.on{background:var(--gold);border-color:var(--gold);color:#222}
-#cv,#fv{padding:8px 12px}
+#cv,#fv,#dv{padding:8px 12px}
+#dv[hidden]{display:none}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}.kpi{background:var(--p);border:1px solid var(--bd);border-radius:12px;padding:8px 10px}.kpi small{display:block;font-size:11px;color:var(--dim)}.kpi b{font-size:20px}
+.fchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;align-items:center}.fchip{background:rgba(245,200,66,.14);border:1px solid var(--gold);color:var(--gold);border-radius:18px;padding:6px 12px;font-size:13px}
+#dcards{display:grid;grid-template-columns:1fr;gap:10px}@media(min-width:760px){#dcards{grid-template-columns:1fr 1fr}}
+.dc{background:var(--p);border:1px solid var(--bd);border-radius:12px;padding:8px;min-width:0}.dc .dh{display:flex;gap:6px;align-items:center;margin-bottom:4px}.dc .dh b{flex:1;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dc .dh button{min-height:34px;padding:4px 9px;font-size:13px}
+.dc .dbox{overflow:auto}.dc .ded{margin:6px 0}.dc [data-k]{cursor:pointer}
+#dtip{min-height:22px;font-size:14px;color:var(--gold);padding:0 4px 6px;font-weight:700}
+#imp{max-width:520px}#imp textarea{height:120px}#imp .msg{font-size:12px;color:var(--dim);line-height:1.6;margin:6px 0}#iPrev{overflow:auto;max-height:200px;border:1px solid var(--bd);border-radius:8px;margin:8px 0}#iPrev table{font-size:12px;min-width:0}#iPrev td,#iPrev th{padding:4px 7px;white-space:nowrap;min-width:0}#iPrev tr.h td{color:var(--gold);font-weight:700}
+#imp label.ck{display:block;font-size:13px;margin:4px 0}
+#imp select{width:100%;font:inherit;font-size:16px;color:var(--tx);background:var(--p2);border:1px solid var(--bd);border-radius:10px;padding:9px}
 .sec{background:var(--p);border:1px solid var(--bd);border-radius:12px;padding:10px;margin-bottom:10px}
 .sec h4{margin:0 0 8px;font-size:13px;color:var(--dim);font-weight:700}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -52,8 +62,8 @@ th.on{background:var(--blue);color:#fff}
 dialog{background:var(--p);color:var(--tx);border:1px solid var(--bd);border-radius:14px;width:92%;max-width:440px}
 dialog textarea{width:100%;height:160px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px;font:inherit}
 </style></head><body>
-<header><b>▦ table-pad</b><button id="bNew" class="pri">＋ 新しい表</button><button id="bIO">⇅</button></header>
-<div id="views"><button data-v="t" class="on">▦ 表</button><button data-v="c">📊 グラフ</button><button data-v="f">🔀 フロー</button></div>
+<header><b>▦ table-pad</b><button id="bNew" class="pri">＋ 新しい表</button><button id="bImp">📂 取り込み</button><button id="bSync" title="声の受け取り設定">🎙⚙</button><button id="bIO">⇅</button></header>
+<div id="views"><button data-v="t" class="on">▦ 表</button><button data-v="c">📊 グラフ</button><button data-v="d">📈 ダッシュ</button><button data-v="f">🔀 フロー</button></div>
 <div id="tabs"></div>
 <input id="title" placeholder="表の名前">
 <div id="wrap"><table id="tb"></table></div>
@@ -76,6 +86,15 @@ dialog textarea{width:100%;height:160px;background:var(--bg);color:var(--tx);bor
     <div style="margin-top:8px"><button id="vNext">🔄 次の角度（分類を順に切替）</button></div></div>
   <div class="sec"><h4>③ 絞り込み（スライサー）<span id="slCnt" style="float:right;font-weight:400"></span></h4><div id="slicers"></div><button id="slClr" style="margin-top:6px">絞り込みを全部解除</button></div>
 </div>
+<div id="dv" hidden>
+  <div id="dkpi" class="kpis"></div>
+  <div id="dfil" class="fchips"></div>
+  <details class="sec" id="dsl"><summary style="font-size:13px;color:var(--dim);font-weight:700">絞り込み（スライサー）</summary><div id="dslb" style="margin-top:8px"></div></details>
+  <div id="dtip"></div>
+  <div id="dcards"></div>
+  <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button id="dAdd" class="pri">＋ グラフを追加</button><button id="dAuto">🔄 自動で並べ直す</button><button id="dPng">🖼 全体を画像で保存</button></div>
+  <div style="font-size:12px;color:var(--dim);margin-top:8px;line-height:1.6">棒・点・円をタップすると、他のグラフがその条件で絞り込まれます（もう一度タップで解除、複数タップで追加）。</div>
+</div>
 <div id="fv" hidden>
   <div class="sec"><h4>書き方：「A -> B」で線がつながります</h4>
   <div style="font-size:12px;color:var(--dim);line-height:1.6;margin-bottom:6px">・<b>判断</b>は末尾に？ または {…}　・<b>はい／いいえ</b>は「A -(はい)-> B」　・<b>始め／終わり</b>は (…)　・横に長く続けて書いてOK：A -> B -> C</div>
@@ -85,6 +104,23 @@ dialog textarea{width:100%;height:160px;background:var(--bg);color:var(--tx);bor
   <div id="flowBox"></div>
 </div>
 <div id="toast"></div>
+<dialog id="imp"><div style="font-weight:700;margin-bottom:8px">📂 表データの取り込み（会計ソフトのCSVなど）</div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap"><button id="iFile" class="pri">ファイルを選ぶ</button><button id="iPaste">貼り付け</button><button id="iSample">会計サンプル</button></div>
+  <input type="file" id="iInp" accept=".csv,.tsv,.txt,text/csv,text/plain,text/tab-separated-values" hidden>
+  <textarea id="iTa" hidden placeholder="Excelやcsvの内容をここに貼り付け" style="width:100%;margin-top:8px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px;font:inherit"></textarea>
+  <div class="msg" id="iInfo">freee・弥生・マネーフォワードなどの「仕訳帳／総勘定元帳」CSV（Shift_JISも可）をそのまま選べます。</div>
+  <div class="ctl"><div><label>見出し行</label><select id="iHdr"></select></div><div><label>区切り文字</label><select id="iDel"><option value="auto">自動</option><option value=",">カンマ</option><option value="\t">タブ</option><option value=";">セミコロン</option></select></div></div>
+  <label class="ck"><input type="checkbox" id="iNeg" checked> △1,000 ▲1,000 (1,000) をマイナスの数字にする</label>
+  <label class="ck"><input type="checkbox" id="iDat" checked> 日付をそろえる（令和8年4月5日・20260405・2026/4/5）</label>
+  <label class="ck"><input type="checkbox" id="iTot" checked> 「合計」「小計」の行は除く</label>
+  <div id="iPrev"></div>
+  <div style="display:flex;gap:8px;justify-content:flex-end"><button id="iX">閉じる</button><button id="iOk" class="pri" disabled>取り込む</button></div></dialog>
+<dialog id="syn"><div style="font-weight:700;margin-bottom:8px">🎙 声（voice-pad）からの受け取り</div>
+  <div style="font-size:12px;color:var(--dim);line-height:1.6;margin-bottom:8px">voice-pad の「table-pad へ預ける」で預けた表・フローを、起動したときと戻ったときに自動で受け取ります。エンドポイントとトークンは quick-ref と同じものです（同じブラウザなら自動で読み取ります）。</div>
+  <input id="sEp" placeholder="https://sync-worker.xxxx.workers.dev" style="width:100%;margin-bottom:6px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:10px;font:inherit">
+  <input id="sTk" type="password" autocomplete="off" placeholder="同期トークン（保存済みなら空でOK）" style="width:100%;margin-bottom:6px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:10px;font:inherit">
+  <div id="sMsg" style="font-size:13px;min-height:20px;color:var(--gold)"></div>
+  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px"><button id="sX">閉じる</button><button id="sSave">保存</button><button id="sGo" class="pri">今すぐ受け取る</button></div></dialog>
 <dialog id="dlg"><div id="dh" style="font-weight:700;margin-bottom:8px"></div><textarea id="dta"></textarea><div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end"><button id="dx">閉じる</button><button id="dok" class="pri">OK</button></div></dialog>
 <script>
 (function(){
@@ -115,17 +151,17 @@ function renderTable(){
   $('title').style.display=has?'':'none'; $('wrap').style.display=has?'':'none';
   if(!t){tb.innerHTML='';$('hint').textContent='「＋ 新しい表」で表を作れます';return}
   $('title').value=t.title;
-  sel.r=Math.min(sel.r,t.d.length-1);sel.c=Math.min(sel.c,t.d[0].length-1);
+  const RC=400;sel.r=Math.min(sel.r,t.d.length-1,RC-1);sel.c=Math.min(sel.c,t.d[0].length-1);
   let h='<tr><th class="corner"></th>';
   for(let c=0;c<t.d[0].length;c++)h+='<th class="ch'+(c===sel.c?' on':'')+'" data-ch="'+c+'">⋮⋮ '+colName(c)+'</th>';
   h+='</tr>';
-  t.d.forEach((row,r)=>{
+  t.d.forEach((row,r)=>{if(r>=RC)return;
     h+='<tr class="'+(t.header&&r===0?'hd':'')+'"><th class="h'+(r===sel.r?' on':'')+'" data-rh="'+r+'">'+(r+1)+'</th>';
     row.forEach((v,c)=>{h+='<td data-r="'+r+'" data-c="'+c+'" class="'+(r===sel.r&&c===sel.c?'sel':(r===sel.r?'selr':(c===sel.c?'selc':'')))+'"><input value="'+esc(v)+'" data-r="'+r+'" data-c="'+c+'" enterkeyhint="next"></td>'});
     h+='</tr>'});
   tb.innerHTML=h;
   $('hdr').textContent=t.header?'1行目=見出し ✓':'1行目=見出し';
-  $('hint').textContent='選んだ場所：'+(sel.r+1)+'行 '+colName(sel.c)+'列　／　左の番号・上のABCを押したまま動かすと移動できます';
+  $('hint').textContent='選んだ場所：'+(sel.r+1)+'行 '+colName(sel.c)+'列　／　左の番号・上のABCを押したまま動かすと移動できます'+(t.d.length>RC?'　※表は先頭'+RC+'行だけ表示（グラフ・ダッシュは全'+t.d.length+'行）':'');
 }
 // 編集
 $('tb').addEventListener('focusin',e=>{const i=e.target;if(i.tagName!=='INPUT')return;const r=+i.dataset.r,c=+i.dataset.c;if(r!==sel.r||c!==sel.c){sel={r,c};markSel()}});
@@ -209,15 +245,17 @@ function applyView(){
   document.querySelectorAll('#views button').forEach(b=>b.classList.toggle('on',b.dataset.v===VIEW));
   const tv=VIEW==='t';
   $('wrap').style.display=(tv&&has)?'':'none';$('hint').style.display=tv?'':'none';$('bar').style.display=tv?'':'none';
-  $('cv').hidden=!(VIEW==='c'&&has);$('fv').hidden=!(VIEW==='f'&&has);
-  if(has&&VIEW==='c')renderChart();if(has&&VIEW==='f')renderFlow();
+  $('cv').hidden=!(VIEW==='c'&&has);$('fv').hidden=!(VIEW==='f'&&has);$('dv').hidden=!(VIEW==='d'&&has);
+  if(has&&VIEW==='c')renderChart();if(has&&VIEW==='f')renderFlow();if(has&&VIEW==='d')renderDash();
 }
 $('views').onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;VIEW=b.dataset.v;applyView();window.scrollTo(0,0)};
 
 // ===================== データの読み取り =====================
 const PAL=['#3987e5','#d95926','#199e70','#c98500','#d55181','#008300','#9085e9'],OTHER='#8a8f9c',INK='#eef1f7',DIM='#9aa3b8',GRID='#2c3345',SURF='#181b24';
-function num(s){const x=String(s==null?'':s).replace(/[,，\s¥￥円%％$]/g,'');if(x===''||!/^[-+]?\d*\.?\d+(e[-+]?\d+)?$/i.test(x))return null;return parseFloat(x)}
-function dparse(s){s=String(s==null?'':s).trim();let m=s.match(/^(\d{4})[-\/年.](\d{1,2})(?:[-\/月.](\d{1,2}))?/);if(m)return{y:+m[1],m:+m[2],d:+(m[3]||1)};m=s.match(/^(\d{1,2})[\/月](\d{1,2})日?$/);if(m)return{y:0,m:+m[1],d:+m[2]};return null}
+function num(s){let x=String(s==null?'':s).trim();let neg=false;if(/^[△▲]/.test(x)){neg=true;x=x.slice(1)}else if(/^\(.*\)$/.test(x)){neg=true;x=x.slice(1,-1)}
+  x=x.replace(/[,，\s¥￥円%％$]/g,'');if(x===''||!/^[-+]?\d*\.?\d+(e[-+]?\d+)?$/i.test(x))return null;const f=parseFloat(x);return neg?-f:f}
+const ERA={'令和':2018,'R':2018,'平成':1988,'H':1988,'昭和':1925,'S':1925};
+function dparse(s){s=String(s==null?'':s).trim();{const e=s.match(/^(令和|平成|昭和|[RHS])\s*(元|\d+)[年.\/-](\d{1,2})[月.\/-](\d{1,2})日?/);if(e)return{y:ERA[e[1]]+(e[2]==='元'?1:+e[2]),m:+e[3],d:+e[4]}}let m=s.match(/^(\d{4})[-\/年.](\d{1,2})(?:[-\/月.](\d{1,2}))?/);if(m)return{y:+m[1],m:+m[2],d:+(m[3]||1)};m=s.match(/^(\d{1,2})[\/月](\d{1,2})日?$/);if(m)return{y:0,m:+m[1],d:+m[2]};return null}
 function ctype(body,i){const v=body.map(r=>String(r[i]==null?'':r[i]).trim()).filter(x=>x!=='');if(!v.length)return'text';
   if(v.filter(x=>dparse(x)&&num(x)===null).length/v.length>=0.8)return'date';
   if(v.filter(x=>num(x)!==null).length/v.length>=0.8)return'num';return'text'}
@@ -261,9 +299,11 @@ function whyText(t,v,R){
   return m}
 
 // ===================== 集計 =====================
+function bk(I,r,col,gran){const raw=String(r[col]==null?'':r[col]).trim();if(I.types[col]==='date'){const g=dparse(raw);if(!g)return'(不明)';const p2=n=>String(n).padStart(2,'0');return gran==='y'?String(g.y):(gran==='m'?g.y+'-'+p2(g.m):g.y+'-'+p2(g.m)+'-'+p2(g.d))}return raw||'(空)'}
 function compute(t,v){
   const I=info(t);
   let rows=I.body.filter(r=>Object.keys(v.sl).every(k=>{const a=v.sl[k];return !a||!a.length||a.includes(String(r[k]==null?'':r[k]).trim())}));
+  if(v.xf&&v.xf.length)rows=rows.filter(r=>v.xf.every(f=>f.vals.includes(bk(I,r,f.col,f.gran))));
   const out={n:rows.length,all:I.body.length};
   if(v.type==='scatter'){out.pts=rows.map(r=>({x:num(r[v.cat]),y:num(r[v.val]),s:v.ser>=0?String(r[v.ser]).trim()||'(空)':'',l:String(r[0]||'')})).filter(p=>p.x!=null&&p.y!=null);
     out.series=[...new Set(out.pts.map(p=>p.s))];return out}
@@ -291,11 +331,11 @@ const tr=(s,n)=>String(s).length>n?String(s).slice(0,n-1)+'…':String(s);
 const X=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 let LASTSVG=null;
 function legendHtml(items){return '<div class="legend">'+items.map((it,i)=>'<span><i style="background:'+it.c+'"></i>'+X(it.n)+'</span>').join('')+'</div>'}
-function drawChart(t,v,R){
-  const W=Math.max(300,$('chartBox').clientWidth-16);let svg='',H=300,legend='';
+function drawChart(t,v,R,box){
+  const W=Math.max(260,(box||$('chartBox')).clientWidth-16);let svg='',H=300,legend='';
   const vn=v.val>=0&&v.agg!=='count'?info(t).names[v.val]:'件数';
   const ser=R.series||[];const col=i=>i<6?PAL[i]:OTHER;
-  const tip=(a,b)=>' data-tip="'+X(a+'　'+b)+'" ';
+  const tip=(a,b,k)=>' data-tip="'+X(a+'　'+b)+'" '+(k==null?'':'data-k="'+X(k)+'" ');
   if(!R.n||(R.cats&&!R.cats.length)||(R.pts&&!R.pts.length)){return '<div style="padding:30px;text-align:center;color:'+DIM+'">表示できるデータがありません。<br>表に数字を入れるか、絞り込みを解除してください。</div>'}
   if(v.type==='scatter'){
     const xs=R.pts.map(p=>p.x),ys=R.pts.map(p=>p.y),sx=niceScale(Math.min(...xs),Math.max(...xs),4),sy=niceScale(Math.min(...ys),Math.max(...ys),4);
@@ -315,7 +355,7 @@ function drawChart(t,v,R){
       const pt=(a,rr)=>(cx+Math.cos(a)*rr).toFixed(1)+' '+(cy+Math.sin(a)*rr).toFixed(1);
       const d=items.length===1?'M'+pt(0,r)+' A'+r+' '+r+' 0 1 1 '+pt(Math.PI,r)+' A'+r+' '+r+' 0 1 1 '+pt(0,r)+' L'+pt(0,ri)+' A'+ri+' '+ri+' 0 1 0 '+pt(Math.PI,ri)+' A'+ri+' '+ri+' 0 1 0 '+pt(0,ri)+'Z':
         'M'+pt(a0,r)+' A'+r+' '+r+' 0 '+big+' 1 '+pt(a1,r)+' L'+pt(a1,ri)+' A'+ri+' '+ri+' 0 '+big+' 0 '+pt(a0,ri)+'Z';
-      svg+='<path d="'+d+'" fill="'+c+'" stroke="'+SURF+'" stroke-width="2"'+tip(it.n,fmt(it.v)+'（'+(it.v/total*100).toFixed(1)+'%）')+'/>';a0=a1});
+      svg+='<path d="'+d+'" fill="'+c+'" stroke="'+SURF+'" stroke-width="2"'+tip(it.n,fmt(it.v)+'（'+(it.v/total*100).toFixed(1)+'%）',it.n==='その他'?null:it.n)+'/>';a0=a1});
     svg+='<text x="'+cx+'" y="'+(cy-2)+'" fill="'+INK+'" font-size="22" font-weight="700" text-anchor="middle">'+fmt(total)+'</text><text x="'+cx+'" y="'+(cy+18)+'" fill="'+DIM+'" font-size="12" text-anchor="middle">'+X(vn)+'</text>';
     legend=legendHtml(items.map((it,i)=>({n:it.n+' '+(it.v/total*100).toFixed(0)+'%',c:it.n==='その他'?OTHER:PAL[i]})));
     return '<svg id="csvg" viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'">'+svg+'</svg>'+legend}
@@ -327,7 +367,7 @@ function drawChart(t,v,R){
     svg+=sc.ticks.map(x=>'<line x1="'+px(x)+'" x2="'+px(x)+'" y1="'+Tp+'" y2="'+(H-22)+'" stroke="'+GRID+'"/><text x="'+px(x)+'" y="'+(H-6)+'" fill="'+DIM+'" font-size="11" text-anchor="middle">'+fmt(x)+'</text>').join('');
     R.cats.forEach((c,i)=>{const y0=Tp+i*rowH;svg+='<text x="'+(L-6)+'" y="'+(y0+rowH/2+4)+'" fill="'+INK+'" font-size="12" text-anchor="end">'+X(tr(c,8))+'</text>';
       ser.forEach((sn,j)=>{const x=R.val(c,sn);if(x==null)return;const bh=Math.min(18,(rowH-8)/ser.length-2),by=y0+4+j*(bh+2),x0=px(0),x1=px(x);
-        svg+='<rect x="'+Math.min(x0,x1)+'" y="'+by+'" width="'+Math.max(1,Math.abs(x1-x0))+'" height="'+bh+'" rx="3" fill="'+col(j)+'"'+tip(c+(sn?' ／ '+sn:''),fmt(x))+'/>';
+        svg+='<rect x="'+Math.min(x0,x1)+'" y="'+by+'" width="'+Math.max(1,Math.abs(x1-x0))+'" height="'+bh+'" rx="3" fill="'+col(j)+'"'+tip(c+(sn?' ／ '+sn:''),fmt(x),c)+'/>';
         if(ser.length===1)svg+='<text x="'+(Math.max(x0,x1)+4)+'" y="'+(by+bh-3)+'" fill="'+INK+'" font-size="11">'+fmt(x)+'</text>'})});
     svg+='<line x1="'+px(0)+'" x2="'+px(0)+'" y1="'+Tp+'" y2="'+(H-22)+'" stroke="'+DIM+'"/>'}
   else{
@@ -338,13 +378,13 @@ function drawChart(t,v,R){
     if(v.type==='line'){
       ser.forEach((sn,j)=>{let d='',pts=[],pen=false;R.cats.forEach((c,i)=>{const x=R.val(c,sn);if(x==null){pen=false;return}d+=(pen?'L':'M')+cxp(i).toFixed(1)+' '+py(x).toFixed(1)+' ';pen=true;pts.push([i,c,x])});
         svg+='<path d="'+d.trim()+'" fill="none" stroke="'+col(j)+'" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
-        pts.forEach(([i,c,x])=>{svg+='<circle cx="'+cxp(i)+'" cy="'+py(x)+'" r="'+(nC>20?3:4.5)+'" fill="'+col(j)+'" stroke="'+SURF+'" stroke-width="2"'+tip(c+(sn?' ／ '+sn:''),fmt(x))+'/>'})});
+        pts.forEach(([i,c,x])=>{svg+='<circle cx="'+cxp(i)+'" cy="'+py(x)+'" r="'+(nC>20?3:4.5)+'" fill="'+col(j)+'" stroke="'+SURF+'" stroke-width="2"'+tip(c+(sn?' ／ '+sn:''),fmt(x),c)+'/>'})});
       // 当たり判定（透明の縦帯）
-      R.cats.forEach((c,i)=>{svg+='<rect x="'+(cxp(i)-band/2)+'" y="'+Tp+'" width="'+band+'" height="'+(H-Tp-B)+'" fill="transparent"'+tip(c,ser.map(sn=>(sn?sn+'：':'')+fmt(R.val(c,sn))).join('　'))+'/>'})}
+      R.cats.forEach((c,i)=>{svg+='<rect x="'+(cxp(i)-band/2)+'" y="'+Tp+'" width="'+band+'" height="'+(H-Tp-B)+'" fill="transparent"'+tip(c,ser.map(sn=>(sn?sn+'：':'')+fmt(R.val(c,sn))).join('　'),c)+'/>'})}
     else{
       const gw=Math.min(band*.78,48*ser.length),bw=gw/ser.length-(ser.length>1?2:0);
       R.cats.forEach((c,i)=>{ser.forEach((sn,j)=>{const x=R.val(c,sn);if(x==null)return;const bx=cxp(i)-gw/2+j*(gw/ser.length),y0=py(0),y1=py(x);
-        svg+='<rect x="'+bx+'" y="'+Math.min(y0,y1)+'" width="'+Math.max(2,bw)+'" height="'+Math.max(1,Math.abs(y1-y0))+'" rx="3" fill="'+col(j)+'"'+tip(c+(sn?' ／ '+sn:''),fmt(x))+'/>';
+        svg+='<rect x="'+bx+'" y="'+Math.min(y0,y1)+'" width="'+Math.max(2,bw)+'" height="'+Math.max(1,Math.abs(y1-y0))+'" rx="3" fill="'+col(j)+'"'+tip(c+(sn?' ／ '+sn:''),fmt(x),c)+'/>';
         if(ser.length===1&&nC<=8)svg+='<text x="'+(bx+bw/2)+'" y="'+(Math.min(y0,y1)-4)+'" fill="'+INK+'" font-size="11" text-anchor="middle">'+fmt(x)+'</text>'})});
       svg+='<line x1="'+L+'" x2="'+(W-Rr)+'" y1="'+py(0)+'" y2="'+py(0)+'" stroke="'+DIM+'"/>'}}
   if(ser.length>1)legend=legendHtml(ser.map((n,i)=>({n,c:col(i)})).concat(R.cut?[{n:'（他'+R.cut+'件は省略）',c:OTHER}]:[]));
@@ -402,6 +442,176 @@ function savePng(svgEl,name){
       const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name+'.png';a.click();toast('画像を保存しました')})};
   img.onerror=()=>toast('画像にできませんでした');img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(x)}
 $('cPng').onclick=()=>savePng($('csvg'),(T().title||'graph')+'-graph');
+
+
+// ===================== ダッシュボード（連動する複数グラフ） =====================
+const openEd=new Set();let lastTip='';
+function isCat(I,i){return I.types[i]==='date'||(I.types[i]==='text'&&I.uniq[i].length>=2&&I.uniq[i].length<=12)}
+function autoCards(t){const I=info(t),cards=[];const nums=I.types.map((x,i)=>x==='num'?i:-1).filter(i=>i>=0),val=nums.length?nums[0]:-1;
+  const mkc=o=>Object.assign({id:uid(),type:'bar',cat:-1,val:val,agg:val>=0?'sum':'count',ser:-1,sort:'val',gran:'m',sl:{}},o);
+  const d=I.types.indexOf('date');
+  if(d>=0){const ds=I.body.map(r=>dparse(r[d])).filter(Boolean);const span=ds.length?(Math.max(...ds.map(g=>g.y*12+g.m))-Math.min(...ds.map(g=>g.y*12+g.m))):0;cards.push(mkc({cat:d,type:'line',sort:'orig',gran:span>=36?'y':(span>=2?'m':'d')}))}
+  I.names.forEach((n,i)=>{if(cards.length>=4||I.types[i]!=='text'||I.uniq[i].length<2||I.uniq[i].length>12)return;const len=Math.max(0,...I.uniq[i].map(x=>x.length));cards.push(mkc({cat:i,type:(I.uniq[i].length>6||len>5)?'hbar':'bar'}))});
+  if(!cards.length){const r=recommend(t);cards.push(mkc({cat:Math.max(0,r.cat),val:r.val,agg:r.agg,type:r.type==='scatter'?'bar':r.type,sort:r.sort,gran:r.gran}))}
+  return cards}
+function dashOf(t){const I=info(t);if(!t.dash)t.dash={cards:autoCards(t),xf:[]};const D=t.dash;
+  D.cards=D.cards.filter(c=>c.cat>=0&&c.cat<I.w&&c.val<I.w);D.xf=(D.xf||[]).filter(f=>f.col<I.w&&(f.src==='sl'||D.cards.some(c=>c.id===f.src)));
+  if(!D.cards.length)D.cards=autoCards(t);return D}
+function cardTitle(I,c){const cn=I.names[c.cat],vn=c.val>=0&&c.agg!=='count'?I.names[c.val]:'件数';return cn+'ごとの'+vn+(c.agg==='count'||c.val<0?'':'（'+aggName(c.agg)+'）')+(I.types[c.cat]==='date'?'　'+{y:'年',m:'月',d:'日'}[c.gran]+'ごと':'')}
+function dKpi(t,D,I){let rows=I.body;if(D.xf.length)rows=rows.filter(r=>D.xf.every(f=>f.vals.includes(bk(I,r,f.col,f.gran))));
+  const nums=I.types.map((x,i)=>x==='num'?i:-1).filter(i=>i>=0).slice(0,2);
+  let h='<div class="kpi"><small>件数</small><b>'+rows.length.toLocaleString('ja-JP')+'</b><small>/ 全'+I.body.length.toLocaleString('ja-JP')+'件</small></div>';
+  nums.forEach(i=>{const x=rows.map(r=>num(r[i])).filter(z=>z!=null);h+='<div class="kpi"><small>'+X(tr(I.names[i],9))+' 合計</small><b>'+fmt(x.reduce((a,b)=>a+b,0))+'</b></div>'});
+  return h}
+function drawCard(t,D,I,c){const box=document.getElementById('db-'+c.id);if(!box)return;
+  const v=Object.assign({},c,{sl:c.sl||{},xf:D.xf.filter(f=>f.src!==c.id)});const R=compute(t,v);box.innerHTML=drawChart(t,v,R,box);
+  const own=D.xf.find(f=>f.src===c.id);if(own)box.querySelectorAll('[data-k]').forEach(el=>{el.style.opacity=own.vals.includes(el.dataset.k)?'1':'.28'})}
+function renderDash(){const t=T();if(!t)return;const D=dashOf(t),I=info(t);
+  $('dkpi').innerHTML=dKpi(t,D,I);
+  // 現在の絞り込み
+  const nm=f=>f.src==='sl'?'スライサー':null;
+  $('dfil').innerHTML=D.xf.length?D.xf.map((f,i)=>'<button class="fchip" data-xr="'+i+'">'+X(I.names[f.col])+'：'+X(f.vals.slice(0,3).map(z=>tr(z,8)).join('、')+(f.vals.length>3?' ほか'+(f.vals.length-3):''))+' ✕</button>').join('')+'<button data-xr="all">全部解除</button>':'<span style="color:var(--dim);font-size:13px">絞り込みなし（グラフをタップすると連動します）</span>';
+  // スライサー
+  let sh='';I.names.forEach((n,i)=>{if(!isCat(I,i)||I.types[i]==='date')return;const f=D.xf.find(x=>x.src==='sl'&&x.col===i),cur=f?f.vals:[];
+    sh+='<div style="margin-bottom:8px"><div style="font-size:12px;color:var(--dim);margin-bottom:4px">'+X(n)+'</div><div class="chips">'+I.uniq[i].map((u,k)=>'<button class="chip'+(cur.includes(u)?' on':'')+'" data-sl="'+i+'" data-su="'+k+'">'+X(tr(u,10))+'</button>').join('')+'</div></div>'});
+  $('dslb').innerHTML=sh||'<span style="color:var(--dim);font-size:13px">絞り込める文字の列がありません</span>';
+  // カード
+  const allCols=I.names.map((n,i)=>[i,n+(I.types[i]==='num'?'（数）':I.types[i]==='date'?'（日付）':'')]);
+  const numCols=[[-1,'件数だけ数える']].concat(I.names.map((n,i)=>[i,n]).filter(([i])=>I.types[i]==='num'));
+  const opt=(arr,val)=>arr.map(([k,l])=>'<option value="'+k+'"'+(String(k)===String(val)?' selected':'')+'>'+X(l)+'</option>').join('');
+  $('dcards').innerHTML=D.cards.map((c,ci)=>{const ed=openEd.has(c.id);
+    return '<div class="dc" data-id="'+c.id+'"><div class="dh"><b>'+X(cardTitle(I,c))+'</b><button data-act="up">▲</button><button data-act="dn">▼</button><button data-act="ed">⚙</button><button data-act="del" class="dng">✕</button></div>'
+    +(ed?'<div class="ded"><div class="chips" style="margin-bottom:6px">'+[['bar','棒'],['hbar','横棒'],['line','折れ線'],['pie','円']].map(([k,l])=>'<button class="chip'+(c.type===k?' on':'')+'" data-ct="'+k+'">'+l+'</button>').join('')+'</div>'
+      +'<div class="ctl"><div><label>分類</label><select data-f="cat">'+opt(allCols,c.cat)+'</select></div><div><label>値</label><select data-f="val">'+opt(numCols,c.val)+'</select></div>'
+      +'<div><label>集計</label><select data-f="agg">'+opt([['sum','合計'],['avg','平均'],['count','件数'],['max','最大'],['min','最小']],c.agg)+'</select></div>'
+      +'<div><label>色分け</label><select data-f="ser">'+opt([[-1,'なし']].concat(allCols.filter(([i])=>I.types[i]==='text'&&i!==c.cat&&I.uniq[i].length>=2&&I.uniq[i].length<=8)),c.ser)+'</select></div>'
+      +(I.types[c.cat]==='date'?'<div><label>日付のまとめ方</label><select data-f="gran">'+opt([['y','年ごと'],['m','月ごと'],['d','日ごと']],c.gran)+'</select></div>':'')+'</div></div>':'')
+    +'<div class="dbox" id="db-'+c.id+'"></div></div>'}).join('');
+  D.cards.forEach(c=>drawCard(t,D,I,c));$('dtip').textContent=lastTip||'';
+}
+function dChange(f){const t=T(),D=dashOf(t);f(D,info(t));touch();renderDash()}
+$('dcards').addEventListener('click',e=>{const t=T();if(!t)return;const D=dashOf(t),I=info(t);const dc=e.target.closest('.dc');if(!dc)return;const id=dc.dataset.id,ci=D.cards.findIndex(c=>c.id===id),c=D.cards[ci];
+  const k=e.target.closest('[data-k]');
+  if(k){lastTip=k.getAttribute('data-tip')||'';const key=k.dataset.k;let f=D.xf.find(x=>x.src===id);
+    if(!f){f={src:id,col:c.cat,gran:I.types[c.cat]==='date'?c.gran:null,vals:[key]};D.xf.push(f)}
+    else if(f.vals.includes(key)){f.vals=f.vals.filter(z=>z!==key);if(!f.vals.length)D.xf=D.xf.filter(x=>x!==f)}else f.vals.push(key);
+    touch();renderDash();return}
+  const a=e.target.closest('[data-act]');
+  if(a){const act=a.dataset.act;
+    if(act==='ed'){openEd.has(id)?openEd.delete(id):openEd.add(id);renderDash()}
+    else if(act==='del'){if(D.cards.length<=1){toast('最後の1枚は消せません');return}dChange(D=>{D.cards=D.cards.filter(x=>x.id!==id);D.xf=D.xf.filter(x=>x.src!==id)})}
+    else if(act==='up'||act==='dn'){const j=ci+(act==='up'?-1:1);if(j<0||j>=D.cards.length)return;dChange(D=>{const x=D.cards.splice(ci,1)[0];D.cards.splice(j,0,x)})}
+    return}
+  const ct=e.target.closest('[data-ct]');if(ct){dChange(D=>{const c2=D.cards[ci];c2.type=ct.dataset.ct;if(c2.type==='line'&&I.types[c2.cat]!=='date')c2.sort='orig'})}});
+$('dcards').addEventListener('change',e=>{const sel=e.target.closest('select[data-f]');if(!sel)return;const dc=e.target.closest('.dc'),id=dc.dataset.id,f=sel.dataset.f;
+  dChange((D,I)=>{const c=D.cards.find(x=>x.id===id);if(f==='agg'||f==='gran')c[f]=sel.value;else c[f]=+sel.value;
+    if(f==='cat'){if(c.ser===c.cat)c.ser=-1;c.sort=I.types[c.cat]==='date'?'orig':'val';if(I.types[c.cat]==='date'&&c.type==='bar')c.type='line';else if(I.types[c.cat]!=='date'&&c.type==='line')c.type='bar'}
+    if(f==='val'){if(c.val<0)c.agg='count';else if(c.agg==='count')c.agg='sum'}
+    if(f==='cat'||f==='gran')D.xf=D.xf.filter(x=>x.src!==id)})});
+$('dfil').addEventListener('click',e=>{const b=e.target.closest('[data-xr]');if(!b)return;lastTip='';dChange(D=>{if(b.dataset.xr==='all')D.xf=[];else D.xf.splice(+b.dataset.xr,1)})});
+$('dslb').addEventListener('click',e=>{const b=e.target.closest('[data-sl]');if(!b)return;const i=+b.dataset.sl,u=info(T()).uniq[i][+b.dataset.su];
+  dChange(D=>{let f=D.xf.find(x=>x.src==='sl'&&x.col===i);if(!f){f={src:'sl',col:i,gran:null,vals:[u]};D.xf.push(f)}else if(f.vals.includes(u)){f.vals=f.vals.filter(z=>z!==u);if(!f.vals.length)D.xf=D.xf.filter(x=>x!==f)}else f.vals.push(u)})});
+$('dAdd').onclick=()=>dChange((D,I)=>{const used=D.cards.map(c=>c.cat),cand=I.names.map((_,i)=>i).filter(i=>isCat(I,i)),nums=I.types.map((x,i)=>x==='num'?i:-1).filter(i=>i>=0);
+  const cat=cand.find(i=>!used.includes(i));if(cat==null){toast('これ以上、分けられる列がありません（⚙で分類を変えられます）');return}
+  const val=nums.length?nums[0]:-1,dt=I.types[cat]==='date';const len=Math.max(0,...I.uniq[cat].map(x=>x.length));
+  const c={id:uid(),type:dt?'line':((I.uniq[cat].length>6||len>5)?'hbar':'bar'),cat,val,agg:val>=0?'sum':'count',ser:-1,sort:dt?'orig':'val',gran:'m',sl:{}};D.cards.push(c);openEd.add(c.id)});
+$('dAuto').onclick=()=>{if(!confirm('グラフの並びを自動で作り直します（絞り込みも解除）'))return;dChange(D=>{D.cards=autoCards(T());D.xf=[]})};
+$('dPng').onclick=()=>{const svgs=[...document.querySelectorAll('#dcards svg')];if(!svgs.length){toast('図がありません');return}
+  const w=Math.max(...svgs.map(s=>+s.getAttribute('width')||300)),parts=[];let y=0;
+  svgs.forEach(sv=>{const h=+sv.getAttribute('height')||300,sw=+sv.getAttribute('width')||300;let x=new XMLSerializer().serializeToString(sv);x=x.replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');parts.push('<g transform="translate(0,'+y+')">'+x+'</g>');y+=h+10});
+  const holder=document.createElementNS('http://www.w3.org/2000/svg','svg');holder.setAttribute('width',w);holder.setAttribute('height',y);holder.setAttribute('viewBox','0 0 '+w+' '+y);holder.innerHTML=parts.join('');
+  savePng(holder,(T().title||'dashboard')+'-dash')};
+
+
+// ===================== 取り込み（会計ソフトのCSVなど） =====================
+const IM={name:'取り込んだ表',text:'',rows:[],enc:'',del:','};
+function parseDelim(s,del){const rows=[];let row=[],cur='',q=false;for(let i=0;i<s.length;i++){const ch=s[i];
+  if(q){if(ch==='"'){if(s[i+1]==='"'){cur+='"';i++}else q=false}else cur+=ch}
+  else if(ch==='"'&&cur==='')q=true;else if(ch===del){row.push(cur);cur=''}
+  else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&s[i+1]==='\n')i++;row.push(cur);rows.push(row);row=[];cur=''}else cur+=ch}
+  if(cur!==''||row.length){row.push(cur);rows.push(row)}return rows}
+function guessDelim(s){const head=s.split(/\r?\n/).slice(0,8).join('\n');const c={'\t':0,',':0,';':0};for(const ch of head)if(c[ch]!=null)c[ch]++;
+  return c['\t']>=Math.max(c[','],c[';'])&&c['\t']>0?'\t':(c[';']>c[',']?';':',')}
+function decodeBuf(buf){let enc='UTF-8',txt;try{txt=new TextDecoder('utf-8',{fatal:true}).decode(buf)}catch(e){try{txt=new TextDecoder('shift_jis').decode(buf);enc='Shift_JIS'}catch(e2){txt=new TextDecoder('utf-8').decode(buf)}}
+  return{txt:txt.replace(/^\uFEFF/,''),enc}}
+function toISO(s){s=String(s).trim();let m=s.match(/^(\d{4})[-\/.年](\d{1,2})[-\/.月](\d{1,2})日?(?:[ T　].*)?$/);if(!m)m=s.match(/^(\d{4})(\d{2})(\d{2})$/);let y,mo,d;
+  if(m){y=+m[1];mo=+m[2];d=+m[3]}else{const e=s.match(/^(令和|平成|昭和|[RHS])\s*(元|\d+)[年.\/-](\d{1,2})[月.\/-](\d{1,2})日?$/);if(!e)return null;y=ERA[e[1]]+(e[2]==='元'?1:+e[2]);mo=+e[3];d=+e[4]}
+  if(y<1900||y>2200||mo<1||mo>12||d<1||d>31)return null;return y+'-'+String(mo).padStart(2,'0')+'-'+String(d).padStart(2,'0')}
+function detectHeader(rows){const mx=Math.max(1,...rows.slice(0,30).map(r=>r.filter(x=>String(x).trim()!=='').length));
+  for(let i=0;i<Math.min(rows.length,15);i++){const r=rows[i],ne=r.filter(x=>String(x).trim()!=='');if(ne.length>=Math.max(2,Math.ceil(mx*.6))&&ne.filter(x=>num(x)===null).length/ne.length>=.7)return i}return 0}
+function buildImport(){let rows=IM.rows;const hi=+$('iHdr').value;const useH=hi>=0;rows=rows.slice(useH?hi:0);
+  const w=Math.max(1,...rows.map(r=>r.length));rows=rows.map(r=>{r=r.map(x=>String(x==null?'':x).normalize('NFKC').replace(/\u00a0/g,' ').trim());while(r.length<w)r.push('');return r});
+  rows=rows.filter(r=>r.some(x=>x!==''));
+  if($('iTot').checked)rows=rows.filter((r,i)=>{if(useH&&i===0)return true;const f=r.filter(x=>x!=='').slice(0,2);return!f.some(x=>/^(合計|総計|小計|累計|計|合　計)$/.test(x))});
+  if($('iNeg').checked)rows=rows.map((r,i)=>(useH&&i===0)?r:r.map(x=>{let m;if((m=x.match(/^[△▲]\s*(\d[\d,]*\.?\d*)$/)))return'-'+m[1].replace(/,/g,'');if((m=x.match(/^\((\d[\d,]*\.?\d*)\)$/)))return'-'+m[1].replace(/,/g,'');
+    if((m=x.match(/^[¥$]?\s*(-?\d{1,3}(?:,\d{3})+(?:\.\d+)?)$/)))return m[1].replace(/,/g,'');return x}));
+  // 末尾の空列を落とす
+  let cw=w;while(cw>1&&rows.every(r=>r[cw-1]===''))cw--;rows=rows.map(r=>r.slice(0,cw));
+  if($('iDat').checked){for(let c=0;c<cw;c++){const body=rows.slice(useH?1:0).map(r=>r[c]).filter(x=>x!=='');if(!body.length)continue;const ok=body.filter(x=>toISO(x)).length;
+      if(ok/body.length>=.8)rows.forEach((r,i)=>{if(useH&&i===0)return;const z=toISO(r[c]);if(z)r[c]=z})}}
+  if(!useH){/* 見出し無し：A列,B列…のまま */}
+  return{rows,header:useH}}
+function reparse(){const del=$('iDel').value==='auto'?guessDelim(IM.text):($('iDel').value==='\\t'?'\t':$('iDel').value);IM.del=del;IM.rows=parseDelim(IM.text,del);
+  const hd=detectHeader(IM.rows);const cur=$('iHdr').dataset.set==='1'?$('iHdr').value:null;
+  const opts=[];for(let i=0;i<Math.min(12,IM.rows.length);i++)opts.push('<option value="'+i+'">'+(i+1)+'行目'+(String(IM.rows[i][0]||'').trim()?'：'+esc(String(IM.rows[i].filter(x=>String(x).trim()).slice(0,3).join(' / ')).slice(0,24)):'')+'</option>');
+  opts.push('<option value="-1">見出し行なし</option>');$('iHdr').innerHTML=opts.join('');$('iHdr').value=String(cur!=null?cur:hd);preview()}
+function preview(){const B=buildImport(),n=B.rows.length-(B.header?1:0),w=B.rows[0]?B.rows[0].length:0;
+  $('iInfo').textContent=(IM.enc?'文字コード：'+IM.enc+'　':'')+'区切り：'+({',':'カンマ','\t':'タブ',';':'セミコロン'}[IM.del]||IM.del)+'　→　'+n.toLocaleString('ja-JP')+'行 × '+w+'列'+(n>20000?'（20,000行までを取り込みます）':'');
+  $('iPrev').innerHTML='<table>'+B.rows.slice(0,7).map((r,i)=>'<tr class="'+(B.header&&i===0?'h':'')+'">'+r.map(x=>'<td>'+esc(tr(x,14))+'</td>').join('')+'</tr>').join('')+'</table>';
+  $('iOk').disabled=!(n>0)}
+function openImp(){$('imp').showModal();}
+function loadImpText(name,txt,enc){IM.name=name;IM.text=txt;IM.enc=enc||'';$('iHdr').dataset.set='';$('iTa').hidden=true;if(!txt.trim()){$('iInfo').textContent='空のようです';return}reparse()}
+$('bImp').onclick=()=>{$('iPrev').innerHTML='';$('iOk').disabled=true;$('iInfo').textContent='freee・弥生・マネーフォワードなどの「仕訳帳／総勘定元帳」CSV（Shift_JISも可）をそのまま選べます。';$('iTa').hidden=true;openImp()};
+$('iX').onclick=()=>$('imp').close();
+$('iFile').onclick=()=>$('iInp').click();
+$('iInp').onchange=async()=>{const f=$('iInp').files[0];if(!f)return;try{const d=decodeBuf(await f.arrayBuffer());loadImpText(f.name.replace(/\.[^.]+$/,''),d.txt,d.enc)}catch(e){$('iInfo').textContent='読み込めませんでした'}$('iInp').value=''};
+$('iPaste').onclick=async()=>{$('iTa').hidden=false;let s='';try{s=await navigator.clipboard.readText()}catch(e){}if(s&&s.trim()){$('iTa').value=s;loadImpText('貼り付けた表',s,'')}else $('iTa').focus()};
+$('iTa').oninput=()=>{if($('iTa').value.trim())loadImpText('貼り付けた表',$('iTa').value,'');};
+['iDel','iNeg','iDat','iTot'].forEach(i=>$(i).onchange=()=>{if(IM.text)reparse()});
+$('iHdr').onchange=()=>{$('iHdr').dataset.set='1';preview()};
+$('iSample').onclick=()=>{const acc=[['売上','収入',[180000,260000]],['雑収入','収入',[3000,12000]],['仕入','支出',[60000,110000]],['広告宣伝費','支出',[10000,40000]],['地代家賃','支出',[80000,80000]],['通信費','支出',[9000,14000]],['旅費交通費','支出',[2000,16000]],['消耗品費','支出',[1500,18000]]];
+  const dep=['東京','大阪','オンライン'];let seed=7;const rnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280};const lines=['日付,勘定科目,区分,部門,金額,摘要'];
+  for(let m=1;m<=12;m++)for(let k=0;k<14;k++){const a=acc[Math.floor(rnd()*acc.length)],amt=Math.round((a[2][0]+rnd()*(a[2][1]-a[2][0]))/100)*100,day=1+Math.floor(rnd()*27);
+    lines.push('2026/'+m+'/'+day+','+a[0]+','+a[1]+','+dep[Math.floor(rnd()*3)]+',"'+amt.toLocaleString('en-US')+'",'+a[0]+'の取引')}
+  lines.push('合計,,,,"0",');loadImpText('会計サンプル（2026年）',lines.join('\n'),'')};
+$('iOk').onclick=()=>{const B=buildImport();let rows=B.rows;if(rows.length>20001){rows=rows.slice(0,20001);toast('20,000行までを取り込みました')}
+  if(!B.header){const w=rows[0].length;rows.unshift(Array.from({length:w},(_,i)=>colName(i)+'列'))}
+  const t=mk(IM.name||'取り込んだ表',1,1);t.d=rows;t.header=true;tables.push(t);cur=t.id;hist=[];sel={r:0,c:0};
+  try{save()}catch(e){}
+  $('imp').close();VIEW='d';render();window.scrollTo(0,0);toast((rows.length-1).toLocaleString('ja-JP')+'行を取り込みました。ダッシュで見られます')};
+
+// ===================== 声からの受け取り（Worker /inbox） =====================
+function syncCfg(){const g=k=>{try{return(localStorage.getItem(k)||'').trim()}catch(e){return''}};return{ep:(g('tp_sync_endpoint')||g('qr_sync_endpoint')).replace(/\/$/,''),tk:g('tp_sync_token')||g('qr_sync_token')}}
+function doneIds(){try{return JSON.parse(localStorage.getItem('tp_inbox_done')||'[]')}catch(e){return[]}}
+function addDone(ids){try{const a=doneIds().concat(ids);localStorage.setItem('tp_inbox_done',JSON.stringify([...new Set(a)].slice(-600)))}catch(e){}}
+function rowsFromAny(s){let rows=/\t/.test(s)?parseTSV(s):s.split(/\r?\n/).filter(x=>x.trim()!=='').map(l=>/^\s*\|/.test(l)?l.trim().replace(/^\||\|$/g,'').split('|').map(x=>x.trim()):l.split(','));
+  rows=rows.filter(r=>!(r.length&&r.every(x=>/^:?-{3,}:?$/.test(String(x).trim()))));if(!rows.length)return null;const w=Math.max(...rows.map(r=>r.length));return rows.map(r=>{r=r.slice();while(r.length<w)r.push('');return r})}
+function stamp(ms){const d=new Date(ms||Date.now());return (d.getMonth()+1)+'/'+d.getDate()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+function itemToTable(it){const text=String(it.text||'');if(!text.trim())return null;
+  if(it.kind==='flow'){const F=parseFlow(text);if(!F.edges.length)return null;const t=mk(it.title||('声のフロー '+stamp(it.createdAt)),1,1);t.d=[['から','へ','ラベル']].concat(F.edges.map(e=>[e.a,e.b,e.l||'']));t.flow={dir:'tb',text:text.split(/\r?\n/).filter(l=>/->/.test(l)).join('\n')||text};return t}
+  const rows=rowsFromAny(text);if(!rows)return null;const t=mk(it.title||('声の表 '+stamp(it.createdAt)),1,1);t.d=rows;t.header=true;return t}
+let pulling=false,lastPull=0;
+async function pullInbox(manual){const c=syncCfg();const out={added:0,seen:0,err:''};
+  if(!c.ep||!c.tk){if(manual)out.err='エンドポイントとトークンを入れてください';return out}
+  if(pulling)return out;pulling=true;lastPull=Date.now();
+  try{const H={Authorization:'Bearer '+c.tk},done=new Set(doneIds());const ack=[];
+    for(const kind of ['table','flow']){
+      const res=await fetch(c.ep+'/inbox?kind='+kind,{headers:H});if(res.status===401)throw new Error('トークンが違います');if(!res.ok)throw new Error('受け取りに失敗（'+res.status+'）');
+      const d=await res.json();const items=Array.isArray(d)?d:(d&&(d.items||d.rows||d.inbox))||[];
+      for(const it of items){if(!it||!it.id)continue;out.seen++;
+        if(done.has(String(it.id))||tables.some(t=>t.srcId===it.id)){ack.push(it.id);continue}
+        const t=itemToTable(Object.assign({kind},it));if(!t){ack.push(it.id);continue}
+        t.srcId=it.id;if(Array.isArray(it.tags)&&it.tags.length)t.tags=it.tags;tables.push(t);out.added++;ack.push(it.id)}}
+    if(out.added){try{localStorage.setItem(KEY,JSON.stringify(tables))}catch(e){throw new Error('端末に保存できませんでした（空き容量）')}if(!cur&&tables[0])cur=tables[0].id;save()}
+    if(ack.length){addDone(ack);try{const r=await fetch(c.ep+'/inbox/ack',{method:'POST',headers:Object.assign({'Content-Type':'application/json'},H),body:JSON.stringify({ids:ack})});if(!r.ok&&manual)out.err='受け取りは済みましたが、あと片づけに失敗（'+r.status+'）。次回また試します'}catch(e){}}
+    if(out.added){render();toast('声から '+out.added+' 件の表・フローを受け取りました')}
+  }catch(e){out.err=e.message||String(e);if(manual)toast(out.err)}
+  finally{pulling=false}return out}
+$('bSync').onclick=()=>{const c=syncCfg();$('sEp').value=c.ep;$('sTk').value='';$('sMsg').textContent=c.tk?'トークンは設定済みです':'未設定';$('syn').showModal()};
+$('sX').onclick=()=>$('syn').close();
+$('sSave').onclick=()=>{try{const e=$('sEp').value.trim();if(e)localStorage.setItem('tp_sync_endpoint',e);const k=$('sTk').value.trim();if(k)localStorage.setItem('tp_sync_token',k)}catch(x){}$('sTk').value='';$('sMsg').textContent='保存しました'};
+$('sGo').onclick=async()=>{$('sSave').click();$('sMsg').textContent='受け取り中…';const r=await pullInbox(true);$('sMsg').textContent=r.err?('⚠ '+r.err):(r.added?r.added+' 件受け取りました':'新しい預かりはありません')};
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&Date.now()-lastPull>20000)pullInbox(false)});
 
 // ===================== フローチャート =====================
 const FLOW_SAMPLE='開始 -> 材料を用意する -> 合っているか？\n合っているか？ -(はい)-> 作る -> 終了\n合っているか？ -(いいえ)-> 材料を用意する';
@@ -475,8 +685,8 @@ document.querySelector('#fv .chips').addEventListener('click',e=>{const b=e.targ
   ta.value=ta.value.slice(0,a)+ins+ta.value.slice(z);ta.focus();ta.selectionStart=ta.selectionEnd=a+ins.length;ta.dispatchEvent(new Event('input'))});
 
 // 公開：他アプリが使えるように
-window.TablePad={recommend,compute,parseFlow,info,list:()=>tables.slice(),get:id=>tables.find(t=>t.id===id),toTSV:tsv,toMarkdown:md,import:importText};
-load();if(!tables.length){const t=mk('はじめての表',4,3);t.d[0]=['項目','内容','メモ'];tables.push(t);cur=t.id;save()}if(!T())cur=tables[0].id;render();
+window.TablePad={pullInbox,itemToTable,bk,toISO,num,buildImport,loadImpText,autoCards,recommend,compute,parseFlow,info,list:()=>tables.slice(),get:id=>tables.find(t=>t.id===id),toTSV:tsv,toMarkdown:md,import:importText};
+load();setTimeout(()=>pullInbox(false),600);if(!tables.length){const t=mk('はじめての表',4,3);t.d[0]=['項目','内容','メモ'];tables.push(t);cur=t.id;save()}if(!T())cur=tables[0].id;render();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){navigator.serviceWorker.register('sw.js').catch(function(){})}
 })();
 </script></body></html>
