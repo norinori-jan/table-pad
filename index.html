@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ja"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0f1117"><title>table-pad</title><link rel="manifest" href="manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f1117"><meta name="tp-rev" content="tp-r4"><title>table-pad</title><link rel="manifest" href="manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes">
 <style>
 :root{--bg:#0f1117;--p:#181b24;--p2:#222735;--bd:#323a4d;--tx:#eef1f7;--dim:#9aa3b8;--blue:#4A9EFF;--gold:#F5C842;--red:#FF6B6B;--grn:#4AE09A}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -30,8 +30,8 @@ th.on{background:var(--blue);color:#fff}
 #bar .row{display:flex;gap:6px;overflow-x:auto;margin-bottom:6px} #bar .row:last-child{margin:0} #bar button{flex:none;padding:8px 11px;min-height:38px;font-size:14px}
 #hint{padding:6px 14px;color:var(--dim);font-size:12px;min-height:24px}
 #toast{position:fixed;left:50%;bottom:150px;transform:translateX(-50%);background:#000c;color:#fff;padding:9px 14px;border-radius:20px;font-size:13px;z-index:20;display:none;max-width:90%}
-#views{display:flex;gap:6px;padding:8px 12px 0}
-#views button{flex:1;font-weight:700}#views button.on{background:var(--gold);border-color:var(--gold);color:#222}
+#views{display:flex;gap:6px;padding:8px 12px 0;overflow-x:auto}
+#views button{flex:1 0 auto;font-weight:700;padding:9px 7px;font-size:13px;white-space:nowrap}#views button.on{background:var(--gold);border-color:var(--gold);color:#222}
 #cv,#fv,#dv{padding:8px 12px}
 #dv[hidden]{display:none}
 .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}.kpi{background:var(--p);border:1px solid var(--bd);border-radius:12px;padding:8px 10px}.kpi small{display:block;font-size:11px;color:var(--dim)}.kpi b{font-size:20px}
@@ -58,18 +58,33 @@ th.on{background:var(--blue);color:#fff}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;padding:6px 4px 2px;font-size:13px;color:var(--dim)}
 .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
 #ftxt{width:100%;height:150px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:10px;font:16px/1.5 ui-monospace,Menlo,monospace}
-#cv[hidden],#fv[hidden]{display:none}
+#cv[hidden],#fv[hidden],#lv[hidden],#sv[hidden]{display:none}
+#sv{padding:8px 12px}
+.srow{display:flex;gap:10px;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bd);font-size:14px;line-height:1.5}.srow span{color:var(--dim);flex:none;max-width:46%}.srow b{text-align:right;font-weight:600;word-break:break-all}.srow b.near{color:var(--gold)}
+.shead{margin-top:12px;padding:4px 0;font-size:13px;font-weight:700;color:var(--gold);border-bottom:2px solid var(--bd)}
+.ssum{background:rgba(245,200,66,.10);border:1px solid rgba(245,200,66,.5);border-radius:12px;padding:10px 12px;margin-bottom:6px;font-size:15px}
+.calout{margin-top:8px}
+#lv{padding:8px 12px}
+.lin{width:100%;font:inherit;font-size:16px;color:var(--tx);background:var(--p2);border:1px solid var(--bd);border-radius:10px;padding:10px}
+.lcard{background:var(--p);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin-bottom:8px}
+.lcard>b{display:block;font-size:16px;margin-bottom:4px;color:var(--gold)}
+.lcard .kv{display:flex;gap:8px;font-size:14px;line-height:1.55}.lcard .kv span{color:var(--dim);flex:none;width:32%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lcard .kv em{font-style:normal;word-break:break-all}
+.lcard .kvs{font-size:13px;line-height:1.7;color:var(--dim)}.lcard .kvs b{color:var(--tx)}
+.tbar{display:flex;align-items:center;gap:6px;font-size:13px;margin-top:3px}.tbar span{width:34%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tbar i{display:block;height:10px;background:var(--blue);border-radius:3px;flex:none}.tbar em{font-style:normal;color:var(--dim)}
+.pv{overflow:auto;border:1px solid var(--bd);border-radius:12px;background:var(--p);max-height:60vh;-webkit-overflow-scrolling:touch}
+.pv table{min-width:0}.pv td,.pv th{min-width:64px;padding:8px 10px;font-size:13px;text-align:right;white-space:nowrap}
+.pv th{background:var(--p2);position:sticky;top:0;z-index:1;color:var(--dim)}.pv td:first-child,.pv th:first-child{text-align:left;position:sticky;left:0;background:var(--p2);z-index:2}
 dialog{background:var(--p);color:var(--tx);border:1px solid var(--bd);border-radius:14px;width:92%;max-width:440px}
 dialog textarea{width:100%;height:160px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px;font:inherit}
 </style></head><body>
 <header><b>▦ table-pad</b><button id="bNew" class="pri">＋ 新しい表</button><button id="bImp">📂 取り込み</button><button id="bSync" title="声の受け取り設定">🎙⚙</button><button id="bSto" title="保存量を見る">📊</button><button id="bIO">⇅</button></header>
-<div id="views"><button data-v="t" class="on">▦ 表</button><button data-v="c">📊 グラフ</button><button data-v="d">📈 ダッシュ</button><button data-v="f">🔀 フロー</button></div>
+<div id="views"><button data-v="t" class="on">▦ 表</button><button data-v="l">🗂 一覧</button><button data-v="s">📉 株価</button><button data-v="c">📊 グラフ</button><button data-v="d">📈 ダッシュ</button><button data-v="f">🔀 フロー</button></div>
 <div id="tabs"></div>
 <input id="title" placeholder="表の名前">
 <div id="wrap"><table id="tb"></table></div>
 <div id="hint"></div>
 <div id="bar">
-  <div class="row"><button id="rUp">▲ 行</button><button id="rDn">▼ 行</button><button id="cLf">◀ 列</button><button id="cRt">▶ 列</button><button id="aR">＋行</button><button id="aC">＋列</button><button id="dR" class="dng">行削除</button><button id="dC" class="dng">列削除</button></div>
+  <div class="row"><button id="rUp">▲ 行</button><button id="rDn">▼ 行</button><button id="cLf">◀ 列</button><button id="cRt">▶ 列</button><button id="aR">＋行</button><button id="aC">＋列</button><button id="sT">↕ 並べ替え</button><button id="dR" class="dng">行削除</button><button id="dC" class="dng">列削除</button></div>
   <div class="row"><button id="vc" class="pri">🎙 声で入れる</button><button id="hdr">1行目=見出し</button><button id="cp">📋 コピー</button><button id="ps">📥 貼り付け</button><button id="un">↶ 元に戻す</button><button id="dT" class="dng">表を削除</button></div>
 </div>
 <div id="cv" hidden>
@@ -86,6 +101,8 @@ dialog textarea{width:100%;height:160px;background:var(--bg);color:var(--tx);bor
     <div style="margin-top:8px"><button id="vNext">🔄 次の角度（分類を順に切替）</button></div></div>
   <div class="sec"><h4>③ 絞り込み（スライサー）<span id="slCnt" style="float:right;font-weight:400"></span></h4><div id="slicers"></div><button id="slClr" style="margin-top:6px">絞り込みを全部解除</button></div>
 </div>
+<div id="lv" hidden></div>
+<div id="sv" hidden></div>
 <div id="dv" hidden>
   <div id="dkpi" class="kpis"></div>
   <div id="dfil" class="fchips"></div>
@@ -152,7 +169,7 @@ function renderTable(){
   renderTabs();
   const t=T(); const tb=$('tb');
   const has=!!t;
-  ['rUp','rDn','cLf','cRt','aR','aC','dR','dC','vc','hdr','cp','ps','un','dT'].forEach(i=>$(i).disabled=!has);
+  ['rUp','rDn','cLf','cRt','aR','aC','dR','dC','vc','hdr','cp','ps','un','dT','sT'].forEach(i=>$(i).disabled=!has);
   $('title').style.display=has?'':'none'; $('wrap').style.display=has?'':'none';
   if(!t){tb.innerHTML='';$('hint').textContent='「＋ 新しい表」で表を作れます';return}
   $('title').value=t.title;
@@ -266,8 +283,8 @@ function applyView(){
   document.querySelectorAll('#views button').forEach(b=>b.classList.toggle('on',b.dataset.v===VIEW));
   const tv=VIEW==='t';
   $('wrap').style.display=(tv&&has)?'':'none';$('hint').style.display=tv?'':'none';$('bar').style.display=tv?'':'none';
-  $('cv').hidden=!(VIEW==='c'&&has);$('fv').hidden=!(VIEW==='f'&&has);$('dv').hidden=!(VIEW==='d'&&has);
-  if(has&&VIEW==='c')renderChart();if(has&&VIEW==='f')renderFlow();if(has&&VIEW==='d')renderDash();
+  $('cv').hidden=!(VIEW==='c'&&has);$('fv').hidden=!(VIEW==='f'&&has);$('dv').hidden=!(VIEW==='d'&&has);$('lv').hidden=!(VIEW==='l'&&has);$('sv').hidden=!(VIEW==='s'&&has);
+  if(has&&VIEW==='c')renderChart();if(has&&VIEW==='f')renderFlow();if(has&&VIEW==='d')renderDash();if(has&&VIEW==='l')renderList();if(has&&VIEW==='s')renderStock();
 }
 $('views').onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;VIEW=b.dataset.v;applyView();window.scrollTo(0,0)};
 
@@ -305,6 +322,14 @@ function recommend(t){
   return v}
 function whyText(t,v,R){
   const I=info(t),cn=v.cat>=0?I.names[v.cat]:'',vn=v.val>=0?I.names[v.val]:'件数';
+  const NW={stack:['積み上げ棒グラフ','合計の大小と、その<b>内訳</b>を同時に見る</b>ときに向いています。'+(v.ser<0?'<br>⚠ 「色分け」を選ぶと内訳が積み上がります。':'<br>ℹ 一番下以外の内訳は、大きさの比較が少し難しくなります。')],
+    stack100:['100%積み上げ','合計ではなく<b>構成比（割合）</b>が、分類ごとにどう違うかを比べるのに向いています。<br>ℹ 全体の大きさは見えません。大きさも知りたいときは「積み上げ」を使います。'],
+    area:['面グラフ','<b>時間の流れの中での量のかたまり</b>を見るのに向いています。'+(I.types[v.cat]!=='date'?'<br>⚠ 分類が日付ではないので、折れ線や棒のほうが読みやすいかもしれません。':'')],
+    pareto:['パレート図','大きい順の棒と、<b>累積の割合（折れ線）</b>で「少数の項目が大半を占めているか」を見ます。<br>ℹ 点線は80%。「上位◯項目で8割」が分かると、先に手を付ける所が決まります。'],
+    wf:['増減（ウォーターフォール）','項目ごとの<b>プラス・マイナス</b>を順に積み重ね、最後の合計になるまでを見ます。損益・差額・増減の内訳に向いています。'],
+    heat:['ヒートマップ','2つの分類（行と列）が<b>交差するところの大きさ</b>を色の濃さで見ます。'+(v.ser<0?'<br>⚠ 「色分け（2つ目の分類）」を選んでください。':'')],
+    hist:['度数分布（ヒストグラム）','「'+cn+'」の値が<b>どのあたりに多く集まっているか</b>（ばらつき・偏り・外れ値）を見ます。']};
+  if(NW[v.type]){const x=NW[v.type];return '📌 <b>'+x[0]+'</b>：'+(v.type==='hist'?'':'「'+cn+'」ごとの「'+vn+'」'+(v.agg==='count'?'':'の'+aggName(v.agg))+'。')+'<br>'+x[1]}
   if(v.type==='scatter')return '📌 <b>散布図</b>：「'+cn+'」と「'+vn+'」の<b>関係（比例しているか・外れ値はないか）</b>を見るなら、点の散らばりが一番です。';
   const head=R&&R.cats.length?'':'';
   const base={bar:'<b>棒グラフ</b>',hbar:'<b>横棒グラフ</b>',line:'<b>折れ線グラフ</b>',pie:'<b>円グラフ</b>'}[v.type];
@@ -326,6 +351,11 @@ function compute(t,v){
   let rows=I.body.filter(r=>Object.keys(v.sl).every(k=>{const a=v.sl[k];return !a||!a.length||a.includes(String(r[k]==null?'':r[k]).trim())}));
   if(v.xf&&v.xf.length)rows=rows.filter(r=>v.xf.every(f=>f.vals.includes(bk(I,r,f.col,f.gran))));
   const out={n:rows.length,all:I.body.length};
+  if(v.type==='hist'){const xs=rows.map(r=>num(r[v.cat])).filter(z=>z!=null).sort((a,b)=>a-b);out.n=xs.length;if(xs.length<2){out.n=0;return out}
+    const mn=xs[0],mx=xs[xs.length-1],mean=xs.reduce((p,c)=>p+c,0)/xs.length,med=xs.length%2?xs[(xs.length-1)/2]:(xs[xs.length/2-1]+xs[xs.length/2])/2;
+    const sc=niceScale(mn,mx,Math.max(5,Math.min(20,Math.ceil(Math.sqrt(xs.length))))),nb=Math.max(1,sc.ticks.length-1),st=nb?(sc.hi-sc.lo)/nb:1;
+    out.bins=Array.from({length:nb},(_,i)=>({lo:sc.lo+i*st,hi:sc.lo+(i+1)*st,n:0}));xs.forEach(x=>{out.bins[Math.min(nb-1,Math.max(0,Math.floor((x-sc.lo)/st)))].n++});
+    out.stats={min:mn,max:mx,mean,med};return out}
   if(v.type==='scatter'){out.pts=rows.map(r=>({x:num(r[v.cat]),y:num(r[v.val]),s:v.ser>=0?String(r[v.ser]).trim()||'(空)':'',l:String(r[0]||'')})).filter(p=>p.x!=null&&p.y!=null);
     out.series=[...new Set(out.pts.map(p=>p.s))];return out}
   const isDate=I.types[v.cat]==='date';
@@ -339,8 +369,9 @@ function compute(t,v){
   const val=(c,sn)=>{const m=G.get(c);return m&&m.has(sn)?ag(m.get(sn)):null};
   const tot=c=>series.reduce((p,sn)=>p+(val(c,sn)||0),0);
   let cats=order.slice();
-  if(isDate||v.sort==='name')cats.sort(isDate?(a,b)=>a<b?-1:a>b?1:0:(a,b)=>a.localeCompare(b,'ja'));
-  else if(v.sort==='val')cats.sort((a,b)=>tot(b)-tot(a));
+  const ps=v.type==='pareto';
+  if(!ps&&(isDate||v.sort==='name'))cats.sort(isDate?(a,b)=>a<b?-1:a>b?1:0:(a,b)=>a.localeCompare(b,'ja'));
+  else if(ps||v.sort==='val')cats.sort((a,b)=>tot(b)-tot(a));
   if(series.length>6){const st=series.map(sn=>[sn,cats.reduce((p,c)=>p+(val(c,sn)||0),0)]).sort((a,b)=>b[1]-a[1]);series=st.slice(0,6).map(x=>x[0]);out.cut=st.length-6}
   out.capped=cats.length>40;if(out.capped)cats=cats.slice(0,40);
   out.cats=cats;out.series=series;out.val=val;out.tot=tot;return out}
@@ -366,6 +397,10 @@ function drawChart(t,v,R,box){
     svg+='<text x="'+(W/2)+'" y="'+(H-4)+'" fill="'+DIM+'" font-size="12" text-anchor="middle">'+X(info(t).names[v.cat])+'</text><text x="12" y="'+(Tp+4)+'" fill="'+DIM+'" font-size="12">'+X(vn)+'</text>';
     svg+=R.pts.map(p=>{const si=Math.max(0,ser.indexOf(p.s));return '<circle cx="'+px(p.x)+'" cy="'+py(p.y)+'" r="6" fill="'+col(si)+'" fill-opacity=".85" stroke="'+SURF+'" stroke-width="2"'+tip((p.l||'')+(p.s?' ／ '+p.s:''),fmt(p.x)+' , '+fmt(p.y))+'/>'}).join('');
     if(ser.length>1)legend=legendHtml(ser.map((n,i)=>({n,c:col(i)})));
+    {const n=R.pts.length;if(n>=3){const mx=xs.reduce((p,c)=>p+c,0)/n,my=ys.reduce((p,c)=>p+c,0)/n;let sxx=0,sxy=0,syy=0;R.pts.forEach(p=>{sxx+=(p.x-mx)*(p.x-mx);sxy+=(p.x-mx)*(p.y-my);syy+=(p.y-my)*(p.y-my)});
+      if(sxx>0&&syy>0){const a=sxy/sxx,b0=my-a*mx,r=sxy/Math.sqrt(sxx*syy),x0=Math.min(...xs),x1=Math.max(...xs),cl=y=>Math.max(sy.lo,Math.min(sy.hi,y));
+        svg+='<line x1="'+px(x0)+'" y1="'+py(cl(a*x0+b0))+'" x2="'+px(x1)+'" y2="'+py(cl(a*x1+b0))+'" stroke="'+PAL[3]+'" stroke-width="2.5" stroke-dasharray="6 5"/>';
+        const ar=Math.abs(r);legend+='<div style="padding:4px;font-size:14px;color:var(--gold)">点線＝傾向線。相関 r = '+r.toFixed(2)+'（'+(ar>=.7?'強い':ar>=.4?'ややある':'ほとんどない')+(ar>=.4?(r>0?'正の関係：一方が増えると他方も増える':'負の関係：一方が増えると他方は減る'):'')+'）</div><div style="padding:0 4px;font-size:12px;color:var(--dim)">※ 関係があっても、原因とは限りません</div>'}}}
     return '<svg id="csvg" viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'">'+svg+'</svg>'+legend}
   if(v.type==='pie'){
     let items=R.cats.map(c=>({n:c,v:Math.max(0,R.tot(c))})).filter(x=>x.v>0);items.sort((a,b)=>b.v-a.v);
@@ -380,6 +415,7 @@ function drawChart(t,v,R,box){
     svg+='<text x="'+cx+'" y="'+(cy-2)+'" fill="'+INK+'" font-size="22" font-weight="700" text-anchor="middle">'+fmt(total)+'</text><text x="'+cx+'" y="'+(cy+18)+'" fill="'+DIM+'" font-size="12" text-anchor="middle">'+X(vn)+'</text>';
     legend=legendHtml(items.map((it,i)=>({n:it.n+' '+(it.v/total*100).toFixed(0)+'%',c:it.n==='その他'?OTHER:PAL[i]})));
     return '<svg id="csvg" viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'">'+svg+'</svg>'+legend}
+  if(NEWT.includes(v.type))return drawX(t,v,R,box,W);
   const nC=R.cats.length,all=[];R.cats.forEach(c=>ser.forEach(sn=>{const x=R.val(c,sn);if(x!=null)all.push(x)}));
   let mn=Math.min(0,...all),mx=Math.max(0,...all);const sc=niceScale(mn,mx,4);
   if(v.type==='hbar'){
@@ -411,8 +447,118 @@ function drawChart(t,v,R,box){
   if(ser.length>1)legend=legendHtml(ser.map((n,i)=>({n,c:col(i)})).concat(R.cut?[{n:'（他'+R.cut+'件は省略）',c:OTHER}]:[]));
   return '<svg id="csvg" viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'">'+svg+'</svg>'+legend+(R.capped?'<div style="color:'+DIM+';font-size:12px;padding:4px">※ 項目が多いので先頭の40件だけ表示しています。絞り込みで減らせます</div>':'')}
 
+const NEWT=['stack','stack100','area','pareto','wf','heat','hist'];
+// ===================== 追加のグラフ（積み上げ・面・パレート・増減・ヒートマップ・度数分布） =====================
+function drawX(t,v,R,box,W){
+  const I=info(t),vn=v.val>=0&&v.agg!=='count'?I.names[v.val]:'件数',ser=R.series||[],col=i=>i<6?PAL[i]:OTHER;
+  const tip=(a,b,k)=>' data-tip="'+X(a+'　'+b)+'" '+(k==null?'':'data-k="'+X(k)+'" ');
+  const nC=(R.cats||[]).length;let svg='',legend='',H=300;
+  const msg=s=>'<div style="padding:30px;text-align:center;color:'+DIM+'">'+s+'</div>';
+  const wrap=()=>'<svg id="csvg" viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'">'+svg+'</svg>'+legend;
+  const frame=(sc,o)=>{o=o||{};const cs=o.cats||R.cats,n=cs.length,L=o.L||44,Rr=o.R||10,Tp=12,rot=n>5,B=rot?58:30;
+    const py=y=>Tp+(1-(y-sc.lo)/(sc.hi-sc.lo))*(H-Tp-B),band=(W-L-Rr)/n,cxp=i=>L+band*(i+.5);let s='';
+    s+=sc.ticks.map(y=>'<line x1="'+L+'" x2="'+(W-Rr)+'" y1="'+py(y)+'" y2="'+py(y)+'" stroke="'+GRID+'"/><text x="'+(L-6)+'" y="'+(py(y)+4)+'" fill="'+DIM+'" font-size="11" text-anchor="end">'+(o.tf||fmt)(y)+'</text>').join('');
+    const every=Math.ceil(n/(o.every||12));
+    cs.forEach((c,i)=>{if(i%every)return;const x=cxp(i),y=H-B+14;s+=rot?'<text transform="translate('+x+','+y+') rotate(-40)" fill="'+INK+'" font-size="11" text-anchor="end">'+X(tr(c,7))+'</text>':'<text x="'+x+'" y="'+y+'" fill="'+INK+'" font-size="12" text-anchor="middle">'+X(tr(c,7))+'</text>'});
+    return{s,py,band,cxp,L,Rr,Tp,B}};
+  const legSer=()=>{if(ser.length>1&&ser[0]!=='')legend=legendHtml(ser.map((n,i)=>({n,c:col(i)})).concat(R.cut?[{n:'（他'+R.cut+'件は省略）',c:OTHER}]:[]))};
+
+  if(v.type==='stack'||v.type==='stack100'){
+    const pct=v.type==='stack100',tt=c=>ser.reduce((p,sn)=>p+Math.abs(R.val(c,sn)||0),0);
+    let mx=0,mn=0;R.cats.forEach(c=>{let p=0,n=0;ser.forEach(sn=>{const x=R.val(c,sn)||0;if(x>=0)p+=x;else n+=x});mx=Math.max(mx,p);mn=Math.min(mn,n)});
+    const sc=pct?niceScale(0,1,4):niceScale(mn,mx,4),f=frame(sc,{tf:pct?(y=>Math.round(y*100)+'%'):null});svg+=f.s;
+    const bw=Math.min(f.band*.7,56);
+    R.cats.forEach((c,i)=>{let up=0,dn=0;const T0=pct?tt(c):1;
+      ser.forEach((sn,j)=>{const x0=R.val(c,sn);if(x0==null)return;const x=pct?(T0?x0/T0:0):x0;let y0,y1;if(x>=0){y0=up;up+=x;y1=up}else{y0=dn;dn+=x;y1=dn}
+        svg+='<rect x="'+(f.cxp(i)-bw/2)+'" y="'+Math.min(f.py(y0),f.py(y1))+'" width="'+bw+'" height="'+Math.max(1,Math.abs(f.py(y0)-f.py(y1)))+'" fill="'+col(j)+'" stroke="'+SURF+'" stroke-width="1"'+tip(c+(sn?' ／ '+sn:''),fmt(x0)+(pct&&T0?'（'+Math.round(x0/T0*100)+'%）':''),c)+'/>'});
+      if(!pct&&nC<=10)svg+='<text x="'+f.cxp(i)+'" y="'+(f.py(up)-4)+'" fill="'+INK+'" font-size="11" text-anchor="middle">'+fmt(up+dn)+'</text>'});
+    svg+='<line x1="'+f.L+'" x2="'+(W-f.Rr)+'" y1="'+f.py(0)+'" y2="'+f.py(0)+'" stroke="'+DIM+'"/>';legSer();
+    if(ser.length<2||ser[0]==='')legend='<div style="color:'+DIM+';font-size:12px;padding:4px">※「② 色分け」を選ぶと、内訳が積み上がります</div>';
+    return wrap()}
+
+  if(v.type==='area'){
+    if(nC<2)return msg('面グラフは2つ以上の点が必要です。棒グラフにしてみてください。');
+    const stacked=ser.length>1;let mx=0,mn=0;
+    R.cats.forEach(c=>{if(stacked){let s=0;ser.forEach(sn=>{s+=Math.max(0,R.val(c,sn)||0)});mx=Math.max(mx,s)}else{const x=R.val(c,ser[0])||0;mx=Math.max(mx,x);mn=Math.min(mn,x)}});
+    const sc=niceScale(mn,mx,4),f=frame(sc,{every:6});svg+=f.s;
+    const base=R.cats.map(()=>0);
+    ser.forEach((sn,j)=>{const up=R.cats.map((c,i)=>{const x=R.val(c,sn)||0;return base[i]+(stacked?Math.max(0,x):x)});
+      let d='M'+f.cxp(0).toFixed(1)+' '+f.py(base[0]).toFixed(1)+' ';up.forEach((u,i)=>{d+='L'+f.cxp(i).toFixed(1)+' '+f.py(u).toFixed(1)+' '});
+      for(let i=nC-1;i>=0;i--)d+='L'+f.cxp(i).toFixed(1)+' '+f.py(base[i]).toFixed(1)+' ';
+      svg+='<path d="'+d+'Z" fill="'+col(j)+'" fill-opacity="'+(stacked?'.75':'.35')+'" stroke="none"/>';
+      let ln='';up.forEach((u,i)=>{ln+=(i?'L':'M')+f.cxp(i).toFixed(1)+' '+f.py(u).toFixed(1)+' '});
+      svg+='<path d="'+ln.trim()+'" fill="none" stroke="'+col(j)+'" stroke-width="2" stroke-linejoin="round"/>';
+      up.forEach((u,i)=>{base[i]=u})});
+    R.cats.forEach((c,i)=>{svg+='<rect x="'+(f.cxp(i)-f.band/2)+'" y="'+f.Tp+'" width="'+f.band+'" height="'+(H-f.Tp-f.B)+'" fill="transparent"'+tip(c,ser.map(sn=>(sn?sn+'：':'')+fmt(R.val(c,sn))).join('　'),c)+'/>'});
+    svg+='<line x1="'+f.L+'" x2="'+(W-f.Rr)+'" y1="'+f.py(0)+'" y2="'+f.py(0)+'" stroke="'+DIM+'"/>';legSer();return wrap()}
+
+  if(v.type==='pareto'){
+    const vals=R.cats.map(c=>Math.max(0,R.tot(c))),total=vals.reduce((p,c)=>p+c,0);
+    if(!total)return msg('パレート図にできる正の値がありません');
+    const sc=niceScale(0,Math.max(...vals),4),f=frame(sc,{R:40});svg+=f.s;
+    const bw=Math.min(f.band*.7,48),ph=H-f.Tp-f.B,yy=p=>f.Tp+(1-p)*ph;let cum=0,pts='',k80=-1,circ='';
+    R.cats.forEach((c,i)=>{const x=vals[i],y1=f.py(x),y0=f.py(0);
+      svg+='<rect x="'+(f.cxp(i)-bw/2)+'" y="'+y1+'" width="'+bw+'" height="'+Math.max(1,y0-y1)+'" rx="3" fill="'+PAL[0]+'"'+tip(c,fmt(x)+'（'+(x/total*100).toFixed(1)+'%）',c)+'/>';
+      cum+=x;const p=cum/total;if(k80<0&&p>=.8)k80=i;pts+=(i?'L':'M')+f.cxp(i).toFixed(1)+' '+yy(p).toFixed(1)+' ';
+      circ+='<circle cx="'+f.cxp(i)+'" cy="'+yy(p)+'" r="4" fill="'+PAL[3]+'" stroke="'+SURF+'" stroke-width="2"'+tip(c,'累積 '+(p*100).toFixed(1)+'%',c)+'/>'});
+    svg+='<path d="'+pts.trim()+'" fill="none" stroke="'+PAL[3]+'" stroke-width="2"/>'+circ;
+    [0,.2,.4,.6,.8,1].forEach(p=>{svg+='<text x="'+(W-f.Rr+4)+'" y="'+(yy(p)+4)+'" fill="'+PAL[3]+'" font-size="11">'+Math.round(p*100)+'%</text>'});
+    svg+='<line x1="'+f.L+'" x2="'+(W-f.Rr)+'" y1="'+yy(.8)+'" y2="'+yy(.8)+'" stroke="'+PAL[3]+'" stroke-dasharray="4 4" stroke-opacity=".6"/>';
+    legend='<div class="legend"><span><i style="background:'+PAL[0]+'"></i>'+X(vn)+'（棒）</span><span><i style="background:'+PAL[3]+'"></i>累積の割合（折れ線）</span></div>'+(k80>=0?'<div style="padding:4px;font-size:14px;color:var(--gold)">上位 '+(k80+1)+' 項目で、全体の '+(vals.slice(0,k80+1).reduce((p,c)=>p+c,0)/total*100).toFixed(0)+'% を占めます</div>':'');
+    return wrap()}
+
+  if(v.type==='wf'){
+    const steps=[];let run=0;R.cats.forEach(c=>{const d=R.tot(c);steps.push({c,a:run,b:run+d,d});run+=d});
+    const cats2=R.cats.concat(['合計']),allv=[0,run].concat(steps.map(s=>s.b),steps.map(s=>s.a));
+    const sc=niceScale(Math.min(...allv),Math.max(...allv),4),f=frame(sc,{cats:cats2}),bw=Math.min(f.band*.7,48);svg+=f.s;
+    steps.forEach((s,i)=>{const y0=f.py(s.a),y1=f.py(s.b),pos=s.d>=0;
+      svg+='<rect x="'+(f.cxp(i)-bw/2)+'" y="'+Math.min(y0,y1)+'" width="'+bw+'" height="'+Math.max(1,Math.abs(y1-y0))+'" rx="3" fill="'+(pos?PAL[2]:PAL[1])+'"'+tip(s.c,(pos?'+':'')+fmt(s.d)+'　→　'+fmt(s.b),s.c)+'/>';
+      if(nC<=10)svg+='<text x="'+f.cxp(i)+'" y="'+(Math.min(y0,y1)-4)+'" fill="'+INK+'" font-size="11" text-anchor="middle">'+(pos?'+':'')+fmt(s.d)+'</text>';
+      svg+='<line x1="'+(f.cxp(i)+bw/2)+'" x2="'+(f.cxp(i+1)-bw/2)+'" y1="'+y1+'" y2="'+y1+'" stroke="'+DIM+'" stroke-dasharray="3 3"/>'});
+    const yt=f.py(run),y0=f.py(0);
+    svg+='<rect x="'+(f.cxp(nC)-bw/2)+'" y="'+Math.min(yt,y0)+'" width="'+bw+'" height="'+Math.max(1,Math.abs(yt-y0))+'" rx="3" fill="'+PAL[0]+'"'+tip('合計',fmt(run))+'/>';
+    svg+='<text x="'+f.cxp(nC)+'" y="'+(Math.min(yt,y0)-4)+'" fill="'+INK+'" font-size="11" text-anchor="middle">'+fmt(run)+'</text>';
+    svg+='<line x1="'+f.L+'" x2="'+(W-f.Rr)+'" y1="'+f.py(0)+'" y2="'+f.py(0)+'" stroke="'+DIM+'"/>';
+    legend='<div class="legend"><span><i style="background:'+PAL[2]+'"></i>増える</span><span><i style="background:'+PAL[1]+'"></i>減る</span><span><i style="background:'+PAL[0]+'"></i>合計</span></div><div style="color:'+DIM+';font-size:12px;padding:4px">※ 左から順に積み重ねた結果が右端の「合計」です。並び順は「② 並び順」で変えられます</div>';
+    return wrap()}
+
+  if(v.type==='heat'){
+    if(ser.length<2||ser[0]==='')return msg('ヒートマップには「② 色分け（2つ目の分類）」が必要です。<br>色分けの列を選んでください。');
+    let mx=0;R.cats.forEach(c=>ser.forEach(sn=>{const x=R.val(c,sn);if(x!=null)mx=Math.max(mx,Math.abs(x))}));
+    const L=Math.min(110,Math.max(50,...R.cats.map(c=>Math.min(c.length,8)*12+10))),Tp=48,cw=(W-L-6)/ser.length,ch=34;H=Tp+nC*ch+8;
+    ser.forEach((sn,j)=>{const x=L+cw*(j+.5);svg+=cw<56?'<text transform="translate('+x+','+(Tp-6)+') rotate(-40)" fill="'+INK+'" font-size="11">'+X(tr(sn,7))+'</text>':'<text x="'+x+'" y="'+(Tp-8)+'" fill="'+INK+'" font-size="12" text-anchor="middle">'+X(tr(sn,8))+'</text>'});
+    R.cats.forEach((c,i)=>{const y=Tp+i*ch;svg+='<text x="'+(L-6)+'" y="'+(y+ch/2+4)+'" fill="'+INK+'" font-size="12" text-anchor="end">'+X(tr(c,8))+'</text>';
+      ser.forEach((sn,j)=>{const x=R.val(c,sn);if(x==null){svg+='<rect x="'+(L+cw*j+1)+'" y="'+(y+1)+'" width="'+(cw-2)+'" height="'+(ch-2)+'" rx="4" fill="'+SURF+'" stroke="'+GRID+'"/>';return}
+        const a=mx?(.1+.85*Math.abs(x)/mx):.1,rgb=x<0?'255,107,107':'74,158,255';
+        svg+='<rect x="'+(L+cw*j+1)+'" y="'+(y+1)+'" width="'+(cw-2)+'" height="'+(ch-2)+'" rx="4" fill="rgba('+rgb+','+a.toFixed(2)+')"'+tip(c+' ／ '+sn,fmt(x),c)+'/>';
+        if(cw>=44)svg+='<text x="'+(L+cw*(j+.5))+'" y="'+(y+ch/2+4)+'" fill="'+INK+'" font-size="11" text-anchor="middle" pointer-events="none">'+fmt(x)+'</text>'})});
+    legend='<div style="color:'+DIM+';font-size:12px;padding:4px">色が濃いほど大きい値です（最大 '+fmt(mx)+'）。赤はマイナス。</div>';return wrap()}
+
+  if(v.type==='hist'){
+    const bins=R.bins,st=R.stats,maxn=Math.max(...bins.map(b=>b.n)),sc=niceScale(0,maxn,4);
+    const L=40,Rr=10,Tp=16,B=34;H=280;const py=y=>Tp+(1-(y-sc.lo)/(sc.hi-sc.lo))*(H-Tp-B),w=(W-L-Rr)/bins.length,lo=bins[0].lo,hi=bins[bins.length-1].hi,px=x=>L+(x-lo)/(hi-lo)*(W-L-Rr);
+    svg+=sc.ticks.map(y=>'<line x1="'+L+'" x2="'+(W-Rr)+'" y1="'+py(y)+'" y2="'+py(y)+'" stroke="'+GRID+'"/><text x="'+(L-6)+'" y="'+(py(y)+4)+'" fill="'+DIM+'" font-size="11" text-anchor="end">'+Math.round(y)+'</text>').join('');
+    bins.forEach((b,i)=>{svg+='<rect x="'+(L+i*w+1)+'" y="'+py(b.n)+'" width="'+Math.max(1,w-2)+'" height="'+Math.max(0,py(0)-py(b.n))+'" rx="2" fill="'+PAL[0]+'"'+tip(fmt(b.lo)+' 〜 '+fmt(b.hi),b.n+'件（'+(b.n/R.n*100).toFixed(1)+'%）')+'/>'});
+    const every=Math.ceil(bins.length/6);bins.forEach((b,i)=>{if(i%every)return;svg+='<text x="'+(L+i*w)+'" y="'+(H-B+16)+'" fill="'+DIM+'" font-size="11" text-anchor="middle">'+fmt(b.lo)+'</text>'});
+    svg+='<text x="'+(W-Rr)+'" y="'+(H-B+16)+'" fill="'+DIM+'" font-size="11" text-anchor="end">'+fmt(hi)+'</text>';
+    [[st.mean,'平均',PAL[3]],[st.med,'中央値',PAL[2]]].forEach(([x,n,c],k)=>{svg+='<line x1="'+px(x)+'" x2="'+px(x)+'" y1="'+Tp+'" y2="'+(H-B)+'" stroke="'+c+'" stroke-width="2" stroke-dasharray="5 4"/><text x="'+px(x)+'" y="'+(Tp-3-k*0)+'" fill="'+c+'" font-size="11" text-anchor="'+(px(x)>W/2?'end':'start')+'">'+n+' '+fmt(x)+'</text>'});
+    svg+='<text x="'+(W/2)+'" y="'+(H-4)+'" fill="'+DIM+'" font-size="12" text-anchor="middle">'+X(I.names[v.cat])+'</text>';
+    legend='<div style="padding:4px;font-size:14px;color:var(--gold)">'+R.n+'件 ／ 最小 '+fmt(st.min)+' ／ 最大 '+fmt(st.max)+' ／ 平均 '+fmt(st.mean)+' ／ 中央値 '+fmt(st.med)+'</div>'+(Math.abs(st.mean-st.med)>(st.max-st.min)*.1?'<div style="color:'+DIM+';font-size:12px;padding:0 4px">平均と中央値が離れています。大きい（小さい）値に引っ張られている可能性があります。</div>':'');
+    return wrap()}
+  return msg('このグラフは表示できません')}
+
+function prepType(I,v,k){
+  const txt=I.names.map((_,i)=>i).filter(i=>I.types[i]==='text'&&i!==v.cat&&I.uniq[i].length>=2&&I.uniq[i].length<=8),nums=I.types.map((x,i)=>x==='num'?i:-1).filter(i=>i>=0);
+  if(k==='hist'){if(!nums.length){toast('度数分布には数字の列が必要です');return false}if(I.types[v.cat]!=='num')v.cat=nums.includes(v.val)?v.val:nums[0];v.ser=-1;v.type=k;return true}
+  if(k==='scatter'){v.type=k;return true}
+  if(I.types[v.cat]==='num'){const c=I.names.map((_,i)=>i).find(i=>I.types[i]!=='num'&&I.uniq[i].length>=2);if(c==null){toast('分類にできる列がありません');return false}v.cat=c;if(v.ser===v.cat)v.ser=-1}
+  if(k==='stack'||k==='stack100'||k==='heat'){
+    if(v.ser<0||v.ser===v.cat||I.types[v.ser]!=='text'){const tx=I.names.map((_,i)=>i).filter(i=>I.types[i]==='text'&&i!==v.cat&&I.uniq[i].length>=2&&I.uniq[i].length<=8);
+      if(!tx.length){toast('「色分け」にできる列（2〜8種類の文字の列）がありません');return false}v.ser=tx[0];toast('色分けを「'+I.names[v.ser]+'」にしました')}}
+  if((k==='area'||k==='line')&&I.types[v.cat]==='date')v.sort='orig';
+  v.type=k;return true}
 function fillSel(el,opts,val){el.innerHTML=opts.map(([k,l])=>'<option value="'+k+'">'+X(l)+'</option>').join('');el.value=String(val)}
-const TYPES=[['rec','✨ おすすめ'],['bar','棒'],['hbar','横棒'],['line','折れ線'],['pie','円'],['scatter','散布図']];
+const TYPES=[['rec','✨ おすすめ'],['bar','棒'],['hbar','横棒'],['line','折れ線'],['pie','円'],['scatter','散布図'],['stack','積み上げ'],['stack100','100%積み上げ'],['area','面'],['pareto','パレート'],['wf','増減(ウォーターフォール)'],['heat','ヒートマップ'],['hist','度数分布']];
 function renderChart(){
   const t=T();if(!t)return;if(!t.view)t.view=recommend(t);const v=t.view,I=info(t);
   if(v.cat<0||v.cat>=I.w||v.val>=I.w){t.view=recommend(t);}
@@ -438,7 +584,7 @@ function renderChart(){
 function chg(f){const t=T();if(!t.view)t.view=recommend(t);f(t.view);touch();renderChart()}
 $('ctype').onclick=e=>{const b=e.target.closest('[data-ct]');if(!b)return;const t=T(),k=b.dataset.ct;
   if(k==='rec'){const r=recommend(t);r.sl=(t.view&&t.view.sl)||{};t.view=r;touch();renderChart();return}
-  chg(v=>{v.type=k;const I=info(t);if(k==='scatter'){const nums=I.types.map((x,i)=>x==='num'?i:-1).filter(i=>i>=0);if(nums.length<2){toast('散布図には数字の列が2つ必要です');v.type='bar';return}if(I.types[v.cat]!=='num')v.cat=nums.find(i=>i!==v.val)??nums[0];if(v.val<0||v.val===v.cat)v.val=nums.find(i=>i!==v.cat)}
+  chg(v=>{const I=info(t);if(k!=='scatter'){if(!prepType(I,v,k))return}else v.type=k;if(k==='scatter'){const nums=I.types.map((x,i)=>x==='num'?i:-1).filter(i=>i>=0);if(nums.length<2){toast('散布図には数字の列が2つ必要です');v.type='bar';return}if(I.types[v.cat]!=='num')v.cat=nums.find(i=>i!==v.val)??nums[0];if(v.val<0||v.val===v.cat)v.val=nums.find(i=>i!==v.cat)}
     else if(v.type!=='scatter'&&I.types[v.cat]==='num'&&I.types.indexOf('text')>=0){}})};
 $('vCat').onchange=()=>chg(v=>{v.cat=+$('vCat').value;if(v.ser===v.cat)v.ser=-1;const I=info(T());if(I.types[v.cat]==='date'&&v.sort==='val')v.sort='orig'});
 $('vVal').onchange=()=>chg(v=>{v.val=+$('vVal').value;if(v.val<0)v.agg='count';else if(v.agg==='count')v.agg='sum'});
@@ -478,7 +624,7 @@ function autoCards(t){const I=info(t),cards=[];const nums=I.types.map((x,i)=>x==
 function dashOf(t){const I=info(t);if(!t.dash)t.dash={cards:autoCards(t),xf:[]};const D=t.dash;
   D.cards=D.cards.filter(c=>c.cat>=0&&c.cat<I.w&&c.val<I.w);D.xf=(D.xf||[]).filter(f=>f.col<I.w&&(f.src==='sl'||D.cards.some(c=>c.id===f.src)));
   if(!D.cards.length)D.cards=autoCards(t);return D}
-function cardTitle(I,c){const cn=I.names[c.cat],vn=c.val>=0&&c.agg!=='count'?I.names[c.val]:'件数';return cn+'ごとの'+vn+(c.agg==='count'||c.val<0?'':'（'+aggName(c.agg)+'）')+(I.types[c.cat]==='date'?'　'+{y:'年',m:'月',d:'日'}[c.gran]+'ごと':'')}
+function cardTitle(I,c){if(c.type==='hist')return I.names[c.cat]+'の分布（度数）';const cn=I.names[c.cat],vn=c.val>=0&&c.agg!=='count'?I.names[c.val]:'件数';return cn+'ごとの'+vn+(c.agg==='count'||c.val<0?'':'（'+aggName(c.agg)+'）')+(I.types[c.cat]==='date'?'　'+{y:'年',m:'月',d:'日'}[c.gran]+'ごと':'')}
 function dKpi(t,D,I){let rows=I.body;if(D.xf.length)rows=rows.filter(r=>D.xf.every(f=>f.vals.includes(bk(I,r,f.col,f.gran))));
   const nums=I.types.map((x,i)=>x==='num'?i:-1).filter(i=>i>=0).slice(0,2);
   let h='<div class="kpi"><small>件数</small><b>'+rows.length.toLocaleString('ja-JP')+'</b><small>/ 全'+I.body.length.toLocaleString('ja-JP')+'件</small></div>';
@@ -502,7 +648,7 @@ function renderDash(){const t=T();if(!t)return;const D=dashOf(t),I=info(t);
   const opt=(arr,val)=>arr.map(([k,l])=>'<option value="'+k+'"'+(String(k)===String(val)?' selected':'')+'>'+X(l)+'</option>').join('');
   $('dcards').innerHTML=D.cards.map((c,ci)=>{const ed=openEd.has(c.id);
     return '<div class="dc" data-id="'+c.id+'"><div class="dh"><b>'+X(cardTitle(I,c))+'</b><button data-act="up">▲</button><button data-act="dn">▼</button><button data-act="ed">⚙</button><button data-act="del" class="dng">✕</button></div>'
-    +(ed?'<div class="ded"><div class="chips" style="margin-bottom:6px">'+[['bar','棒'],['hbar','横棒'],['line','折れ線'],['pie','円']].map(([k,l])=>'<button class="chip'+(c.type===k?' on':'')+'" data-ct="'+k+'">'+l+'</button>').join('')+'</div>'
+    +(ed?'<div class="ded"><div class="chips" style="margin-bottom:6px">'+[['bar','棒'],['hbar','横棒'],['line','折れ線'],['pie','円'],['stack','積み上げ'],['stack100','100%'],['area','面'],['pareto','パレート'],['wf','増減'],['heat','ヒート'],['hist','度数分布']].map(([k,l])=>'<button class="chip'+(c.type===k?' on':'')+'" data-ct="'+k+'">'+l+'</button>').join('')+'</div>'
       +'<div class="ctl"><div><label>分類</label><select data-f="cat">'+opt(allCols,c.cat)+'</select></div><div><label>値</label><select data-f="val">'+opt(numCols,c.val)+'</select></div>'
       +'<div><label>集計</label><select data-f="agg">'+opt([['sum','合計'],['avg','平均'],['count','件数'],['max','最大'],['min','最小']],c.agg)+'</select></div>'
       +'<div><label>色分け</label><select data-f="ser">'+opt([[-1,'なし']].concat(allCols.filter(([i])=>I.types[i]==='text'&&i!==c.cat&&I.uniq[i].length>=2&&I.uniq[i].length<=8)),c.ser)+'</select></div>'
@@ -523,7 +669,7 @@ $('dcards').addEventListener('click',e=>{const t=T();if(!t)return;const D=dashOf
     else if(act==='del'){if(D.cards.length<=1){toast('最後の1枚は消せません');return}dChange(D=>{D.cards=D.cards.filter(x=>x.id!==id);D.xf=D.xf.filter(x=>x.src!==id)})}
     else if(act==='up'||act==='dn'){const j=ci+(act==='up'?-1:1);if(j<0||j>=D.cards.length)return;dChange(D=>{const x=D.cards.splice(ci,1)[0];D.cards.splice(j,0,x)})}
     return}
-  const ct=e.target.closest('[data-ct]');if(ct){dChange(D=>{const c2=D.cards[ci];c2.type=ct.dataset.ct;if(c2.type==='line'&&I.types[c2.cat]!=='date')c2.sort='orig'})}});
+  const ct=e.target.closest('[data-ct]');if(ct){dChange(D=>{const c2=D.cards[ci];if(!prepType(I,c2,ct.dataset.ct))return;if(c2.type==='line'&&I.types[c2.cat]!=='date')c2.sort='orig'})}});
 $('dcards').addEventListener('change',e=>{const sel=e.target.closest('select[data-f]');if(!sel)return;const dc=e.target.closest('.dc'),id=dc.dataset.id,f=sel.dataset.f;
   dChange((D,I)=>{const c=D.cards.find(x=>x.id===id);if(f==='agg'||f==='gran')c[f]=sel.value;else c[f]=+sel.value;
     if(f==='cat'){if(c.ser===c.cat)c.ser=-1;c.sort=I.types[c.cat]==='date'?'orig':'val';if(I.types[c.cat]==='date'&&c.type==='bar')c.type='line';else if(I.types[c.cat]!=='date'&&c.type==='line')c.type='bar'}
@@ -704,6 +850,306 @@ $('fTbl').onclick=()=>{const t=T(),I=info(t);const lines=I.body.filter(r=>String
   t.flow=t.flow||{dir:'tb'};t.flow.text=lines.join('\n');touch();$('ftxt').value=t.flow.text;FZ=null;renderFlow();toast('表の1列目→2列目から作りました')};
 document.querySelector('#fv .chips').addEventListener('click',e=>{const b=e.target.closest('[data-ins]');if(!b)return;const ta=$('ftxt'),ins=b.dataset.ins==='\\n'?'\n':b.dataset.ins,a=ta.selectionStart,z=ta.selectionEnd;
   ta.value=ta.value.slice(0,a)+ins+ta.value.slice(z);ta.focus();ta.selectionStart=ta.selectionEnd=a+ins.length;ta.dispatchEvent(new Event('input'))});
+
+// ===================== 並べ替え（表の中） =====================
+function cmpFor(I,col,dir){const ty=I.types[col];
+  const key=r=>{const s=String(r[col]==null?'':r[col]).trim();if(s==='')return null;if(ty==='num'){return num(s)}if(ty==='date'){const g=dparse(s);return g?g.y*10000+g.m*100+g.d:null}return s};
+  return (a,b)=>{const x=key(a),y=key(b);if(x==null&&y==null)return 0;if(x==null)return 1;if(y==null)return -1;const c=typeof x==='number'?x-y:String(x).localeCompare(String(y),'ja');return c*dir}}
+let lastSort=null;
+$('sT').onclick=()=>{const t=T();if(!t)return;const I=info(t),off=t.header?1:0;if(t.d.length-off<2){toast('並べ替える行がありません');return}
+  const dir=(lastSort&&lastSort.id===t.id&&lastSort.c===sel.c&&lastSort.dir===1)?-1:1;lastSort={id:t.id,c:sel.c,dir};
+  push();const head=t.d.slice(0,off),body=t.d.slice(off).sort(cmpFor(I,sel.c,dir));t.d=head.concat(body);touch();render();
+  toast(I.names[sel.c]+' を'+(I.types[sel.c]==='text'?(dir===1?'あいうえお順':'逆順'):(dir===1?'小さい順':'大きい順'))+'に並べ替えました（もう一度押すと逆）')};
+
+// ===================== 一覧（カード・列の要約・集計表） =====================
+const LS={};
+function lst(t){return LS[t.id]||(LS[t.id]={mode:'card',q:'',sc:-1,dir:1,fc:-1,fv:[],pg:40,pr:-2,pc:-2,pv:-2,pa:'sum',pp:false})}
+function newTable(title,d){const w=Math.max(1,...d.map(r=>r.length));d=d.map(r=>{r=r.slice();while(r.length<w)r.push('');return r});
+  const nt={id:uid(),title,d,header:true,at:Date.now()};tables.push(nt);cur=nt.id;hist=[];sel={r:0,c:0};save();VIEW='t';render();window.scrollTo(0,0);toast('新しい表「'+title+'」を作りました')}
+async function copyOut(s,msg){try{await navigator.clipboard.writeText(s);toast(msg||'コピーしました（Excel等にそのまま貼れます）')}catch(e){openDlg('コピーしてください',s)}}
+const tsvRows=m=>m.map(r=>r.map(v=>String(v).replace(/[\t\n]/g,' ')).join('\t')).join('\n');
+function renderList(){const t=T();if(!t)return;const S=lst(t);
+  const modes=[['card','🗂 カード'],['prof','🔎 列の要約'],['pivot','🧮 集計表']];
+  $('lv').innerHTML='<div class="chips" style="margin-bottom:10px">'+modes.map(([k,l])=>'<button class="chip'+(S.mode===k?' on':'')+'" data-lm="'+k+'">'+l+'</button>').join('')+'</div><div id="lbody"></div>';
+  renderLBody()}
+function renderLBody(){const t=T();if(!t)return;const S=lst(t),I=info(t),box=$('lbody');if(!box)return;
+  if(!I.body.length){box.innerHTML='<div style="padding:30px;text-align:center;color:var(--dim)">表にデータがありません（2行目以降に入力してください）</div>';return}
+  if(S.mode==='card'){
+    const fcols=I.names.map((_,i)=>i).filter(i=>I.types[i]==='text'&&I.uniq[i].length>=2&&I.uniq[i].length<=30);
+    if(S.sc>=I.w)S.sc=-1;if(S.fc>=0&&!fcols.includes(S.fc)){S.fc=-1;S.fv=[]}
+    const op=(arr,val)=>arr.map(([k,l])=>'<option value="'+k+'"'+(String(k)===String(val)?' selected':'')+'>'+X(l)+'</option>').join('');
+    box.innerHTML='<input class="lin" id="lq" type="search" placeholder="🔍 さがす（どの列でも・空白で複数語）" value="'+X(S.q)+'">'
+     +'<div class="ctl" style="margin-top:8px"><div><label>並べ替え</label><select id="lsc">'+op([[-1,'表の順']].concat(I.names.map((n,i)=>[i,n])),S.sc)+'</select></div>'
+     +'<div><label>順番</label><select id="lsd">'+op([[1,'小さい・あいうえお順'],[-1,'大きい・逆順']],S.dir)+'</select></div>'
+     +'<div style="grid-column:1/3"><label>絞り込む列</label><select id="lfc">'+op([[-1,'絞り込まない']].concat(fcols.map(i=>[i,I.names[i]])),S.fc)+'</select></div></div>'
+     +(S.fc>=0?'<div class="chips" style="margin-top:8px">'+I.uniq[S.fc].map((u,k)=>'<button class="chip'+(S.fv.includes(u)?' on':'')+'" data-lfv="'+k+'">'+X(tr(u,12))+'</button>').join('')+'</div>':'')
+     +'<div id="lres" style="margin-top:10px"></div>';renderCards()}
+  else if(S.mode==='prof'){box.innerHTML=profHtml(t)}
+  else renderPivot()}
+function listRows(t,S){const I=info(t),off=t.header?1:0;let ix=I.body.map((_,i)=>i);const terms=S.q.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  if(terms.length)ix=ix.filter(i=>{const line=I.body[i].join('\u0001').toLowerCase();return terms.every(w=>line.includes(w))});
+  if(S.fc>=0&&S.fv.length)ix=ix.filter(i=>S.fv.includes(String(I.body[i][S.fc]==null?'':I.body[i][S.fc]).trim()));
+  if(S.sc>=0){const cf=cmpFor(I,S.sc,S.dir);ix.sort((a,b)=>cf(I.body[a],I.body[b]))}
+  return{I,off,ix}}
+function renderCards(){const t=T(),box=$('lres');if(!t||!box)return;const S=lst(t),{I,off,ix}=listRows(t,S);
+  let h='<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px"><span style="flex:1;color:var(--gold);font-size:14px;font-weight:700">'+I.body.length+'件中 '+ix.length+'件</span><button data-lcopy>📋 コピー</button><button data-lnew>＋ この結果を新しい表に</button></div>';
+  if(!ix.length)h+='<div style="padding:24px;text-align:center;color:var(--dim)">見つかりません。ことばを変えるか、絞り込みを外してください。</div>';
+  h+=ix.slice(0,S.pg).map(i=>{const r=I.body[i],title=String(r[0]==null?'':r[0]).trim()||('（'+(i+1+off)+'行目）');
+    const kv=r.map((v,c)=>{const s=String(v==null?'':v).trim();return(c===0||s==='')?'':'<div class="kv"><span>'+X(I.names[c])+'</span><em>'+X(s)+'</em></div>'}).join('');
+    return '<div class="lcard" data-lcard="'+(i+off)+'"><b>'+X(title)+'</b>'+kv+'</div>'}).join('');
+  if(ix.length>S.pg)h+='<button class="pri" data-lmore style="width:100%">さらに表示（残り '+(ix.length-S.pg)+'件）</button>';
+  h+='<div style="font-size:12px;color:var(--dim);margin-top:8px">カードをタップすると、表のその行に移動します。</div>';box.innerHTML=h}
+function spark(xs){const mn=xs[0],mx=xs[xs.length-1];if(mn===mx)return'';const nb=10,b=Array(nb).fill(0);xs.forEach(x=>{b[Math.min(nb-1,Math.floor((x-mn)/(mx-mn)*nb))]++});const m=Math.max(...b);
+  return '<svg viewBox="0 0 100 30" width="100%" height="34" preserveAspectRatio="none" style="margin-top:6px">'+b.map((n,i)=>'<rect x="'+(i*10+.5)+'" y="'+(30-n/m*28)+'" width="9" height="'+(n/m*28)+'" rx="1" fill="'+PAL[0]+'"/>').join('')+'</svg>'}
+function profHtml(t){const I=info(t),N=I.body.length;let h='<div style="font-size:12px;color:var(--dim);margin-bottom:8px">列ごとの中身を一目で確認できます。空欄が多い列や、数字のつもりが文字になっている列を見つけるのに便利です。</div>';
+  I.names.forEach((n,i)=>{const vals=I.body.map(r=>String(r[i]==null?'':r[i]).trim()),filled=vals.filter(x=>x!==''),empty=N-filled.length,ty=I.types[i],tl={num:'数字',date:'日付',text:'文字'}[ty];let b='',btn='';
+    if(ty==='num'){const xs=filled.map(num).filter(z=>z!=null).sort((a,b)=>a-b);if(xs.length){const sum=xs.reduce((p,c)=>p+c,0),mid=xs.length%2?xs[(xs.length-1)/2]:(xs[xs.length/2-1]+xs[xs.length/2])/2;
+      b='<div class="kvs">合計 <b>'+fmt(sum)+'</b>　平均 <b>'+fmt(sum/xs.length)+'</b>　中央値 <b>'+fmt(mid)+'</b><br>最小 <b>'+fmt(xs[0])+'</b>　最大 <b>'+fmt(xs[xs.length-1])+'</b></div>'+spark(xs);btn='<button data-pg="hist:'+i+'">📊 度数分布で見る</button>'}
+      if(xs.length<filled.length)b+='<div class="kvs" style="color:var(--gold)">数字として読めないセルが '+(filled.length-xs.length)+'個 あります</div>'}
+    else if(ty==='date'){const ds=filled.map(x=>dparse(x)).filter(Boolean).sort((a,b)=>(a.y*10000+a.m*100+a.d)-(b.y*10000+b.m*100+b.d));
+      if(ds.length){const f=g=>g.y+'/'+g.m+'/'+g.d;b='<div class="kvs">期間 <b>'+f(ds[0])+'</b> 〜 <b>'+f(ds[ds.length-1])+'</b></div>';btn='<button data-pg="trend:'+i+'">📈 推移で見る</button>'}}
+    else{const cnt=new Map();filled.forEach(x=>cnt.set(x,(cnt.get(x)||0)+1));const top=[...cnt].sort((a,b)=>b[1]-a[1]).slice(0,5),mx=top.length?top[0][1]:1;
+      b=top.map(([k,c])=>'<div class="tbar"><span>'+X(tr(k,12))+'</span><i style="width:'+Math.max(3,c/mx*45)+'%"></i><em>'+c+'</em></div>').join('');
+      if(I.uniq[i].length>=2&&I.uniq[i].length<=60)btn='<button data-pg="cnt:'+i+'">📊 内訳で見る</button>'}
+    h+='<div class="lcard"><b>'+X(n)+' <small style="color:var(--dim);font-weight:400">'+tl+'</small></b><div class="kvs">入力 '+filled.length+'/'+N+(empty?'　<span style="color:var(--gold)">空欄 '+empty+'</span>':'')+'　種類 '+I.uniq[i].length+'</div>'+b+(btn?'<div style="margin-top:6px">'+btn+'</div>':'')+'</div>'});
+  return h}
+function goChart(kind,i){const t=T(),I=info(t),nums=I.types.map((x,k)=>x==='num'?k:-1).filter(k=>k>=0),val=nums.length?nums[0]:-1;
+  const v={cat:i,val,agg:val>=0?'sum':'count',type:'bar',ser:-1,sort:'val',gran:'m',sl:{}};
+  if(kind==='hist'){v.type='hist';if(nums.includes(i)&&nums.length>1)v.val=nums.find(k=>k!==i)}
+  else if(kind==='trend'){v.type='line';v.sort='orig';const g=I.body.map(r=>dparse(r[i])).filter(Boolean),sp=g.length?(Math.max(...g.map(z=>z.y*12+z.m))-Math.min(...g.map(z=>z.y*12+z.m))):0;v.gran=sp>=2?'m':'d'}
+  else{v.val=-1;v.agg='count';v.type=I.uniq[i].length>8?'hbar':'bar'}
+  t.view=v;touch();VIEW='c';applyView();window.scrollTo(0,0)}
+// ---- 集計表（クロス集計）
+function pivCols(I){return I.names.map((_,i)=>i).filter(i=>I.types[i]==='date'||(I.types[i]==='text'&&I.uniq[i].length>=2&&I.uniq[i].length<=60))}
+function pivCalc(t,S){const I=info(t),cs=pivCols(I),nums=I.types.map((x,i)=>x==='num'?i:-1).filter(i=>i>=0);
+  if(S.pr===-2||(S.pr>=0&&!cs.includes(S.pr)))S.pr=cs.length?cs[0]:-1;
+  if(S.pc===-2)S.pc=cs.find(i=>i!==S.pr&&I.types[i]!=='date'&&I.uniq[i].length<=12)??-1;
+  if(S.pc>=0&&(S.pc===S.pr||!cs.includes(S.pc)||I.types[S.pc]==='date'))S.pc=-1;
+  if(S.pv===-2||S.pv>=I.w)S.pv=nums.length?nums[0]:-1;if(S.pv>=0&&I.types[S.pv]!=='num')S.pv=nums.length?nums[0]:-1;
+  if(S.pr<0)return{I,cs,nums,none:true};
+  const useCnt=S.pv<0||S.pa==='count',cells=new Map(),rA=new Map(),cA=new Map(),all=[];
+  const put=(m,k,x)=>{if(!m.has(k))m.set(k,[]);m.get(k).push(x)};
+  I.body.forEach(r=>{const a=bk(I,r,S.pr,'m'),b=S.pc>=0?bk(I,r,S.pc,'m'):'合計',x=useCnt?1:num(r[S.pv]);put(cells,a+'\u0001'+b,x);put(rA,a,x);put(cA,b,x);all.push(x)});
+  const ag=arr=>{if(!arr)return null;if(useCnt)return arr.length;const x=arr.filter(z=>z!=null);if(!x.length)return null;return S.pa==='sum'?x.reduce((p,c)=>p+c,0):S.pa==='avg'?x.reduce((p,c)=>p+c,0)/x.length:S.pa==='max'?Math.max(...x):Math.min(...x)};
+  const dt=ty=>ty==='date';let rows=[...rA.keys()],cols=[...cA.keys()];
+  if(dt(I.types[S.pr]))rows.sort();else rows.sort((a,b)=>(ag(rA.get(b))||0)-(ag(rA.get(a))||0));
+  cols.sort((a,b)=>(ag(cA.get(b))||0)-(ag(cA.get(a))||0));
+  const capR=rows.length>60,capC=cols.length>12;if(capR)rows=rows.slice(0,60);if(capC)cols=cols.slice(0,12);
+  return{I,cs,nums,rows,cols,capR,capC,cell:(a,b)=>ag(cells.get(a+'\u0001'+b)),rt:a=>ag(rA.get(a)),ct:b=>ag(cA.get(b)),grand:ag(all),useCnt}}
+function pivMatrix(P,S){const m=[],rn=P.I.names[S.pr],tot=S.pc>=0;
+  m.push([rn+(tot?' ＼ '+P.I.names[S.pc]:'')].concat(P.cols).concat(tot?['合計']:[]));
+  const rd=x=>x==null?'':+(+x).toFixed(2);
+  P.rows.forEach(a=>m.push([a].concat(P.cols.map(b=>rd(P.cell(a,b)))).concat(tot?[rd(P.rt(a))]:[])));
+  if(P.rows.length>1||tot)m.push(['合計'].concat(P.cols.map(b=>rd(P.ct(b)))).concat(tot?[rd(P.grand)]:[]));return m}
+function renderPivot(){const t=T(),S=lst(t),box=$('lbody'),P=pivCalc(t,S);
+  if(P.none){box.innerHTML='<div style="padding:30px;text-align:center;color:var(--dim)">集計表にできる列（日付、または2〜60種類の文字の列）がありません</div>';return}
+  const I=P.I,op=(arr,val)=>arr.map(([k,l])=>'<option value="'+k+'"'+(String(k)===String(val)?' selected':'')+'>'+X(l)+'</option>').join('');
+  const canPct=S.pa==='sum'||S.pa==='count'||P.useCnt;if(!canPct)S.pp=false;
+  let h='<div style="font-size:12px;color:var(--dim);margin-bottom:8px">「行」と「列」を選ぶと、交差するところの合計などが一覧表になります（ピボットテーブル）。</div>'
+   +'<div class="ctl"><div><label>行（縦に並べる）</label><select id="prr">'+op(P.cs.map(i=>[i,I.names[i]]),S.pr)+'</select></div>'
+   +'<div><label>列（横に並べる）</label><select id="prc">'+op([[-1,'なし（1列だけ）']].concat(P.cs.filter(i=>i!==S.pr&&I.types[i]!=='date').map(i=>[i,I.names[i]])),S.pc)+'</select></div>'
+   +'<div><label>値</label><select id="prv">'+op([[-1,'件数だけ数える']].concat(P.nums.map(i=>[i,I.names[i]])),S.pv)+'</select></div>'
+   +'<div><label>集計</label><select id="pra">'+op([['sum','合計'],['avg','平均'],['count','件数'],['max','最大'],['min','最小']],S.pa)+'</select></div></div>'
+   +'<label style="display:block;margin:8px 0;font-size:14px"><input type="checkbox" id="ppp"'+(S.pp?' checked':'')+(canPct?'':' disabled')+'> 行ごとの割合（％）で表示</label>';
+  const tot=S.pc>=0;let mx=0;P.rows.forEach(a=>P.cols.forEach(b=>{const x=P.cell(a,b);if(x!=null)mx=Math.max(mx,Math.abs(x))}));
+  const show=(x,base)=>x==null?'':(S.pp&&base?Math.round(x/base*100)+'%':fmt(x));
+  h+='<div class="pv"><table><tr><th>'+X(I.names[S.pr])+(tot?' ＼ '+X(tr(I.names[S.pc],6)):'')+'</th>'+P.cols.map(c=>'<th>'+X(tr(c,8))+'</th>').join('')+(tot?'<th>合計</th>':'')+'</tr>';
+  P.rows.forEach(a=>{const rt=P.rt(a);h+='<tr><td>'+X(tr(a,10))+'</td>'+P.cols.map(b=>{const x=P.cell(a,b),al=(x!=null&&mx)?(.08+.5*Math.abs(x)/mx):0;
+      return '<td style="'+(al?'background:rgba('+(x<0?'255,107,107':'74,158,255')+','+al.toFixed(2)+')':'')+'">'+show(x,rt)+'</td>'}).join('')+(tot?'<td><b>'+(S.pp?'100%':fmt(rt))+'</b></td>':'')+'</tr>'});
+  if(P.rows.length>1||tot)h+='<tr><td><b>合計</b></td>'+P.cols.map(b=>'<td><b>'+show(P.ct(b),P.grand)+'</b></td>').join('')+(tot?'<td><b>'+(S.pp?'100%':fmt(P.grand))+'</b></td>':'')+'</tr>';
+  h+='</table></div>'+((P.capR||P.capC)?'<div style="font-size:12px;color:var(--dim);margin-top:6px">※ 多いので'+(P.capR?'行は先頭60':'')+(P.capR&&P.capC?'、':'')+(P.capC?'列は上位12':'')+'までを表示しています</div>':'');
+  h+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button data-pcopy>📋 コピー</button><button data-pnew>＋ 新しい表にする</button><button data-pchart class="pri">📊 グラフにする</button></div>';
+  box.innerHTML=h}
+$('lv').addEventListener('click',e=>{const t=T();if(!t)return;const S=lst(t);let b;
+  if(b=e.target.closest('[data-lm]')){S.mode=b.dataset.lm;renderList();return}
+  if(b=e.target.closest('[data-lfv]')){const u=info(t).uniq[S.fc][+b.dataset.lfv];S.fv=S.fv.includes(u)?S.fv.filter(x=>x!==u):S.fv.concat([u]);S.pg=40;renderLBody();return}
+  if(b=e.target.closest('[data-lmore]')){S.pg+=40;renderCards();return}
+  if(b=e.target.closest('[data-lcopy],[data-lnew]')){const {I,ix}=listRows(t,S),m=[I.names].concat(ix.map(i=>I.body[i]));
+    if(b.hasAttribute('data-lcopy'))copyOut(tsvRows(m));else newTable((t.title||'表')+'（絞り込み）',m);return}
+  if(b=e.target.closest('[data-lcard]')){sel={r:+b.dataset.lcard,c:0};VIEW='t';render();setTimeout(()=>{const td=document.querySelector('#tb td.sel');if(td)td.scrollIntoView({block:'center',inline:'nearest'})},30);return}
+  if(b=e.target.closest('[data-pg]')){const [k,i]=b.dataset.pg.split(':');goChart(k,+i);return}
+  if(b=e.target.closest('[data-pcopy],[data-pnew],[data-pchart]')){const P=pivCalc(t,S);if(P.none)return;
+    if(b.hasAttribute('data-pcopy'))copyOut(tsvRows(pivMatrix(P,S)));
+    else if(b.hasAttribute('data-pnew'))newTable((t.title||'表')+'の集計',pivMatrix(P,S));
+    else{const dt=P.I.types[S.pr]==='date',two=S.pc>=0;t.view={cat:S.pr,val:S.pv,agg:S.pv<0?'count':S.pa,type:two?'stack':(dt?'line':'bar'),ser:two?S.pc:-1,sort:dt?'orig':'val',gran:'m',sl:{}};touch();VIEW='c';applyView();window.scrollTo(0,0)}}});
+$('lv').addEventListener('change',e=>{const t=T();if(!t)return;const S=lst(t),id=e.target.id,v=e.target.value;
+  if(id==='lsc'){S.sc=+v;renderCards()}else if(id==='lsd'){S.dir=+v;renderCards()}else if(id==='lfc'){S.fc=+v;S.fv=[];S.pg=40;renderLBody()}
+  else if(id==='prr'){S.pr=+v;renderPivot()}else if(id==='prc'){S.pc=+v;renderPivot()}else if(id==='prv'){S.pv=+v;renderPivot()}
+  else if(id==='pra'){S.pa=v;renderPivot()}else if(id==='ppp'){S.pp=e.target.checked;renderPivot()}});
+$('lv').addEventListener('input',e=>{if(e.target.id!=='lq')return;const t=T();if(!t)return;const S=lst(t);S.q=e.target.value;S.pg=40;renderCards()});
+
+// ===================== 株価分析（移動平均・ボリンジャー・一目・フィボナッチ・RSI・MACD ほか） =====================
+const SK_DEF=()=>({map:null,range:120,tf:'d',sma:[5,25,75],ema:[],bb:false,ichi:false,fib:true,fx:false,fr:false,vol:true,rsi:true,macd:false,sto:false,jp:true,cal:{cap:1000000,risk:2,entry:'',stop:'',tgt:'',unit:100,fills:''}});
+const SKC=['#F5C842','#4AE09A','#ff8c42','#b38cff'];
+function stkOf(t){if(!t.stk)t.stk=SK_DEF();const S=t.stk,I=info(t);
+  if(!S.map||Object.values(S.map).some(x=>x>=I.w)){const used=new Set(),pick=(re,exact)=>{const i=I.names.findIndex((n,k)=>!used.has(k)&&re.test(n));if(i>=0)used.add(i);return i};
+    const m={};let d=I.types.indexOf('date');if(d<0)d=pick(/日付|年月日|date|日時/i);used.add(d);m.d=d;
+    m.o=pick(/始値|open/i);m.h=pick(/高値|high/i);m.l=pick(/安値|low/i);m.c=pick(/終値|close/i);if(m.c<0)m.c=pick(/株価|価格|price|値/i);
+    if(m.c<0){const nu=I.types.map((x,i)=>x==='num'&&!used.has(i)?i:-1).filter(i=>i>=0);m.c=nu.length?nu[0]:-1;if(m.c>=0)used.add(m.c)}
+    m.v=pick(/出来高|volume|vol/i);S.map=m}
+  return S}
+function skRows(t,S){const I=info(t),m=S.map;if(m.d<0||m.c<0)return[];
+  let r=I.body.map(x=>{const d=dparse(x[m.d]),c=num(x[m.c]);if(!d||c==null)return null;const g=k=>m[k]>=0?num(x[m[k]]):null;
+    const o=g('o'),h=g('h'),l=g('l');return{d,key:d.y*10000+d.m*100+d.d,o:o==null?c:o,h:h==null?Math.max(c,o==null?c:o):h,l:l==null?Math.min(c,o==null?c:o):l,c,v:g('v')||0}}).filter(Boolean);
+  r.sort((a,b)=>a.key-b.key);
+  if(S.tf!=='d'){const G=new Map();r.forEach(x=>{let k;if(S.tf==='m')k=x.d.y*100+x.d.m;else{const ts=Date.UTC(x.d.y,x.d.m-1,x.d.d),wd=new Date(ts).getUTCDay();k=ts-((wd+6)%7)*864e5}
+      const g=G.get(k);if(!g)G.set(k,{d:x.d,key:x.key,o:x.o,h:x.h,l:x.l,c:x.c,v:x.v});else{g.h=Math.max(g.h,x.h);g.l=Math.min(g.l,x.l);g.c=x.c;g.v+=x.v;g.d=x.d;g.key=x.key}});r=[...G.values()]}
+  return r}
+// --- 指標の計算
+function skSma(a,n){const o=Array(a.length).fill(null);for(let i=n-1;i<a.length;i++){let s=0,ok=true;for(let j=i-n+1;j<=i;j++){if(a[j]==null){ok=false;break}s+=a[j]}if(ok)o[i]=s/n}return o}
+function skEma(a,n){const o=Array(a.length).fill(null),k=2/(n+1);let cnt=0,s=0,prev=null;for(let i=0;i<a.length;i++){if(a[i]==null)continue;if(prev==null){s+=a[i];cnt++;if(cnt===n){prev=s/n;o[i]=prev}}else{prev=a[i]*k+prev*(1-k);o[i]=prev}}return o}
+function skBb(c,n,k){const m=skSma(c,n),u=Array(c.length).fill(null),l=Array(c.length).fill(null);for(let i=n-1;i<c.length;i++){let v=0;for(let j=i-n+1;j<=i;j++)v+=(c[j]-m[i])**2;const sd=Math.sqrt(v/n);u[i]=m[i]+k*sd;l[i]=m[i]-k*sd}return{m,u,l}}
+function skRsi(c,n){const o=Array(c.length).fill(null);if(c.length<=n)return o;let g=0,l=0;for(let i=1;i<=n;i++){const d=c[i]-c[i-1];if(d>=0)g+=d;else l-=d}g/=n;l/=n;o[n]=l===0?100:100-100/(1+g/l);
+  for(let i=n+1;i<c.length;i++){const d=c[i]-c[i-1];g=(g*(n-1)+Math.max(d,0))/n;l=(l*(n-1)+Math.max(-d,0))/n;o[i]=l===0?100:100-100/(1+g/l)}return o}
+function skMacd(c){const a=skEma(c,12),b=skEma(c,26),m=c.map((_,i)=>a[i]!=null&&b[i]!=null?a[i]-b[i]:null),s=skEma(m,9);return{m,s,h:m.map((x,i)=>x!=null&&s[i]!=null?x-s[i]:null)}}
+function skSto(R,n){const k=Array(R.length).fill(null);for(let i=n-1;i<R.length;i++){let hh=-Infinity,ll=Infinity;for(let j=i-n+1;j<=i;j++){hh=Math.max(hh,R[j].h);ll=Math.min(ll,R[j].l)}k[i]=hh===ll?50:(R[i].c-ll)/(hh-ll)*100}const sk=skSma(k,3);return{k:sk,d:skSma(sk,3)}}
+function skAtr(R,n){const o=Array(R.length).fill(null);if(R.length<=n)return o;const tr=i=>Math.max(R[i].h-R[i].l,Math.abs(R[i].h-R[i-1].c),Math.abs(R[i].l-R[i-1].c));let a=0;for(let i=1;i<=n;i++)a+=tr(i);a/=n;o[n]=a;for(let i=n+1;i<R.length;i++){a=(a*(n-1)+tr(i))/n;o[i]=a}return o}
+function skIchi(R){const N=R.length,hl=(i,n)=>{if(i<n-1)return null;let h=-Infinity,l=Infinity;for(let j=i-n+1;j<=i;j++){h=Math.max(h,R[j].h);l=Math.min(l,R[j].l)}return(h+l)/2};
+  const tk=R.map((_,i)=>hl(i,9)),kj=R.map((_,i)=>hl(i,26)),sa=Array(N+26).fill(null),sb=Array(N+26).fill(null);
+  for(let i=0;i<N;i++){if(tk[i]!=null&&kj[i]!=null)sa[i+26]=(tk[i]+kj[i])/2;const b=hl(i,52);if(b!=null)sb[i+26]=b}return{tk,kj,sa,sb}}
+function skCalc(t,S){const R=skRows(t,S);if(R.length<2)return null;const N=R.length,c=R.map(x=>x.c),n=Math.min(S.range||N,N),start=N-n;
+  const C={R,N,n,start,c,sma:S.sma.map(p=>skSma(c,p)),ema:S.ema.map(p=>skEma(c,p)),bb:skBb(c,20,2),rsi:skRsi(c,14),macd:skMacd(c),sto:skSto(R,14),atr:skAtr(R,14),ichi:skIchi(R)};
+  // フィボナッチ：表示期間の最高値・最安値
+  let hi=-Infinity,lo=Infinity,hiI=0,loI=0;for(let i=start;i<N;i++){if(R[i].h>hi){hi=R[i].h;hiI=i}if(R[i].l<lo){lo=R[i].l;loI=i}}
+  let up=loI<hiI;if(S.fr)up=!up;const rg=hi-lo,rl=[0,.236,.382,.5,.618,.786,1],ex=[1.272,1.618,2.618];
+  const lv=r=>up?(r<=1?hi-rg*r:lo+rg*r):(r<=1?lo+rg*r:hi-rg*r);
+  C.fib={hi,lo,hiI,loI,up,rg,levels:rl.map(r=>({r,p:lv(r),ex:false})).concat(S.fx?ex.map(r=>({r,p:lv(r),ex:true})):[])};
+  // クロス（短期×長期の移動平均）
+  C.cross=[];if(S.sma.length>=2){const ps=S.sma.map((p,i)=>[p,i]).sort((a,b)=>a[0]-b[0]),sh=C.sma[ps[0][1]],lg=C.sma[ps[1][1]];C.crossN=[ps[0][0],ps[1][0]];
+    for(let i=1;i<N;i++){if(sh[i]==null||lg[i]==null||sh[i-1]==null||lg[i-1]==null)continue;if(sh[i-1]<=lg[i-1]&&sh[i]>lg[i])C.cross.push({i,t:'GC'});else if(sh[i-1]>=lg[i-1]&&sh[i]<lg[i])C.cross.push({i,t:'DC'})}}
+  return C}
+const skPf=x=>x==null||isNaN(x)?'':(Math.abs(x)>=1000?Math.round(x).toLocaleString('ja-JP'):(+(+x).toFixed(2)).toLocaleString('ja-JP'));
+const skDs=(d,y)=>y?String(d.y).slice(2)+'/'+d.m:d.m+'/'+d.d;
+function skPath(arr,start,n,cx,py){let d='',pen=false;for(let i=0;i<n;i++){const v=arr[start+i];if(v==null){pen=false;continue}d+=(pen?'L':'M')+cx(i).toFixed(1)+' '+py(v).toFixed(1)+' ';pen=true}return d.trim()}
+function skDraw(t,S,C,W){const{R,N,n,start}=C,jp=S.jp,UP=jp?'#ff5c5c':'#2fd08a',DN=jp?'#4a9eff':'#ff5c5c';
+  const L=6,Rr=58,Tp=8,slots=n+(S.ichi?26:0),band=(W-L-Rr)/slots,cx=i=>L+band*(i+.5),MH=300,GAP=16;
+  const hasC=R.some(x=>x.o!==x.c||x.h!==x.c||x.l!==x.c)&&S.map.o>=0;
+  let svg='',y=Tp;const sh=a=>{const o=[];for(let i=0;i<n;i++)o.push(a[start+i])};
+  // メインの縦軸
+  const vals=[];for(let i=start;i<N;i++){vals.push(R[i].h,R[i].l)}
+  const ov=[];C.sma.forEach(a=>ov.push(a));C.ema.forEach(a=>ov.push(a));if(S.bb){ov.push(C.bb.u,C.bb.l)}
+  ov.forEach(a=>{for(let i=start;i<N;i++)if(a[i]!=null)vals.push(a[i])});
+  if(S.ichi){[C.ichi.tk,C.ichi.kj,C.ichi.sa,C.ichi.sb].forEach(a=>{for(let i=start;i<Math.min(a.length,N+26);i++)if(a[i]!=null)vals.push(a[i])})}
+  if(S.fib)C.fib.levels.forEach(l=>vals.push(l.p));
+  let lo=Math.min(...vals),hi=Math.max(...vals);const pd=(hi-lo)*.04||1;const sc=niceScale(lo-pd,hi+pd,5);
+  const py=v=>y+(1-(v-sc.lo)/(sc.hi-sc.lo))*MH;
+  svg+=sc.ticks.map(v=>`<line x1="${L}" x2="${W-Rr}" y1="${py(v)}" y2="${py(v)}" stroke="${GRID}"/><text x="${W-Rr+4}" y="${py(v)+4}" fill="${DIM}" font-size="11">${skPf(v)}</text>`).join('');
+  // 一目均衡表の雲
+  if(S.ichi){const sa=C.ichi.sa,sb=C.ichi.sb;for(let i=0;i<slots-1;i++){const k=start+i,a0=sa[k],b0=sb[k],a1=sa[k+1],b1=sb[k+1];if(a0==null||b0==null||a1==null||b1==null)continue;
+      svg+=`<path d="M${cx(i)} ${py(a0)} L${cx(i+1)} ${py(a1)} L${cx(i+1)} ${py(b1)} L${cx(i)} ${py(b0)}Z" fill="${(a0+a1)>=(b0+b1)?'rgba(255,92,92,.16)':'rgba(74,158,255,.16)'}"/>`}
+    const ln=(a,col)=>{let d='',pen=false;for(let i=0;i<slots;i++){const v=a[start+i];if(v==null){pen=false;continue}d+=(pen?'L':'M')+cx(i).toFixed(1)+' '+py(v).toFixed(1)+' ';pen=true}svg+=`<path d="${d.trim()}" fill="none" stroke="${col}" stroke-width="1.4"/>`};
+    ln(C.ichi.sa,'rgba(255,92,92,.7)');ln(C.ichi.sb,'rgba(74,158,255,.7)');ln(C.ichi.tk,'#ff8c42');ln(C.ichi.kj,'#b38cff')}
+  // ボリンジャー
+  if(S.bb){let d='',e='';for(let i=0;i<n;i++){const u=C.bb.u[start+i];if(u==null)continue;d+=(d?'L':'M')+cx(i).toFixed(1)+' '+py(u).toFixed(1)+' '}
+    for(let i=n-1;i>=0;i--){const l=C.bb.l[start+i];if(l==null)continue;e+='L'+cx(i).toFixed(1)+' '+py(l).toFixed(1)+' '}
+    if(d&&e)svg+=`<path d="${d}${e}Z" fill="rgba(74,158,255,.09)" stroke="none"/>`;
+    svg+=`<path d="${skPath(C.bb.u,start,n,cx,py)}" fill="none" stroke="#4A9EFF" stroke-width="1" opacity=".8"/><path d="${skPath(C.bb.l,start,n,cx,py)}" fill="none" stroke="#4A9EFF" stroke-width="1" opacity=".8"/>`}
+  // フィボナッチ
+  if(S.fib){const F=C.fib;if(F.hiI>=start&&F.loI>=start)svg+=`<line x1="${cx(F.loI-start)}" y1="${py(F.lo)}" x2="${cx(F.hiI-start)}" y2="${py(F.hi)}" stroke="#F5C842" stroke-dasharray="2 4" opacity=".7"/>`;
+    F.levels.forEach(l=>{const yy=py(l.p),hot=l.r===.382||l.r===.5||l.r===.618;svg+=`<line x1="${L}" x2="${W-Rr}" y1="${yy}" y2="${yy}" stroke="#F5C842" stroke-width="${hot?1.4:1}" stroke-dasharray="${l.ex?'2 3':'6 4'}" opacity="${hot?.9:.55}"/><text x="${L+3}" y="${yy-3}" fill="#F5C842" font-size="10" style="paint-order:stroke;stroke:#181b24;stroke-width:3px">${(l.r*100).toFixed(1)}%　${skPf(l.p)}</text>`})}
+  // 価格
+  if(hasC){R.slice(start).forEach((r,i)=>{const col=r.c>=r.o?UP:DN,x=cx(i),bw=Math.max(1,band*.68);
+      svg+=`<line x1="${x}" x2="${x}" y1="${py(r.h)}" y2="${py(r.l)}" stroke="${col}" stroke-width="1"/><rect x="${x-bw/2}" y="${Math.min(py(r.o),py(r.c))}" width="${bw}" height="${Math.max(1,Math.abs(py(r.o)-py(r.c)))}" fill="${col}"/>`})}
+  else{const p=R.slice(start).map((r,i)=>(i?'L':'M')+cx(i).toFixed(1)+' '+py(r.c).toFixed(1)).join(' ');svg+=`<path d="${p}" fill="none" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"/>`}
+  // 移動平均
+  C.sma.forEach((a,k)=>{svg+=`<path d="${skPath(a,start,n,cx,py)}" fill="none" stroke="${SKC[k%4]}" stroke-width="1.6"/>`});
+  C.ema.forEach((a,k)=>{svg+=`<path d="${skPath(a,start,n,cx,py)}" fill="none" stroke="${SKC[(k+2)%4]}" stroke-width="1.4" stroke-dasharray="5 3"/>`});
+  // GC/DC
+  if(n<=300)C.cross.forEach(x=>{if(x.i<start)return;const i=x.i-start,r=R[x.i];svg+=x.t==='GC'?`<text x="${cx(i)}" y="${py(r.l)+13}" fill="#4AE09A" font-size="10" text-anchor="middle">▲GC</text>`:`<text x="${cx(i)}" y="${py(r.h)-5}" fill="#FF6B6B" font-size="10" text-anchor="middle">▼DC</text>`});
+  // 現在値ライン
+  const last=R[N-1];svg+=`<line x1="${L}" x2="${W-Rr}" y1="${py(last.c)}" y2="${py(last.c)}" stroke="${INK}" stroke-width=".8" stroke-dasharray="3 3" opacity=".6"/><rect x="${W-Rr+1}" y="${py(last.c)-9}" width="${Rr-2}" height="18" rx="3" fill="${INK}"/><text x="${W-Rr+4}" y="${py(last.c)+4}" fill="#111" font-size="11" font-weight="700">${skPf(last.c)}</text>`;
+  y+=MH;
+  // サブパネル
+  const sub=(h,label,lo2,hi2,ticks,fn)=>{y+=GAP;const y0=y,p2=v=>y0+(1-(v-lo2)/(hi2-lo2))*h;svg+=`<line x1="${L}" x2="${W-Rr}" y1="${y0}" y2="${y0}" stroke="${GRID}"/><text x="${L+3}" y="${y0+12}" fill="${DIM}" font-size="11">${label}</text>`;
+    svg+=ticks.map(v=>`<line x1="${L}" x2="${W-Rr}" y1="${p2(v)}" y2="${p2(v)}" stroke="${GRID}" stroke-dasharray="3 4"/><text x="${W-Rr+4}" y="${p2(v)+4}" fill="${DIM}" font-size="10">${v>=1e4?fmt(v):skPf(v)}</text>`).join('');fn(p2,y0,h);y+=h};
+  if(S.vol){const vs=R.slice(start).map(r=>r.v),mx=Math.max(...vs,1);sub(54,'出来高',0,mx,[mx],(p2,y0,h)=>{R.slice(start).forEach((r,i)=>{const pc=(start+i)>0?R[start+i-1].c:r.o,col=r.c>=pc?UP:DN;svg+=`<rect x="${cx(i)-Math.max(1,band*.68)/2}" y="${p2(r.v)}" width="${Math.max(1,band*.68)}" height="${Math.max(0,y0+h-p2(r.v))}" fill="${col}" opacity=".65"/>`})})}
+  if(S.rsi){const v=C.rsi[N-1];sub(84,'RSI(14)　'+(v==null?'':v.toFixed(1)),0,100,[30,70],(p2)=>{svg+=`<path d="${skPath(C.rsi,start,n,cx,p2)}" fill="none" stroke="#b38cff" stroke-width="1.6"/>`})}
+  if(S.macd){const a=[...C.macd.m,...C.macd.s,...C.macd.h].filter(x=>x!=null).slice(-n*3),mm=Math.max(...a.map(Math.abs),1e-9)*1.1;sub(96,'MACD(12,26,9)',-mm,mm,[0],(p2)=>{
+      for(let i=0;i<n;i++){const h=C.macd.h[start+i];if(h==null)continue;svg+=`<rect x="${cx(i)-Math.max(1,band*.6)/2}" y="${Math.min(p2(h),p2(0))}" width="${Math.max(1,band*.6)}" height="${Math.max(1,Math.abs(p2(h)-p2(0)))}" fill="${h>=0?UP:DN}" opacity=".55"/>`}
+      svg+=`<path d="${skPath(C.macd.m,start,n,cx,p2)}" fill="none" stroke="#4A9EFF" stroke-width="1.5"/><path d="${skPath(C.macd.s,start,n,cx,p2)}" fill="none" stroke="#ff8c42" stroke-width="1.5"/>`})}
+  if(S.sto){const k=C.sto.k[N-1];sub(84,'ストキャス(14,3,3)　%K '+(k==null?'':k.toFixed(0)),0,100,[20,80],(p2)=>{svg+=`<path d="${skPath(C.sto.k,start,n,cx,p2)}" fill="none" stroke="#4A9EFF" stroke-width="1.5"/><path d="${skPath(C.sto.d,start,n,cx,p2)}" fill="none" stroke="#ff8c42" stroke-width="1.5"/>`})}
+  // 日付の軸
+  const every=Math.max(1,Math.ceil(n/5)),yy=n>200||S.tf==='m';y+=4;
+  for(let i=0;i<n;i+=every)svg+=`<text x="${cx(i)}" y="${y+14}" fill="${DIM}" font-size="11" text-anchor="middle">${skDs(R[start+i].d,yy)}</text>`;
+  const H=y+22,top=Tp;
+  // タップで値を表示
+  for(let i=0;i<n;i++){const k=start+i,r=R[k],pr=k>0?R[k-1].c:null,df=pr!=null?r.c-pr:null;
+    const parts=[r.d.y+'/'+r.d.m+'/'+r.d.d,hasC?'始'+skPf(r.o)+' 高'+skPf(r.h)+' 安'+skPf(r.l)+' 終'+skPf(r.c):'終値'+skPf(r.c)];
+    if(df!=null)parts.push((df>=0?'+':'')+skPf(df)+'（'+(df>=0?'+':'')+(df/pr*100).toFixed(2)+'%）');if(r.v)parts.push('出来高'+r.v.toLocaleString('ja-JP'));
+    S.sma.forEach((p,j)=>{if(C.sma[j][k]!=null)parts.push('SMA'+p+' '+skPf(C.sma[j][k]))});S.ema.forEach((p,j)=>{if(C.ema[j][k]!=null)parts.push('EMA'+p+' '+skPf(C.ema[j][k]))});
+    if(S.rsi&&C.rsi[k]!=null)parts.push('RSI '+C.rsi[k].toFixed(1));if(S.macd&&C.macd.m[k]!=null)parts.push('MACD '+C.macd.m[k].toFixed(2));
+    svg+=`<rect x="${cx(i)-band/2}" y="${top}" width="${band}" height="${H-top-20}" fill="transparent" data-tip="${X(parts.join('　'))}"/>`}
+  let legend='<div class="legend">'+S.sma.map((p,k)=>`<span><i style="background:${SKC[k%4]}"></i>SMA${p}</span>`).join('')+S.ema.map((p,k)=>`<span><i style="background:${SKC[(k+2)%4]}"></i>EMA${p}</span>`).join('')+(S.bb?'<span><i style="background:#4A9EFF"></i>ボリンジャー(20,±2σ)</span>':'')+(S.ichi?'<span><i style="background:#ff8c42"></i>転換線</span><span><i style="background:#b38cff"></i>基準線</span><span><i style="background:rgba(255,92,92,.5)"></i>雲</span>':'')+(S.fib?'<span><i style="background:#F5C842"></i>フィボナッチ</span>':'')+'</div>';
+  return `<svg id="ssvg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">${svg}</svg>`+legend}
+// --- 判定・数値パネル
+function skStats(t,S,C){const{R,N,n,start}=C,last=R[N-1],prev=N>1?R[N-2]:null,F=C.fib,rows=[];
+  const row=(a,b,cls)=>rows.push(`<div class="srow"><span>${a}</span><b${cls?' class="'+cls+'"':''}>${b}</b></div>`);const sec=a=>rows.push(`<div class="shead">${a}</div>`);
+  const pc=(a,b)=>(a>=0?'+':'')+(a/b*100).toFixed(2)+'%',unit={d:'日',w:'週',m:'月'}[S.tf];let up=0,tot=0;const tally=ok=>{if(ok==null)return;tot++;if(ok)up++};
+  sec('いまの位置');row('終値（'+last.d.y+'/'+last.d.m+'/'+last.d.d+'）',skPf(last.c)+(prev?'　'+(last.c-prev.c>=0?'+':'')+skPf(last.c-prev.c)+'（'+pc(last.c-prev.c,prev.c)+'）':''));
+  const fr=R[start];row('表示期間の騰落率',pc(last.c-fr.c,fr.c)+'（'+skPf(fr.c)+' → '+skPf(last.c)+'）');
+  row('期間の最高値 / 最安値',skPf(F.hi)+' / '+skPf(F.lo));row('レンジ内の位置',F.rg?((last.c-F.lo)/F.rg*100).toFixed(0)+'%（0%=安値、100%=高値）':'-');
+  sec('トレンド');
+  S.sma.forEach((p,k)=>{const a=C.sma[k][N-1],b=C.sma[k][N-1-Math.min(5,N-1)];if(a==null)return;row('SMA'+p+'　との乖離',skPf(a)+'　'+pc(last.c-a,a)+'　'+(b!=null?(a>b?'↗向き上':'↘向き下'):''));if(k===S.sma.length-1)tally(last.c>a)});
+  if(C.crossN){const lc=C.cross[C.cross.length-1];if(lc)row('直近のクロス（SMA'+C.crossN[0]+'×'+C.crossN[1]+'）',(lc.t==='GC'?'ゴールデンクロス':'デッドクロス')+'（'+(N-1-lc.i)+unit+'前）');const a=C.sma[S.sma.indexOf(C.crossN[0])][N-1],b=C.sma[S.sma.indexOf(C.crossN[1])][N-1];if(a!=null&&b!=null)tally(a>b)}
+  if(C.ichi&&last){const k=N-1,sa=C.ichi.sa[k],sb=C.ichi.sb[k];if(sa!=null&&sb!=null){const hi=Math.max(sa,sb),lo=Math.min(sa,sb);row('一目均衡表',last.c>hi?'雲の上（強気の位置）':last.c<lo?'雲の下（弱気の位置）':'雲の中（方向感なし）');tally(last.c>hi?true:last.c<lo?false:null)}}
+  sec('勢い');const rv=C.rsi[N-1];if(rv!=null){row('RSI(14)',rv.toFixed(1)+'　'+(rv>=70?'買われすぎ圏（70以上）':rv<=30?'売られすぎ圏（30以下）':'中立圏'));tally(rv>50)}
+  const mm=C.macd.m[N-1],ms=C.macd.s[N-1];if(mm!=null&&ms!=null){let lc=null;for(let i=N-1;i>0;i--){const a=C.macd.m[i]-C.macd.s[i],b=C.macd.m[i-1]-C.macd.s[i-1];if(C.macd.s[i]==null||C.macd.s[i-1]==null)break;if((a>0)!==(b>0)){lc=[i,a>0];break}}
+    row('MACD',mm.toFixed(2)+' / シグナル '+ms.toFixed(2)+'　'+(mm>ms?'上向き優勢':'下向き優勢')+(lc?'（'+(lc[1]?'ゴールデン':'デッド')+'クロス '+(N-1-lc[0])+unit+'前）':''));tally(mm>ms)}
+  const sk=C.sto.k[N-1],sd=C.sto.d[N-1];if(sk!=null&&sd!=null)row('ストキャス(14,3,3)','%K '+sk.toFixed(0)+' / %D '+sd.toFixed(0)+'　'+(sk>=80?'買われすぎ圏':sk<=20?'売られすぎ圏':'中立圏'));
+  sec('ばらつき・リスク');const u=C.bb.u[N-1],l=C.bb.l[N-1];if(u!=null){const b=(last.c-l)/(u-l);row('ボリンジャー(20,±2σ)','%b '+(b*100).toFixed(0)+'%　'+(b>1?'+2σ超え':b<0?'-2σ割れ':b>.8?'上限に近い':b<.2?'下限に近い':'バンド内')+'　幅 '+((u-l)/C.bb.m[N-1]*100).toFixed(1)+'%');tally(b>.5)}
+  const at=C.atr[N-1];if(at!=null)row('ATR(14)（1'+unit+'の平均的な値幅）',skPf(at)+'（'+(at/last.c*100).toFixed(2)+'%）');
+  const lr=[];for(let i=start+1;i<N;i++)lr.push(Math.log(R[i].c/R[i-1].c));if(lr.length>=5){const m=lr.reduce((p,c)=>p+c,0)/lr.length,sdv=Math.sqrt(lr.reduce((p,c)=>p+(c-m)**2,0)/(lr.length-1)),ppy={d:245,w:52,m:12}[S.tf];row('年率ボラティリティ',(sdv*Math.sqrt(ppy)*100).toFixed(1)+'%')}
+  let pk=-Infinity,dd=0,ddI=0;for(let i=start;i<N;i++){pk=Math.max(pk,R[i].c);const d=R[i].c/pk-1;if(d<dd){dd=d;ddI=i}}row('最大ドローダウン（期間内）',(dd*100).toFixed(1)+'%（'+R[ddI].d.y+'/'+R[ddI].d.m+'/'+R[ddI].d.d+'）');
+  const vv=R.slice(Math.max(0,N-21),N-1).map(x=>x.v).filter(x=>x>0);if(last.v&&vv.length>=5)row('出来高（直近20'+unit+'平均比）',(last.v/(vv.reduce((p,c)=>p+c,0)/vv.length)).toFixed(2)+'倍');
+  if(prev){const P=(prev.h+prev.l+prev.c)/3;sec('ピボット（前'+unit+'のH・L・Cから）');row('R2 / R1',skPf(P+(prev.h-prev.l))+' / '+skPf(2*P-prev.l));row('ピボット',skPf(P));row('S1 / S2',skPf(2*P-prev.h)+' / '+skPf(P-(prev.h-prev.l)))}
+  sec('フィボナッチ（'+(F.up?'上昇':'下落')+'の波：'+skPf(F.lo)+' ⇄ '+skPf(F.hi)+'）');
+  const lv=F.levels.slice().sort((a,b)=>b.p-a.p);let near=lv.reduce((a,b)=>Math.abs(b.p-last.c)<Math.abs(a.p-last.c)?b:a);
+  lv.forEach(x=>row((x.r*100).toFixed(1)+'%'+(x.ex?'（拡張）':(x.r===0?(F.up?'（高値）':'（安値）'):x.r===1?(F.up?'（安値）':'（高値）'):'')),skPf(x.p)+'　現在値から '+pc(x.p-last.c,last.c),x===near?'near':''));
+  const sum=tot?`<div class="ssum">上向きの指標：<b>${up}</b> / ${tot}　<small>（SMA・クロス・一目・RSI・MACD・ボリンジャーの合計。参考表示）</small></div>`:'';
+  return sum+rows.join('')}
+// --- 損益・株数計算
+function skCalcHtml(S,last){const c=S.cal;const f=(k,l,ph,mode)=>`<div><label>${l}</label><input class="lin" data-cal="${k}" inputmode="decimal" placeholder="${ph||''}" value="${X(c[k])}"></div>`;
+  return `<div class="sec"><h4>🧮 株数・損益の計算（リスク管理）</h4><div class="ctl">${f('cap','資金（円）')}${f('risk','1回で許せる損失（%）','2')}${f('entry','買う価格（エントリー）','現在値 '+skPf(last))}${f('stop','損切りの価格','')}${f('tgt','利益確定の価格','')}${f('unit','売買の単位（株）','100')}</div><div id="calOut" class="calout"></div>
+  <h4 style="margin-top:14px">平均取得単価</h4><textarea id="calFills" class="lin" rows="3" placeholder="1行に1回の約定を「株数@価格」で入力&#10;例）100@1500&#10;200@1420">${X(c.fills||'')}</textarea><div id="fillOut" class="calout"></div></div>`}
+function skCalcRun(t,S,last){const c=S.cal,n=x=>{const v=parseFloat(String(x).replace(/[,，\s]/g,''));return isNaN(v)?null:v};const cap=n(c.cap),rk=n(c.risk),en=n(c.entry)??last,st=n(c.stop),tg=n(c.tgt),un=Math.max(1,n(c.unit)||1);let h='';
+  if(cap&&rk&&st!=null&&st!==en){const long=st<en,ps=Math.abs(en-st),allow=cap*rk/100,q=Math.floor(allow/ps/un)*un,need=q*en,loss=q*ps;
+    h+=`<div class="srow"><span>方向</span><b>${long?'買い（ロング）':'売り（ショート）'}　損切り幅 ${skPf(ps)}（${(ps/en*100).toFixed(2)}%）</b></div><div class="srow"><span>許せる損失額</span><b>${Math.round(allow).toLocaleString('ja-JP')}円</b></div>`
+     +`<div class="srow"><span>買える株数</span><b class="near">${q.toLocaleString('ja-JP')}株</b></div><div class="srow"><span>必要な資金</span><b${need>cap?' style="color:var(--red)"':''}>${Math.round(need).toLocaleString('ja-JP')}円${need>cap?'　⚠ 資金を超えています（レバレッジが必要）':''}</b></div><div class="srow"><span>損切りになったときの損失</span><b>-${Math.round(loss).toLocaleString('ja-JP')}円</b></div>`;
+    if(q===0)h+='<div class="srow"><span>注意</span><b style="color:var(--red)">この条件では1単位も買えません（損切り幅が大きい／許容損失が小さい）</b></div>';
+    if(tg!=null&&((long&&tg>en)||(!long&&tg<en))){const rw=Math.abs(tg-en),R=rw/ps;h+=`<div class="srow"><span>利益確定のとき</span><b>+${Math.round(q*rw).toLocaleString('ja-JP')}円（+${(rw/en*100).toFixed(2)}%）</b></div><div class="srow"><span>リスクリワード</span><b>1 : ${R.toFixed(2)}</b></div><div class="srow"><span>損益分岐の勝率</span><b>${(1/(1+R)*100).toFixed(0)}% 以上で期待値がプラス</b></div>`}
+    else if(tg!=null)h+='<div class="srow"><span>注意</span><b style="color:var(--red)">利益確定の価格が、損切りと逆側にありません</b></div>'}
+  else h='<div style="font-size:13px;color:var(--dim)">資金・許せる損失(%)・損切りの価格を入れると、買える株数が出ます。（買う価格が空なら現在値で計算）</div>';
+  $('calOut').innerHTML=h;
+  const fl=String(c.fills||'').split(/\n/).map(s=>s.trim().match(/^([\d,.]+)\s*[@＠×x\s]\s*([\d,.]+)$/i)).filter(Boolean).map(m=>[n(m[1]),n(m[2])]).filter(a=>a[0]&&a[1]!=null);
+  if(fl.length){const q=fl.reduce((p,a)=>p+a[0],0),cost=fl.reduce((p,a)=>p+a[0]*a[1],0),avg=cost/q,pl=(last-avg)*q;$('fillOut').innerHTML=`<div class="srow"><span>合計 / 平均単価</span><b>${q.toLocaleString('ja-JP')}株 / ${skPf(avg)}</b></div><div class="srow"><span>現在値(${skPf(last)})での損益</span><b style="color:var(--${pl>=0?'grn':'red'})">${pl>=0?'+':''}${Math.round(pl).toLocaleString('ja-JP')}円（${((last/avg-1)*100).toFixed(2)}%）</b></div>`}else $('fillOut').innerHTML=''}
+const SK_CH=[['sma','移動平均'],['ema','指数平滑(EMA)'],['bb','ボリンジャー'],['ichi','一目均衡表'],['fib','フィボナッチ'],['vol','出来高'],['rsi','RSI'],['macd','MACD'],['sto','ストキャス']];
+function renderStock(){const t=T();if(!t)return;const S=stkOf(t),I=info(t),box=$('sv'),m=S.map;
+  const C=m.d>=0&&m.c>=0?skCalc(t,S):null;
+  const colSel=(k,l,opt)=>`<div><label>${l}</label><select data-skm="${k}">${(opt?'<option value="-1">なし</option>':'')+I.names.map((n,i)=>`<option value="${i}"${m[k]===i?' selected':''}>${X(n)}</option>`).join('')}</select></div>`;
+  const map=`<details class="sec"><summary style="font-size:13px;color:var(--dim);font-weight:700">列の対応（自動で見つけています。違うときだけ直す）</summary><div class="ctl" style="margin-top:8px">${colSel('d','日付')}${colSel('c','終値')}${colSel('o','始値',1)}${colSel('h','高値',1)}${colSel('l','安値',1)}${colSel('v','出来高',1)}</div><div style="font-size:12px;color:var(--dim);margin-top:6px">日付と終値だけでも動きます（折れ線表示）。始値・高値・安値があるとローソク足、一目均衡表、ストキャス、ATRが正確になります。古い順でも新しい順でも自動で並べ替えます。</div></details>`;
+  if(!C){box.innerHTML='<div style="padding:24px;text-align:center;color:var(--dim);line-height:1.7">株価データが見つかりません。<br>「日付」と「終値」の列がある表（2行以上）を用意してください。<br>📂 取り込み から、証券会社・Yahoo!ファイナンス・株探などのCSVを読み込めます。</div>'+map;return}
+  const on=k=>k==='sma'?S.sma.length>0:k==='ema'?S.ema.length>0:S[k];
+  const h=`<div id="stip" style="min-height:22px;font-size:13px;color:var(--gold);padding:0 4px 6px;font-weight:700;line-height:1.5">${C.R.length}本のデータ（${C.R[0].d.y}/${C.R[0].d.m}/${C.R[0].d.d} 〜 ${C.R[C.N-1].d.y}/${C.R[C.N-1].d.m}/${C.R[C.N-1].d.d}）。足をタップすると値が出ます</div><div id="schart" style="background:var(--p);border:1px solid var(--bd);border-radius:12px;padding:8px 0 8px 8px;overflow:hidden">${skDraw(t,S,C,Math.max(280,box.clientWidth-18))}</div>
+   <div style="display:flex;gap:8px;margin-top:8px"><button id="sPng">🖼 画像で保存</button></div>
+   <div class="sec"><h4>① 期間と足</h4><div class="chips">${[[60,'3か月'],[120,'半年'],[250,'1年'],[500,'2年'],[0,'全部']].map(([k,l])=>`<button class="chip${S.range===k?' on':''}" data-skr="${k}">${l}</button>`).join('')}<span style="width:10px"></span>${[['d','日足'],['w','週足'],['m','月足']].map(([k,l])=>`<button class="chip${S.tf===k?' on':''}" data-skt="${k}">${l}</button>`).join('')}<span style="width:10px"></span><button class="chip${S.jp?' on':''}" data-skk="jp">${S.jp?'陽線＝赤（日本式）':'陽線＝緑（海外式）'}</button></div><div style="font-size:12px;color:var(--dim);margin-top:6px">※ 「期間」は表示する本数です。指標は、それより前のデータも使って計算します。</div></div>
+   <div class="sec"><h4>② 指標を重ねる</h4><div class="chips">${SK_CH.map(([k,l])=>`<button class="chip${on(k)?' on':''}" data-skk="${k}">${l}</button>`).join('')}</div>
+    <div class="ctl" style="margin-top:10px"><div><label>SMA の期間（例 5,25,75）</label><input class="lin" data-skp="sma" value="${S.sma.join(',')}" inputmode="numeric"></div><div><label>EMA の期間（例 12,26）</label><input class="lin" data-skp="ema" value="${S.ema.join(',')}" inputmode="numeric"></div></div>
+    ${S.fib?`<div class="chips" style="margin-top:10px"><button class="chip${S.fx?' on':''}" data-skk="fx">拡張（127.2・161.8・261.8%）も表示</button><button class="chip${S.fr?' on':''}" data-skk="fr">波の向きを反転</button></div><div style="font-size:12px;color:var(--dim);margin-top:6px">フィボナッチは「表示期間の最高値と最安値」を自動で結びます。期間を変えると波も変わります。</div>`:''}</div>
+   <div class="sec"><h4>③ 数値で見る（判定の目安）</h4>${skStats(t,S,C)}<div style="font-size:12px;color:var(--dim);margin-top:8px;line-height:1.6">過去の値動きから機械的に計算した参考表示です。将来の値動きや利益を保証するものではなく、売買の判断はご自身の責任で行ってください。</div></div>
+   ${skCalcHtml(S,C.R[C.N-1].c)}${map}`;
+  box.innerHTML=h;skCalcRun(t,S,C.R[C.N-1].c)}
+function skPeriods(s,max){return [...new Set(String(s).split(/[,，、\s]+/).map(x=>parseInt(x,10)).filter(x=>x>=2&&x<=400))].sort((a,b)=>a-b).slice(0,max)}
+$('sv').addEventListener('click',e=>{const t=T();if(!t)return;const S=stkOf(t);let b;
+  if(b=e.target.closest('[data-tip]')){$('stip').textContent=b.getAttribute('data-tip');return}
+  if(b=e.target.closest('[data-skr]')){S.range=+b.dataset.skr;touch();renderStock();return}
+  if(b=e.target.closest('[data-skt]')){S.tf=b.dataset.skt;touch();renderStock();return}
+  if(b=e.target.closest('[data-skk]')){const k=b.dataset.skk;if(k==='sma')S.sma=S.sma.length?[]:[5,25,75];else if(k==='ema')S.ema=S.ema.length?[]:[12,26];else S[k]=!S[k];touch();renderStock();return}
+  if(e.target.closest('#sPng')){savePng($('ssvg'),(t.title||'stock')+'-chart')}});
+$('sv').addEventListener('change',e=>{const t=T();if(!t)return;const S=stkOf(t),el=e.target;
+  if(el.dataset.skm){S.map[el.dataset.skm]=+el.value;touch();renderStock();return}
+  if(el.dataset.skp){const k=el.dataset.skp;S[k]=skPeriods(el.value,4);touch();renderStock()}});
+$('sv').addEventListener('input',e=>{const t=T();if(!t)return;const S=stkOf(t),el=e.target;
+  if(el.dataset.cal||el.id==='calFills'){if(el.id==='calFills')S.cal.fills=el.value;else S.cal[el.dataset.cal]=el.value;touch();const R=skRows(t,S);if(R.length)skCalcRun(t,S,R[R.length-1].c)}});
 
 // 公開：他アプリが使えるように
 window.TablePad={pullInbox,itemToTable,bk,toISO,num,buildImport,loadImpText,autoCards,recommend,compute,parseFlow,info,list:()=>tables.slice(),get:id=>tables.find(t=>t.id===id),toTSV:tsv,toMarkdown:md,import:importText};
