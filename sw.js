@@ -1,4 +1,4 @@
-const C='tp-cache-v5';
+const C='tp-cache-v6';
 const INJECT='\n<script src="./hub-activity.js"></script><script src="./hub-handoff.js"></script><script src="./hub-ui.js"></script>\n';
 function instrument(r){return r.text().then(t=>{const h=new Headers(r.headers);h.delete('content-length');return new Response(t.replace(/<\/body>/i,INJECT+'</body>'),{status:r.status,statusText:r.statusText,headers:h})})}
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>c.addAll(['./','index.html','manifest.webmanifest','input-guide.js','hub-activity.js','hub-handoff.js','hub-ui.js'])))});
