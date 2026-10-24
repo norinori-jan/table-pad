@@ -350,8 +350,14 @@ async function copyResourceText(items){
 function runNewsSearch(provider){
  const q=String($('newsQuery').value||'').trim();
  if(!q){$('newsQuery').focus();$('rSummary').textContent='先に「ニュース検索」にキーワードを入力してください。';return;}
- const e=encodeURIComponent(q);const urls={google:'https://news.google.com/search?q='+e,nyt:'https://www.nytimes.com/search?query='+e,guardian:'https://www.theguardian.com/search?q='+e,reuters:'https://www.reuters.com/site-search/?query='+e,cnbc:'https://www.cnbc.com/search/?query='+e,yahoo:'https://finance.yahoo.com/search/?q='+e};
- const u=urls[provider];if(u)window.open(u,'_blank','noopener,noreferrer');
+ const e=encodeURIComponent(q);
+ // Use Google News publisher-scoped searches for consistent search results.
+ // Guardian's guessed /search?q= route returned HTTP 404 during verification;
+ // publisher pages remain available, and this avoids depending on private search routes.
+ const publishers={nyt:'site:nytimes.com',guardian:'site:theguardian.com',reuters:'site:reuters.com',cnbc:'site:cnbc.com',yahoo:'site:finance.yahoo.com'};
+ const query=provider==='google'?q:((publishers[provider]||'')+' '+q).trim();
+ const u='https://news.google.com/search?q='+encodeURIComponent(query);
+ window.open(u,'_blank','noopener,noreferrer');
 }
 $('rSearch').addEventListener('input',e=>renderResources(e.target.value));
 $('rSelectVisible').addEventListener('click',()=>{RESOURCE_VISIBLE.forEach(i=>RESOURCE_SELECTED.add(i));renderResources($('rSearch').value);});
