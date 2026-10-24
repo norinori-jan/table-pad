@@ -124,7 +124,7 @@ dialog textarea{width:100%;height:160px;background:var(--bg);color:var(--tx);bor
   <div class="chips" style="margin-top:8px"><button id="fDir">↓↔→ 向きを変える</button><button id="fTbl">▦ 表から作る</button><button id="fZi">＋</button><button id="fZo">－</button><button id="fPng">🖼 画像で保存</button></div></div>
   <div id="flowBox"></div>
 </div>
-<div id="rv" hidden><input id="rSearch" type="search" placeholder="情報源を検索（CSV、HTML、デザインなど）"><div class="resource-tools"><button type="button" id="rSelectVisible">表示中を選択</button><button type="button" id="rClear">選択解除</button><button type="button" id="rCopySelected">選択したリンクをコピー</button><button type="button" id="rCopyVisible">表示中のリンクを全部コピー</button></div><div id="rSummary">リンクを複数選び、まとめてコピーしてメモや辞書アプリに貼り付けられます。</div><div id="rCards" class="resource-grid"></div><textarea id="rCopyFallback" aria-label="コピー用テキスト" readonly style="position:fixed;left:-9999px;top:0"></textarea></div><div id="toast"></div>
+<div id="rv" hidden><section style="padding:12px 12px 4px"><h2 style="margin:0 0 6px;font-size:18px">世界ニュース・株式ニュースを探す</h2><p style="margin:0 0 10px;color:var(--dim);font-size:13px;line-height:1.5">キーワードを入力し、読みたい媒体の検索を開きます。原文と日本語翻訳リンクを用意しています。記事本文の取得・自動翻訳・要約のアプリ内実行は、別途APIや利用条件の確認が必要です。</p><input id="newsQuery" type="search" placeholder="ニュース検索（例：Japan economy / Apple earnings）" style="box-sizing:border-box;width:100%;padding:11px;background:var(--p);color:var(--tx);border:1px solid var(--bd);border-radius:9px;font:inherit;margin:0 0 8px"><div class="resource-tools"><button type="button" data-news-search="google">世界ニュース横断検索</button><button type="button" data-news-search="nyt">New York Times</button><button type="button" data-news-search="guardian">The Guardian</button><button type="button" data-news-search="reuters">Reuters</button><button type="button" data-news-search="cnbc">CNBC</button><button type="button" data-news-search="yahoo">Yahoo Finance</button></div></section><hr style="border:0;border-top:1px solid var(--bd);margin:8px 12px"><section style="padding:4px 12px"><h2 style="margin:0 0 6px;font-size:18px">情報源リンク集</h2><input id="rSearch" type="search" placeholder="情報源を絞り込む（HTML、株式、世界、翻訳など）" style="box-sizing:border-box;width:100%;padding:11px;background:var(--p);color:var(--tx);border:1px solid var(--bd);border-radius:9px;font:inherit;margin:0 0 8px"><div class="resource-tools"><button type="button" id="rSelectVisible">表示中を選択</button><button type="button" id="rClear">選択解除</button><button type="button" id="rCopySelected">選択したリンクをコピー</button><button type="button" id="rCopyVisible">表示中のリンクを全部コピー</button></div><div id="rSummary">ニュース検索と情報源検索を使い分けられます。選択したリンクはまとめてコピーしてメモや辞書アプリに貼り付けできます。</div><div id="rCards" class="resource-grid"></div></section><textarea id="rCopyFallback" aria-label="コピー用テキスト" readonly style="position:fixed;left:-9999px;top:0"></textarea></div><div id="toast"></div>
 <dialog id="imp"><div style="font-weight:700;margin-bottom:8px">📂 表データの取り込み（会計ソフトのCSVなど）</div>
   <div style="display:flex;gap:6px;flex-wrap:wrap"><button id="iFile" class="pri">ファイルを選ぶ</button><button id="iPaste">貼り付け</button><button id="iSample">会計サンプル</button></div>
   <input type="file" id="iInp" accept=".csv,.tsv,.txt,text/csv,text/plain,text/tab-separated-values" hidden>
@@ -292,7 +292,7 @@ function applyView(){
 }
 $('views').onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;VIEW=b.dataset.v;applyView();if(VIEW==='r')renderResources($('rSearch').value);window.scrollTo(0,0)};
 
-// ===================== 情報源リンク集（複数選択・一括コピー対応） =====================
+// ===================== 情報源リンク集・ニュース検索 =====================
 const RESOURCE_LINKS = [
  {cat:'表の基本',name:'MDN：HTML の表の基本',desc:'行・列・見出し・セル結合など、表の基礎を学ぶ。',url:'https://developer.mozilla.org/ja/docs/Learn_web_development/Core/Structuring_content/HTML_table_basics'},
  {cat:'公式リファレンス',name:'MDN：HTML table 要素',desc:'table、thead、tbody、th、td などの公式リファレンス。',url:'https://developer.mozilla.org/ja/docs/Web/HTML/Reference/Elements/table'},
@@ -305,7 +305,31 @@ const RESOURCE_LINKS = [
  {cat:'表計算',name:'Microsoft Support：Excel ヘルプ',desc:'表の整形、並び替え、フィルターなどの操作を調べる。',url:'https://support.microsoft.com/excel'},
  {cat:'表計算',name:'Google ドキュメント エディタ ヘルプ',desc:'Google スプレッドシートでの表・データ整理のヘルプ。',url:'https://support.google.com/docs/?hl=ja'},
  {cat:'データ可視化',name:'Datawrapper Academy',desc:'表やグラフを読みやすく伝えるための実践ガイド。',url:'https://academy.datawrapper.de/'},
- {cat:'ウェブ標準',name:'WHATWG HTML Living Standard',desc:'HTML の表要素について標準仕様を確認する。',url:'https://html.spec.whatwg.org/multipage/tables.html'}
+ {cat:'ウェブ標準',name:'WHATWG HTML Living Standard',desc:'HTML の表要素について標準仕様を確認する。',url:'https://html.spec.whatwg.org/multipage/tables.html'},
+ {cat:'世界ニュース',name:'The New York Times：トップニュース',desc:'米国・世界・政治・経済のニュース。記事全文の閲覧は購読条件によります。',url:'https://www.nytimes.com/'},
+ {cat:'世界ニュース',name:'The New York Times：World',desc:'世界各地の国際ニュース。',url:'https://www.nytimes.com/section/world'},
+ {cat:'世界ニュース',name:'The Guardian：World',desc:'国際ニュース。個人利用向けRSSも提供。',url:'https://www.theguardian.com/world'},
+ {cat:'世界ニュース',name:'The Guardian：RSS feeds（公式案内）',desc:'セクションや記事一覧のRSS配信についての公式説明。',url:'https://www.theguardian.com/help/feeds'},
+ {cat:'世界ニュース',name:'Reuters：World',desc:'世界の速報・国際情勢。',url:'https://www.reuters.com/world/'},
+ {cat:'世界ニュース',name:'Associated Press（AP）',desc:'国際・米国ニュースと報道写真。',url:'https://apnews.com/'},
+ {cat:'世界ニュース',name:'BBC News：World',desc:'国際ニュースと解説。',url:'https://www.bbc.com/news/world'},
+ {cat:'世界ニュース',name:'Al Jazeera：News',desc:'中東を含む世界各地のニュース。',url:'https://www.aljazeera.com/news/'},
+ {cat:'世界ニュース',name:'DW：News',desc:'ドイツ発の国際ニュース。',url:'https://www.dw.com/en/top-stories/s-9097'},
+ {cat:'日本語ニュース',name:'NHK WORLD-JAPAN',desc:'日本発の国際ニュース。英語など多言語で提供。',url:'https://www3.nhk.or.jp/nhkworld/'},
+ {cat:'世界ニュース',name:'Google News：世界ニュース',desc:'複数媒体のニュースを横断して探す。',url:'https://news.google.com/'},
+ {cat:'株式・金融ニュース',name:'CNBC：Markets',desc:'米国株・市場・企業・経済のニュース。',url:'https://www.cnbc.com/markets/'},
+ {cat:'株式・金融ニュース',name:'Yahoo Finance',desc:'株式・企業ニュース、決算、相場情報。',url:'https://finance.yahoo.com/'},
+ {cat:'株式・金融ニュース',name:'MarketWatch',desc:'市場・投資・経済ニュース。',url:'https://www.marketwatch.com/'},
+ {cat:'株式・金融ニュース',name:'Financial Times',desc:'世界経済・企業・金融市場。記事閲覧に購読が必要な場合があります。',url:'https://www.ft.com/'},
+ {cat:'株式・金融ニュース',name:'Bloomberg Markets',desc:'世界市場・金融・企業ニュース。',url:'https://www.bloomberg.com/markets'},
+ {cat:'株式・金融ニュース',name:'Investing.com',desc:'世界市場、株式、為替、経済カレンダー。',url:'https://www.investing.com/'},
+ {cat:'企業の一次資料',name:'SEC EDGAR / Investor.gov',desc:'米国上場企業の年次・四半期報告など公式提出書類。',url:'https://www.investor.gov/introduction-investing/getting-started/researching-investments/using-edgar-research-investments'},
+ {cat:'API・自動収集',name:'The Guardian Open Platform API',desc:'Guardianの記事データをプログラムから検索するAPI。APIキーが必要。',url:'https://open-platform.theguardian.com/documentation/'},
+ {cat:'API・自動収集',name:'NewsAPI Documentation',desc:'複数ニュース媒体の記事検索API。APIキーが必要。',url:'https://newsapi.org/docs'},
+ {cat:'API・自動収集',name:'Alpha Vantage：News & Sentiment API',desc:'銘柄・市場テーマに関する金融ニュースとセンチメント。APIキーが必要で機能に利用条件あり。',url:'https://www.alphavantage.co/documentation/#news-sentiment'},
+ {cat:'API・自動収集',name:'The New York Times Developer Portal',desc:'NYTの記事検索などの開発者向けAPI情報。利用条件とAPIキーを要確認。',url:'https://developer.nytimes.com/'},
+ {cat:'API・自動収集',name:'Google Translate',desc:'記事URLの翻訳や、ブラウザーの翻訳機能を補助する。翻訳品質・利用可否はページにより異なる。',url:'https://translate.google.com/'},
+ {cat:'API・自動収集',name:'Google News RSS検索',desc:'検索語を含むニュースのRSSフィード。提供内容・利用条件はGoogle側の仕様に依存。',url:'https://news.google.com/rss'},
 ];
 let RESOURCE_VISIBLE = RESOURCE_LINKS.map((_,i)=>i);
 const RESOURCE_SELECTED = new Set();
@@ -313,9 +337,8 @@ function renderResources(query=''){
  const q=String(query).trim().toLocaleLowerCase();
  RESOURCE_VISIBLE=RESOURCE_LINKS.map((x,i)=>({x,i})).filter(o=>(o.x.cat+' '+o.x.name+' '+o.x.desc).toLocaleLowerCase().includes(q)).map(o=>o.i);
  const chosen=RESOURCE_SELECTED;
- $('rCards').innerHTML=RESOURCE_VISIBLE.map(i=>{const x=RESOURCE_LINKS[i];return '<article class="resource-card"><label class="resource-pick"><input type="checkbox" data-resource-pick value="'+i+'" '+(chosen.has(i)?'checked':'')+'><span>コピー対象に選ぶ</span></label><span class="resource-tag">'+esc(x.cat)+'</span><h3>'+esc(x.name)+'</h3><p>'+esc(x.desc)+'</p><a href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">資料を開く ↗</a></article>';}).join('')||'<p style="padding:12px;color:var(--dim)">該当する情報源がありません。</p>';
- const count=RESOURCE_SELECTED.size;
- $('rSummary').textContent='表示 '+RESOURCE_VISIBLE.length+' / 全 '+RESOURCE_LINKS.length+' 件。選択中 '+count+' 件。チェックしたリンクはタイトルとURLをまとめてコピーし、メモ・辞書アプリなどに貼り付けできます。リンクを開くときは「資料を開く」をタップしてください。';
+ $('rCards').innerHTML=RESOURCE_VISIBLE.map(i=>{const x=RESOURCE_LINKS[i];const translated='https://translate.google.com/translate?sl=auto&tl=ja&u='+encodeURIComponent(x.url);return '<article class="resource-card"><label class="resource-pick"><input type="checkbox" data-resource-pick value="'+i+'" '+(chosen.has(i)?'checked':'')+'><span>コピー対象に選ぶ</span></label><span class="resource-tag">'+esc(x.cat)+'</span><h3>'+esc(x.name)+'</h3><p>'+esc(x.desc)+'</p><div style="display:flex;flex-wrap:wrap;gap:12px"><a href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">原文・公式サイト ↗</a><a href="'+esc(translated)+'" target="_blank" rel="noopener noreferrer">日本語翻訳で開く ↗</a></div></article>';}).join('')||'<p style="padding:12px;color:var(--dim)">該当する情報源がありません。</p>';
+ $('rSummary').textContent='表示 '+RESOURCE_VISIBLE.length+' / 全 '+RESOURCE_LINKS.length+' 件。選択中 '+RESOURCE_SELECTED.size+' 件。原文リンクと日本語翻訳リンクを表示します。記事本文の取得・翻訳・要約の自動化は、各社APIと利用条件を別途確認する必要があります。';
 }
 async function copyResourceText(items){
  if(!items.length){$('rSummary').textContent='先にカードの「コピー対象に選ぶ」にチェックしてください。';return;}
@@ -324,12 +347,21 @@ async function copyResourceText(items){
  catch(e){const box=$('rCopyFallback');box.value=text;box.style.position='fixed';box.style.left='12px';box.style.top='12px';box.style.width='90%';box.style.height='140px';box.style.zIndex='99999';box.focus();box.select();let ok=false;try{ok=document.execCommand('copy');}catch(_){}if(!ok){$('rSummary').textContent='自動コピーできませんでした。画面上のテキスト欄を長押しして「コピー」してください。';return;}box.style.left='-9999px';}
  $('rSummary').textContent=items.length+' 件のリンクをコピーしました。メモ・辞書アプリなどに移動して貼り付けてください。';
 }
+function runNewsSearch(provider){
+ const q=String($('newsQuery').value||'').trim();
+ if(!q){$('newsQuery').focus();$('rSummary').textContent='先に「ニュース検索」にキーワードを入力してください。';return;}
+ const e=encodeURIComponent(q);const urls={google:'https://news.google.com/search?q='+e,nyt:'https://www.nytimes.com/search?query='+e,guardian:'https://www.theguardian.com/search?q='+e,reuters:'https://www.reuters.com/site-search/?query='+e,cnbc:'https://www.cnbc.com/search/?query='+e,yahoo:'https://finance.yahoo.com/search/?q='+e};
+ const u=urls[provider];if(u)window.open(u,'_blank','noopener,noreferrer');
+}
 $('rSearch').addEventListener('input',e=>renderResources(e.target.value));
 $('rSelectVisible').addEventListener('click',()=>{RESOURCE_VISIBLE.forEach(i=>RESOURCE_SELECTED.add(i));renderResources($('rSearch').value);});
 $('rClear').addEventListener('click',()=>{RESOURCE_SELECTED.clear();renderResources($('rSearch').value);});
 $('rCopySelected').addEventListener('click',()=>{copyResourceText(Array.from(RESOURCE_SELECTED).sort((a,b)=>a-b).map(i=>RESOURCE_LINKS[i]));});
 $('rCopyVisible').addEventListener('click',()=>copyResourceText(RESOURCE_VISIBLE.map(i=>RESOURCE_LINKS[i])));
 $('rCards').addEventListener('change',e=>{if(e.target.matches('[data-resource-pick]')){const i=Number(e.target.value);if(e.target.checked)RESOURCE_SELECTED.add(i);else RESOURCE_SELECTED.delete(i);$('rSummary').textContent='表示 '+RESOURCE_VISIBLE.length+' / 全 '+RESOURCE_LINKS.length+' 件。選択中 '+RESOURCE_SELECTED.size+' 件。選択したリンクはまとめてコピーできます。';}});
+document.querySelectorAll('[data-news-search]').forEach(b=>b.addEventListener('click',()=>runNewsSearch(b.dataset.newsSearch)));
+$('newsQuery').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();runNewsSearch('google');}});
+
 // ===================== データの読み取り =====================
 const PAL=['#3987e5','#d95926','#199e70','#c98500','#d55181','#008300','#9085e9'],OTHER='#8a8f9c',INK='#eef1f7',DIM='#9aa3b8',GRID='#2c3345',SURF='#181b24';
 function num(s){let x=String(s==null?'':s).trim();let neg=false;if(/^[△▲]/.test(x)){neg=true;x=x.slice(1)}else if(/^\(.*\)$/.test(x)){neg=true;x=x.slice(1,-1)}
