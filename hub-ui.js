@@ -43,3 +43,11 @@
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
 })();
+(function(){
+  function loadGuide(){
+    if(window.TablePadInputGuide||document.getElementById('tpInputGuideScript'))return;
+    var s=document.createElement('script');s.id='tpInputGuideScript';s.src='./input-guide.js';s.async=false;
+    document.body.appendChild(s);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',loadGuide);else loadGuide();
+})();
