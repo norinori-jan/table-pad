@@ -78,7 +78,7 @@ th.on{background:var(--blue);color:#fff}
 .pv th{background:var(--p2);position:sticky;top:0;z-index:1;color:var(--dim)}.pv td:first-child,.pv th:first-child{text-align:left;position:sticky;left:0;background:var(--p2);z-index:2}
 dialog{background:var(--p);color:var(--tx);border:1px solid var(--bd);border-radius:14px;width:92%;max-width:440px}
 dialog textarea{width:100%;height:160px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px;font:inherit}
-.resource-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:10px;padding:12px}.resource-card{background:var(--p);border:1px solid var(--bd);border-radius:12px;padding:13px}.resource-card h3{font-size:15px;margin:0 0 7px}.resource-card p{font-size:13px;color:var(--dim);line-height:1.55;margin:0 0 10px}.resource-card a{color:var(--blue);overflow-wrap:anywhere}.resource-tag{display:inline-block;font-size:11px;border:1px solid var(--bd);border-radius:20px;padding:3px 7px;margin-bottom:8px;color:var(--dim)}#rSearch{width:calc(100% - 24px);margin:12px;padding:10px;background:var(--p);color:var(--tx);border:1px solid var(--bd);border-radius:9px;font:inherit}#rSummary{padding:0 12px;color:var(--dim);font-size:12px}.resource-grid{padding-top:8px}</style></head><body>
+.resource-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:10px;padding:12px}.resource-card{background:var(--p);border:1px solid var(--bd);border-radius:12px;padding:13px}.resource-card h3{font-size:15px;margin:0 0 7px}.resource-card p{font-size:13px;color:var(--dim);line-height:1.55;margin:0 0 10px}.resource-card a{color:var(--blue);overflow-wrap:anywhere}.resource-tag{display:inline-block;font-size:11px;border:1px solid var(--bd);border-radius:20px;padding:3px 7px;margin-bottom:8px;color:var(--dim)}#rSearch{width:calc(100% - 24px);margin:12px;padding:10px;background:var(--p);color:var(--tx);border:1px solid var(--bd);border-radius:9px;font:inherit}#rSummary{padding:0 12px;color:var(--dim);font-size:12px}.resource-grid{padding-top:8px}.resource-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:10px;padding:12px}.resource-card{background:var(--p);border:1px solid var(--bd);border-radius:12px;padding:13px}.resource-card h3{font-size:15px;margin:0 0 7px}.resource-card p{font-size:13px;color:var(--dim);line-height:1.55;margin:0 0 10px}.resource-card a{color:var(--blue);overflow-wrap:anywhere}.resource-tag{display:inline-block;font-size:11px;border:1px solid var(--bd);border-radius:20px;padding:3px 7px;margin-bottom:8px;color:var(--dim)}#rSearch{width:calc(100% - 24px);margin:12px;padding:10px;background:var(--p);color:var(--tx);border:1px solid var(--bd);border-radius:9px;font:inherit}.resource-tools{display:flex;flex-wrap:wrap;gap:7px;padding:0 12px}.resource-tools button{padding:9px 11px;border:1px solid var(--bd);border-radius:9px;background:var(--p);color:var(--tx);font:inherit;font-size:13px}.resource-pick{display:flex;align-items:center;gap:7px;margin-bottom:8px;font-size:13px;color:var(--dim)}.resource-pick input{width:20px;height:20px}#rSummary{padding:10px 12px;color:var(--dim);font-size:12px;line-height:1.5}.resource-grid{padding-top:8px}</style></head><body>
 <header><b>▦ table-pad</b><button id="bNew" class="pri">＋ 新しい表</button><button id="bImp">📂 取り込み</button><button id="bSync" title="声の受け取り設定">🎙⚙</button><button id="bSto" title="保存量を見る">📊</button><button id="bIO">⇅</button></header>
 <div id="views"><button data-v="t" class="on">▦ 表</button><button data-v="l">🗂 一覧</button><button data-v="s">📉 株価</button><button data-v="x">🧮 計算</button><button data-v="z">🔵 集合</button><button data-v="c">📊 グラフ</button><button data-v="d">📈 ダッシュ</button><button data-v="f">🔀 フロー</button><button data-v="r">🔎 情報源</button></div>
 <div id="tabs"></div>
@@ -124,7 +124,7 @@ dialog textarea{width:100%;height:160px;background:var(--bg);color:var(--tx);bor
   <div class="chips" style="margin-top:8px"><button id="fDir">↓↔→ 向きを変える</button><button id="fTbl">▦ 表から作る</button><button id="fZi">＋</button><button id="fZo">－</button><button id="fPng">🖼 画像で保存</button></div></div>
   <div id="flowBox"></div>
 </div>
-<div id="rv" hidden><input id="rSearch" type="search" placeholder="情報源を検索（CSV、HTML、デザインなど）"><div id="rSummary">表作成・データ整理に役立つ公開ドキュメントと学習資料です。リンク先の利用条件は各サイトで確認してください。</div><div id="rCards" class="resource-grid"></div></div><div id="toast"></div>
+<div id="rv" hidden><input id="rSearch" type="search" placeholder="情報源を検索（CSV、HTML、デザインなど）"><div class="resource-tools"><button type="button" id="rSelectVisible">表示中を選択</button><button type="button" id="rClear">選択解除</button><button type="button" id="rCopySelected">選択したリンクをコピー</button><button type="button" id="rCopyVisible">表示中のリンクを全部コピー</button></div><div id="rSummary">リンクを複数選び、まとめてコピーしてメモや辞書アプリに貼り付けられます。</div><div id="rCards" class="resource-grid"></div><textarea id="rCopyFallback" aria-label="コピー用テキスト" readonly style="position:fixed;left:-9999px;top:0"></textarea></div><div id="toast"></div>
 <dialog id="imp"><div style="font-weight:700;margin-bottom:8px">📂 表データの取り込み（会計ソフトのCSVなど）</div>
   <div style="display:flex;gap:6px;flex-wrap:wrap"><button id="iFile" class="pri">ファイルを選ぶ</button><button id="iPaste">貼り付け</button><button id="iSample">会計サンプル</button></div>
   <input type="file" id="iInp" accept=".csv,.tsv,.txt,text/csv,text/plain,text/tab-separated-values" hidden>
@@ -292,7 +292,7 @@ function applyView(){
 }
 $('views').onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;VIEW=b.dataset.v;applyView();if(VIEW==='r')renderResources($('rSearch').value);window.scrollTo(0,0)};
 
-// ===================== 情報源リンク集（APIキー不要の公開ページ） =====================
+// ===================== 情報源リンク集（複数選択・一括コピー対応） =====================
 const RESOURCE_LINKS = [
  {cat:'表の基本',name:'MDN：HTML の表の基本',desc:'行・列・見出し・セル結合など、表の基礎を学ぶ。',url:'https://developer.mozilla.org/ja/docs/Learn_web_development/Core/Structuring_content/HTML_table_basics'},
  {cat:'公式リファレンス',name:'MDN：HTML table 要素',desc:'table、thead、tbody、th、td などの公式リファレンス。',url:'https://developer.mozilla.org/ja/docs/Web/HTML/Reference/Elements/table'},
@@ -307,13 +307,29 @@ const RESOURCE_LINKS = [
  {cat:'データ可視化',name:'Datawrapper Academy',desc:'表やグラフを読みやすく伝えるための実践ガイド。',url:'https://academy.datawrapper.de/'},
  {cat:'ウェブ標準',name:'WHATWG HTML Living Standard',desc:'HTML の表要素について標準仕様を確認する。',url:'https://html.spec.whatwg.org/multipage/tables.html'}
 ];
+let RESOURCE_VISIBLE = RESOURCE_LINKS.map((_,i)=>i);
+const RESOURCE_SELECTED = new Set();
 function renderResources(query=''){
  const q=String(query).trim().toLocaleLowerCase();
- const list=RESOURCE_LINKS.filter(x=>(x.cat+' '+x.name+' '+x.desc).toLocaleLowerCase().includes(q));
- $('rCards').innerHTML=list.map(x=>'<article class="resource-card"><span class="resource-tag">'+esc(x.cat)+'</span><h3>'+esc(x.name)+'</h3><p>'+esc(x.desc)+'</p><a href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">公式ページ・資料を開く ↗</a></article>').join('')||'<p style="padding:12px;color:var(--dim)">該当する情報源がありません。</p>';
- $('rSummary').textContent='公開ドキュメント・学習資料 '+list.length+' 件（全 '+RESOURCE_LINKS.length+' 件）。外部ページを開く方式で、APIキーは不要です。';
+ RESOURCE_VISIBLE=RESOURCE_LINKS.map((x,i)=>({x,i})).filter(o=>(o.x.cat+' '+o.x.name+' '+o.x.desc).toLocaleLowerCase().includes(q)).map(o=>o.i);
+ const chosen=RESOURCE_SELECTED;
+ $('rCards').innerHTML=RESOURCE_VISIBLE.map(i=>{const x=RESOURCE_LINKS[i];return '<article class="resource-card"><label class="resource-pick"><input type="checkbox" data-resource-pick value="'+i+'" '+(chosen.has(i)?'checked':'')+'><span>コピー対象に選ぶ</span></label><span class="resource-tag">'+esc(x.cat)+'</span><h3>'+esc(x.name)+'</h3><p>'+esc(x.desc)+'</p><a href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">資料を開く ↗</a></article>';}).join('')||'<p style="padding:12px;color:var(--dim)">該当する情報源がありません。</p>';
+ const count=RESOURCE_SELECTED.size;
+ $('rSummary').textContent='表示 '+RESOURCE_VISIBLE.length+' / 全 '+RESOURCE_LINKS.length+' 件。選択中 '+count+' 件。チェックしたリンクはタイトルとURLをまとめてコピーし、メモ・辞書アプリなどに貼り付けできます。リンクを開くときは「資料を開く」をタップしてください。';
+}
+async function copyResourceText(items){
+ if(!items.length){$('rSummary').textContent='先にカードの「コピー対象に選ぶ」にチェックしてください。';return;}
+ const text=items.map(x=>x.name+'\n'+x.url).join('\n\n');
+ try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);}else{throw new Error('clipboard unavailable');}}
+ catch(e){const box=$('rCopyFallback');box.value=text;box.style.position='fixed';box.style.left='12px';box.style.top='12px';box.style.width='90%';box.style.height='140px';box.style.zIndex='99999';box.focus();box.select();let ok=false;try{ok=document.execCommand('copy');}catch(_){}if(!ok){$('rSummary').textContent='自動コピーできませんでした。画面上のテキスト欄を長押しして「コピー」してください。';return;}box.style.left='-9999px';}
+ $('rSummary').textContent=items.length+' 件のリンクをコピーしました。メモ・辞書アプリなどに移動して貼り付けてください。';
 }
 $('rSearch').addEventListener('input',e=>renderResources(e.target.value));
+$('rSelectVisible').addEventListener('click',()=>{RESOURCE_VISIBLE.forEach(i=>RESOURCE_SELECTED.add(i));renderResources($('rSearch').value);});
+$('rClear').addEventListener('click',()=>{RESOURCE_SELECTED.clear();renderResources($('rSearch').value);});
+$('rCopySelected').addEventListener('click',()=>{copyResourceText(Array.from(RESOURCE_SELECTED).sort((a,b)=>a-b).map(i=>RESOURCE_LINKS[i]));});
+$('rCopyVisible').addEventListener('click',()=>copyResourceText(RESOURCE_VISIBLE.map(i=>RESOURCE_LINKS[i])));
+$('rCards').addEventListener('change',e=>{if(e.target.matches('[data-resource-pick]')){const i=Number(e.target.value);if(e.target.checked)RESOURCE_SELECTED.add(i);else RESOURCE_SELECTED.delete(i);$('rSummary').textContent='表示 '+RESOURCE_VISIBLE.length+' / 全 '+RESOURCE_LINKS.length+' 件。選択中 '+RESOURCE_SELECTED.size+' 件。選択したリンクはまとめてコピーできます。';}});
 // ===================== データの読み取り =====================
 const PAL=['#3987e5','#d95926','#199e70','#c98500','#d55181','#008300','#9085e9'],OTHER='#8a8f9c',INK='#eef1f7',DIM='#9aa3b8',GRID='#2c3345',SURF='#181b24';
 function num(s){let x=String(s==null?'':s).trim();let neg=false;if(/^[△▲]/.test(x)){neg=true;x=x.slice(1)}else if(/^\(.*\)$/.test(x)){neg=true;x=x.slice(1,-1)}
