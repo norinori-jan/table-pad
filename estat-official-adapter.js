@@ -4,7 +4,7 @@ if(window.TablePadEStat)return;
 const VERSION='table_pad_estat_official_v1';
 const API='https://api.e-stat.go.jp/rest/2.1/app/json/getStatsData';
 const KEY='tp_estat_app_id_v1';
-function clean(v,n){return String(v==null?'':'').replace(/\s+/g,' ').trim().slice(0,n||1000)}
+function clean(v,n){return String(v==null?'':v).replace(/\s+/g,' ').trim().slice(0,n||1000)}
 function appId(){return localStorage.getItem(KEY)||''}
 function setAppId(v){const x=clean(v,200);if(x)localStorage.setItem(KEY,x);else localStorage.removeItem(KEY);return x}
 function getUrl(statsDataId,extra){const id=appId();if(!id)throw new Error('e-StatのアプリケーションIDが未設定です');if(!statsDataId)throw new Error('統計表IDが未設定です');const p=new URLSearchParams({appId:id,statsDataId:String(statsDataId)});Object.keys(extra||{}).forEach(k=>{if(extra[k]!==''&&extra[k]!=null)p.set(k,String(extra[k]))});return API+'?'+p.toString()}
