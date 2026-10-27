@@ -1,9 +1,9 @@
 (function(){
 'use strict';
 if(window.TablePadEStat)return;
-const VERSION='table_pad_estat_official_v3';
+const VERSION='table_pad_estat_official_v4';
 const API='https://api.e-stat.go.jp/rest/2.1/app/json/';
-const KEY='tp_estat_app_id_v1',CACHE='tp_estat_cache_v1';
+const KEY='tp_estat_app_id_v1',CACHE='tp_estat_cache_v1',MAX_CACHE_CHARS=700000;
 function clean(v,n){return String(v==null?'':v).replace(/\s+/g,' ').trim().slice(0,n||1000)}
 function appId(){return localStorage.getItem(KEY)||''}
 function setAppId(v){const x=clean(v,200);if(x)localStorage.setItem(KEY,x);else localStorage.removeItem(KEY);return x}
@@ -13,7 +13,7 @@ function attr(v,k){return v&&v['@'+k]!=null?String(v['@'+k]):''}
 function readCache(){try{const x=JSON.parse(localStorage.getItem(CACHE)||'{}');return x&&typeof x==='object'?x:{}}catch(e){return{}}}
 function writeCache(x){localStorage.setItem(CACHE,JSON.stringify(x))}
 function cacheGet(k){const c=readCache()[k];return c&&c.data?c:null}
-function cachePut(k,data){const c=readCache();c[k]={savedAt:new Date().toISOString(),data};writeCache(c);return data}
+function cachePut(k,data){const packed=JSON.stringify(data);if(packed.length>MAX_CACHE_CHARS)return data;const c=readCache();c[k]={savedAt:new Date().toISOString(),data};const keys=Object.keys(c);while(JSON.stringify(c).length>900000&&keys.length>1)delete c[keys.shift()];writeCache(c);return data}
 function cacheKey(path,p){return path+'?'+Object.keys(p||{}).sort().map(k=>k+'='+String(p[k])).join('&')}
 function url(path,p){const id=appId();if(!id)throw new Error('e-StatのアプリケーションIDが未設定です');const q=new URLSearchParams({appId:id,lang:'J'});Object.keys(p||{}).forEach(k=>{if(p[k]!==''&&p[k]!=null)q.set(k,String(p[k]))});return API+path+'?'+q.toString()}
 async function request(path,p,opt){const sourceUrl=url(path,p),key=cacheKey(path,p),cached=cacheGet(key);if(!(opt&&opt.force)&&cached)return Object.assign({},cached.data,{cached:true,cacheSavedAt:cached.savedAt});const r=await fetch(sourceUrl,{cache:'no-store'});if(!r.ok)throw new Error('e-Stat APIに接続できませんでした（HTTP '+r.status+'）');const data=await r.json();const root=data&&Object.values(data)[0];if(root&&root.RESULT&&String(root.RESULT.STATUS)!=='0')throw new Error(clean(root.RESULT.ERROR_MSG||'e-Stat APIエラー',300));const out={schema:VERSION,source:'estat',sourceName:'e-Stat',authority:'政府統計',sourceUrl,data,observedAt:new Date().toISOString(),cached:false};cachePut(key,out);return out}
@@ -27,5 +27,5 @@ function rowsFrom(data,limit){const root=data&&data.GET_STATS_DATA&&data.GET_STA
 function rows(data,limit){const h=['取得日時','情報源','統計名','作成機関','提供統計名','表題','大分類','小分類','統計表ID','表章項目コード','表章項目','分類01コード','分類01','分類02コード','分類02','分類03コード','分類03','地域コード','地域','時間コード','時間','値','数値','単位','情報源URL','取得方法'];return [h].concat(rowsFrom(data,limit))}
 function toOfficial(data,limit){const r=rowsFrom(data,limit),m=meta(data);return {schema:VERSION,source:'estat',sourceName:'e-Stat',authority:'政府統計',title:m.tableName||m.statisticsName||'e-Stat統計',category:'政府統計',value:String(r.length)+'件',unit:'件',location:m.mainCategory||'',latitude:null,longitude:null,sourceUrl:data.sourceUrl,method:data.cached?'local-cache':'official-api',observedAt:data.observedAt,notes:'統計表ID '+data.statsDataId+'。CLASS_INFによる項目名・地域名・時間名を行に展開して保存。'}}
 function clearCache(){localStorage.removeItem(CACHE)}
-window.TablePadEStat={VERSION,API,KEY,CACHE,appId,setAppId,searchStats,searchResults,getUrl,getStatsData,meta,rowsFrom,rows,toOfficial,clearCache};
+window.TablePadEStat={VERSION,API,KEY,CACHE,MAX_CACHE_CHARS,appId,setAppId,searchStats,searchResults,getUrl,getStatsData,meta,rowsFrom,rows,toOfficial,clearCache};
 })();
