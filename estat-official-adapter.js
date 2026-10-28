@@ -1,8 +1,8 @@
 (function(){
 'use strict';
 if(window.TablePadEStat)return;
-const VERSION='table_pad_estat_official_v4';
-const API='https://api.e-stat.go.jp/rest/2.1/app/json/';
+const VERSION='table_pad_estat_official_v5';
+const API='https://api.e-stat.go.jp/rest/3.0/app/json/';
 const KEY='tp_estat_app_id_v1',CACHE='tp_estat_cache_v1',MAX_CACHE_CHARS=700000;
 function clean(v,n){return String(v==null?'':v).replace(/\s+/g,' ').trim().slice(0,n||1000)}
 function appId(){return localStorage.getItem(KEY)||''}
@@ -14,7 +14,7 @@ function readCache(){try{const x=JSON.parse(localStorage.getItem(CACHE)||'{}');r
 function writeCache(x){localStorage.setItem(CACHE,JSON.stringify(x))}
 function cacheGet(k){const c=readCache()[k];return c&&c.data?c:null}
 function cachePut(k,data){const packed=JSON.stringify(data);if(packed.length>MAX_CACHE_CHARS)return data;const c=readCache();c[k]={savedAt:new Date().toISOString(),data};let keys=Object.keys(c);while((JSON.stringify(c).length>900000||keys.length>8)&&keys.length>1){delete c[keys.shift()];keys=Object.keys(c)}try{writeCache(c)}catch(e){try{localStorage.removeItem(CACHE)}catch(_){}}return data}
-function cacheKey(path,p){return path+'?'+Object.keys(p||{}).sort().map(k=>k+'='+String(p[k])).join('&')}
+function cacheKey(path,p){return VERSION+'|'+path+'?'+Object.keys(p||{}).sort().map(k=>k+'='+String(p[k])).join('&')}
 function url(path,p){const id=appId();if(!id)throw new Error('e-StatのアプリケーションIDが未設定です');const q=new URLSearchParams({appId:id,lang:'J'});Object.keys(p||{}).forEach(k=>{if(p[k]!==''&&p[k]!=null)q.set(k,String(p[k]))});return API+path+'?'+q.toString()}
 async function request(path,p,opt){const sourceUrl=url(path,p),key=cacheKey(path,p),cached=cacheGet(key);if(!(opt&&opt.force)&&cached)return Object.assign({},cached.data,{cached:true,cacheSavedAt:cached.savedAt});const r=await fetch(sourceUrl,{cache:'no-store'});if(!r.ok)throw new Error('e-Stat APIに接続できませんでした（HTTP '+r.status+'）');const data=await r.json();const root=data&&Object.values(data)[0];if(root&&root.RESULT&&String(root.RESULT.STATUS)!=='0')throw new Error(clean(root.RESULT.ERROR_MSG||'e-Stat APIエラー',300));const out={schema:VERSION,source:'estat',sourceName:'e-Stat',authority:'政府統計',sourceUrl:API+path,requestParams:Object.assign({},p),data,observedAt:new Date().toISOString(),cached:false};cachePut(key,out);return out}
 async function searchStats(params,opt){const p=Object.assign({searchKind:1,limit:30},params||{});if(!p.searchWord&&!p.statsField&&!p.statsCode&&!p.surveyYears&&!p.openYears&&!p.updatedDate)throw new Error('検索語または統計分野などを1つ指定してください');return request('getStatsList',p,opt)}
