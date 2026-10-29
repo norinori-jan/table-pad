@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ja"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f1117"><meta name="tp-rev" content="tp-r7"><title>table-pad</title><link rel="manifest" href="manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes">
@@ -1765,4 +1765,74 @@ $('sv').addEventListener('click',async e=>{if(e.target.closest('#jqa-fetch')){tr
 load();setTimeout(()=>pullInbox(false),600);if(!tables.length){const t=mk('はじめての表',4,3);t.d[0]=['項目','内容','メモ'];tables.push(t);cur=t.id;save()}if(!T())cur=tables[0].id;render();ssTransferIn();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){navigator.serviceWorker.register('sw.js').catch(function(){})}
 })();
-</script></body></html>
+</script><script src="./news-lite.js" defer></script>
+<!-- TABLEPAD_TRANSLATION_PANEL -->
+<style>
+#tpTranslateLauncher{position:fixed;right:12px;bottom:170px;z-index:9998;background:#4A9EFF;color:#fff;border:0;border-radius:999px;padding:12px 16px;font-weight:700;box-shadow:0 3px 12px #0006}
+#tpTranslatePanel{display:none;position:fixed;inset:0;z-index:9999;background:#000b;padding:12px;overflow:auto}
+#tpTranslatePanel .tp-box{max-width:680px;margin:24px auto;background:#181b24;color:#eef1f7;border:1px solid #323a4d;border-radius:14px;padding:14px}
+#tpTranslatePanel h2{font-size:18px;margin:0 0 10px}
+#tpTranslatePanel label{display:block;font-size:13px;margin:10px 0 5px;color:#c5ccda}
+#tpTranslatePanel textarea{display:block;width:100%;min-height:110px;resize:vertical;background:#0f1117;color:#eef1f7;border:1px solid #323a4d;border-radius:9px;padding:10px;font:16px/1.5 sans-serif}
+#tpTranslatePanel .tp-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+#tpTranslatePanel button{font-size:14px}
+#tpTranslatePanel .tp-note{font-size:12px;color:#aab3c7;line-height:1.5;margin-top:8px}
+</style>
+<button id="tpTranslateLauncher" type="button">&#32763;&#35379; / English</button>
+<div id="tpTranslatePanel" role="dialog" aria-modal="true" aria-label="Translation panel">
+ <div class="tp-box">
+  <h2>&#12491;&#12517;&#12540;&#12473;&#33521;&#35486; / &#32763;&#35379;</h2>
+  <div class="tp-row"><button id="tpTranslateClose" type="button">&#38281;&#12376;&#12427;</button></div>
+  <label for="tpEnglish">&#9312; English input</label>
+  <textarea id="tpEnglish" placeholder="Paste English news here..."></textarea>
+  <div class="tp-row">
+   <button id="tpCopyEnglish" type="button">&#33521;&#25991;&#12434;&#12467;&#12500;&#12540;</button>
+   <button id="tpOpenGoogle" type="button">Google Translate</button>
+   <button id="tpSpeakEnglish" type="button">&#33521;&#35486;&#12434;&#35501;&#12415;&#19978;&#12370;</button>
+   <button id="tpStopSpeak" type="button">&#20572;&#27490;</button>
+  </div>
+  <label for="tpJapanese">&#9313; &#26085;&#26412;&#35486; output (paste translation here)</label>
+  <textarea id="tpJapanese" placeholder="Paste Japanese translation here..."></textarea>
+  <div class="tp-row">
+   <button id="tpCopyJapanese" type="button">&#26085;&#26412;&#35486;&#12434;&#12467;&#12500;&#12540;</button>
+   <button id="tpClearBoth" type="button">&#20840;&#37096;&#28040;&#12377;</button>
+  </div>
+  <p class="tp-note">iPhone standard Translate app: tap Copy English, open the Translate app, paste the text, translate it, then copy the Japanese result and paste it into the output box. Google Translate opens in a new tab. Translation results are not automatically imported.</p>
+ </div>
+</div>
+<script>
+(function(){
+ const byId = id => document.getElementById(id);
+ const panel = byId('tpTranslatePanel');
+ const english = byId('tpEnglish');
+ const japanese = byId('tpJapanese');
+ function copyText(text, area){
+  if (navigator.clipboard && window.isSecureContext) {
+   navigator.clipboard.writeText(text).then(()=>alert('Copied.')).catch(()=>fallbackCopy(area));
+  } else { fallbackCopy(area); }
+ }
+ function fallbackCopy(area){
+  area.focus(); area.select();
+  try { document.execCommand('copy'); alert('Selected text. If it was not copied, use Copy from the menu.'); }
+  catch(e){ alert('Please select and copy the text manually.'); }
+ }
+ byId('tpTranslateLauncher').addEventListener('click',()=>{panel.style.display='block';});
+ byId('tpTranslateClose').addEventListener('click',()=>{panel.style.display='none';});
+ panel.addEventListener('click',e=>{if(e.target===panel) panel.style.display='none';});
+ byId('tpCopyEnglish').addEventListener('click',()=>copyText(english.value,english));
+ byId('tpCopyJapanese').addEventListener('click',()=>copyText(japanese.value,japanese));
+ byId('tpOpenGoogle').addEventListener('click',()=>{
+  if(!english.value.trim()){alert('Paste English text first.');return;}
+  window.open('https://translate.google.com/?sl=auto&tl=ja&text='+encodeURIComponent(english.value)+'&op=translate','_blank','noopener');
+ });
+ byId('tpSpeakEnglish').addEventListener('click',()=>{
+  if(!('speechSynthesis' in window)){alert('Speech is not supported in this browser.');return;}
+  if(!english.value.trim()){alert('Paste English text first.');return;}
+  speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(english.value); u.lang='en-US'; u.rate=0.85; speechSynthesis.speak(u);
+ });
+ byId('tpStopSpeak').addEventListener('click',()=>{if('speechSynthesis' in window)speechSynthesis.cancel();});
+ byId('tpClearBoth').addEventListener('click',()=>{english.value='';japanese.value='';});
+})();
+</script>
+</body></html>
+
