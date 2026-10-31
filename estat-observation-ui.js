@@ -10,11 +10,11 @@ function make(){
  const box=document.createElement('div');box.id='tpEStatObs';box.style.cssText='position:fixed;right:14px;bottom:280px;z-index:9994;font-family:system-ui,sans-serif';
  const b=btn('📊 e-Stat：政府統計を検索',true);
  const panel=document.createElement('div');panel.hidden=true;panel.style.cssText='position:absolute;right:0;bottom:48px;width:min(470px,calc(100vw - 28px));max-height:78vh;overflow:auto;background:#fff;border:1px solid #aaa;border-radius:14px;padding:14px;box-shadow:0 8px 28px rgba(0,0,0,.22);color:#222';
- const h=document.createElement('strong');h.textContent='政府統計を検索して、表に取り込む';h.style.cssText='font-size:17px;color:#111';panel.appendChild(h);
+ const key=inp('ここに e-Stat アプリケーションID を貼り付け',window.TablePadEStat.appId());key.type='password';key.autocomplete='off';key.setAttribute('aria-label','e-Stat アプリケーションID');
+ const keyLabel=label('① e-StatのアプリケーションID');keyLabel.style.marginTop='2px';panel.appendChild(keyLabel);panel.appendChild(key);
+ const saveKey=btn('① IDを保存',true);saveKey.style.display='block';saveKey.style.width='100%';panel.appendChild(saveKey);
+ const h=document.createElement('strong');h.textContent='政府統計を検索して、表に取り込む';h.style.cssText='display:block;font-size:17px;color:#111;margin-top:14px';panel.appendChild(h);
  panel.appendChild(help('手順：①API IDを保存 → ②統計を検索 → ③候補を選ぶ → ④データを取得 → ⑤表に保存。'));
- const key=inp('ここに e-Stat アプリケーションID を貼り付け',window.TablePadEStat.appId());key.type='password';
- panel.appendChild(label('① e-StatのアプリケーションID'));panel.appendChild(key);
- const saveKey=btn('① IDを保存',true);panel.appendChild(saveKey);
  const word=inp('例：人口、消費者物価、労働力','');
  panel.appendChild(label('② 調べたい統計を検索'));panel.appendChild(word);
  const search=btn('② 統計を検索する',true);panel.appendChild(search);
