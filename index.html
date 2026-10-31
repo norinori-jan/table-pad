@@ -99,6 +99,40 @@ dialog textarea{width:100%;height:160px;background:var(--bg);color:var(--tx);bor
   }
   #tpEStatObs > button { max-width: calc(100vw - 16px) !important; }
 }
+
+/* Responsive usability audit: phone layout */
+@media (max-width: 600px) {
+  html, body { width:100%; max-width:100%; overflow-x:hidden; }
+  header { position:relative; flex-wrap:wrap; align-items:stretch; gap:6px; padding:8px; }
+  header b { flex:1 0 100%; }
+  header button { flex:1 1 calc(50% - 6px); min-width:0; white-space:normal; line-height:1.25; font-size:14px; }
+  #views { padding:8px; }
+  #tabs { padding:8px; }
+  #title { width:calc(100% - 16px); margin-left:8px; margin-right:8px; }
+  #wrap { margin:0 8px; max-height:52vh; max-height:52dvh; }
+  #bar { padding:6px 6px calc(6px + env(safe-area-inset-bottom)); }
+  #bar .row { gap:5px; margin-bottom:5px; }
+  #bar button { min-height:42px; padding:8px 10px; }
+  #hint { padding-bottom:10px; }
+  .resource-tools { padding:0 8px; }
+  #rSearch { width:calc(100% - 16px); margin:8px; }
+  /* Every official-data panel opens as a full-screen dialog; the dialog, not the page, scrolls. */
+  #tpOfficialInfo > div, #tpGsiObs > div, #tpJmaObs > div,
+  #tpEStatObs > div, #tpBOJObs > div, #tpMOFObs > div, #tpFSAObs > div {
+    max-width:none !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+    overscroll-behavior:contain !important;
+    -webkit-overflow-scrolling:touch !important;
+    touch-action:pan-y !important;
+  }
+  #tpOfficialInfo button, #tpGsiObs button, #tpJmaObs button,
+  #tpEStatObs button, #tpBOJObs button, #tpMOFObs button, #tpFSAObs button {
+    min-height:44px;
+    white-space:normal;
+    line-height:1.3;
+  }
+}
 </style></head><body>
 <header><b>▦ table-pad</b><button id="bNew" class="pri" title="空の表を作成">＋ 表を作成</button><button id="bImp">📂 取り込み</button><button id="bSync" title="音声・flow-mind連携の設定" aria-label="音声・flow-mind連携の設定">🎙 音声連携設定</button><button id="bSto" title="端末内の保存量を確認" aria-label="保存量を確認">📦 保存量</button><button id="bIO" title="表データの読み込み・書き出し" aria-label="表データの読み込み・書き出し">⇅ 入出力</button></header>
 <div id="views"><button data-v="t" class="on">▦ 表</button><button data-v="l">🗂 一覧</button><button data-v="s">📉 株価</button><button data-v="x">🧮 計算</button><button data-v="z">🔵 集合</button><button data-v="c">📊 グラフ</button><button data-v="d">📈 ダッシュ</button><button data-v="f">🔀 フロー</button><button data-v="r">🔎 情報源</button></div>
