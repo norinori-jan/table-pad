@@ -156,6 +156,19 @@ dialog textarea{width:100%;height:160px;background:var(--bg);color:var(--tx);bor
     <div><label>並び順</label><select id="vSort"><option value="val">大きい順</option><option value="orig">表の順</option><option value="name">名前順</option></select></div>
     <div id="granBox"><label>日付のまとめ方</label><select id="vGran"><option value="y">年ごと</option><option value="m">月ごと</option><option value="d">日ごと</option></select></div></div>
     <div style="margin-top:8px"><button id="vNext">🔄 次の角度（分類を順に切替）</button></div></div>
+  <div class="sec" id="compareSec">
+    <h4>④ 別の保存済み統計と比較</h4>
+    <p style="font-size:13px;color:var(--dim);line-height:1.6;margin:4px 0 10px">今開いている表と、もう1つの保存済み表を、共通する分類項目で対応させて比較用の表を作ります。例：年ごとの人口と物価。</p>
+    <div class="ctl">
+      <div><label for="cmpTable">比較する表</label><select id="cmpTable"></select></div>
+      <div><label for="cmpKeyA">この表の共通項目</label><select id="cmpKeyA"></select></div>
+      <div><label for="cmpValA">この表の数値</label><select id="cmpValA"></select></div>
+      <div><label for="cmpKeyB">比較する表の共通項目</label><select id="cmpKeyB"></select></div>
+      <div><label for="cmpValB">比較する表の数値</label><select id="cmpValB"></select></div>
+    </div>
+    <button id="cmpBuild" class="pri" style="margin-top:10px">＋ 比較用の表を作成してグラフで見る</button>
+    <div id="cmpStatus" role="status" style="font-size:13px;line-height:1.5;margin-top:8px;color:var(--dim)">2つの表に共通する項目（年・月・地域など）を選んでください。</div>
+  </div>
   <div class="sec"><h4>③ 絞り込み（スライサー）<span id="slCnt" style="float:right;font-weight:400"></span></h4><div id="slicers"></div><button id="slClr" style="margin-top:6px">絞り込みを全部解除</button></div>
 </div>
 <div id="lv" hidden></div>
@@ -709,7 +722,48 @@ function renderChart(){
   const R=compute(t,V);$('slCnt').textContent=R.all+'件中 '+R.n+'件';
   $('why').innerHTML=whyText(t,V,R);$('tip').textContent='棒・点・線をタップすると数字が出ます';
   $('chartBox').innerHTML=drawChart(t,V,R);
+  renderCompare();
 }
+function cmpOptions(sel,cols,selected){
+  sel.innerHTML=cols.map(([i,n])=>'<option value="'+i+'">'+X(n)+'</option>').join('');
+  if(selected!=null&&cols.some(x=>x[0]===selected))sel.value=String(selected);
+}
+function cmpCols(t,kind){
+  const I=info(t);
+  return I.names.map((n,i)=>[i,n]).filter(([i])=>kind==='num'?I.types[i]==='num':I.types[i]!=='num'&&I.uniq[i].length>0);
+}
+function renderCompare(){
+  const base=T();if(!base)return;
+  const other=$('cmpTable');
+  const candidates=tables.filter(t=>t.id!==base.id&&t.d&&t.d.length);
+  other.innerHTML=candidates.map(t=>'<option value="'+t.id+'">'+X(t.title||'無題')+'</option>').join('');
+  $('cmpBuild').disabled=!candidates.length;
+  if(!candidates.length){$('cmpStatus').textContent='比較できる別の表がありません。先に別の統計を取得して表に保存してください。';return}
+  const second=candidates.find(t=>t.id===other.value)||candidates[0];other.value=second.id;
+  const fill=(id,cols)=>{const s=$(id),old=s.value;s.innerHTML=cols.map(([i,n])=>'<option value="'+i+'">'+X(n)+'</option>').join('');if(cols.some(x=>String(x[0])===old))s.value=old};
+  fill('cmpKeyA',cmpCols(base,'key'));fill('cmpValA',cmpCols(base,'num'));
+  fill('cmpKeyB',cmpCols(second,'key'));fill('cmpValB',cmpCols(second,'num'));
+  const ok=cmpCols(base,'key').length&&cmpCols(second,'key').length&&cmpCols(base,'num').length&&cmpCols(second,'num').length;
+  $('cmpBuild').disabled=!ok;
+  $('cmpStatus').textContent=ok?'共通項目と数値列を選択して、比較用の表を作成できます。':'両方の表に分類項目と数値列が必要です。数値が文字列として保存されている場合は、元データの列形式も確認してください。';
+}
+$('cmpTable').onchange=renderCompare;
+$('cmpBuild').onclick=()=>{
+  const a=T(),b=tables.find(t=>t.id===$('cmpTable').value);if(!a||!b)return;
+  const ka=+$('cmpKeyA').value,va=+$('cmpValA').value,kb=+$('cmpKeyB').value,vb=+$('cmpValB').value;
+  const IA=info(a),IB=info(b);
+  const toNum=x=>{const n=num(x);return n==null?null:n};
+  const map=new Map();
+  IB.body.forEach(r=>{const k=String(r[kb]??'').trim(),v=toNum(r[vb]);if(k&&v!=null)map.set(k,(map.get(k)||0)+v)});
+  const rows=[['共通項目：'+IA.names[ka],a.title+'：'+IA.names[va],b.title+'：'+IB.names[vb]]];
+  const seen=new Set();
+  IA.body.forEach(r=>{const k=String(r[ka]??'').trim(),v=toNum(r[va]);if(!k||v==null||seen.has(k))return;seen.add(k);rows.push([k,String(v),map.has(k)?String(map.get(k)):''])});
+  map.forEach((v,k)=>{if(!seen.has(k))rows.push([k,'',String(v)])});
+  if(rows.length<2){$('cmpStatus').textContent='共通項目に使えるデータがありません。列の選択を確認してください。';return}
+  const title='比較：'+a.title+' × '+b.title;
+  const nt={id:uid(),title,d:rows,header:true,at:Date.now()};
+  tables.push(nt);cur=nt.id;save();VIEW='c';render();toast('比較用の表を作成しました。分類と2つの数値を選んでグラフにできます。');
+};
 function chg(f){const t=T();if(!t.view)t.view=recommend(t);f(t.view);touch();renderChart()}
 $('ctype').onclick=e=>{const b=e.target.closest('[data-ct]');if(!b)return;const t=T(),k=b.dataset.ct;
   if(k==='rec'){const r=recommend(t);r.sl=(t.view&&t.view.sl)||{};t.view=r;touch();renderChart();return}
