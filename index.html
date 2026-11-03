@@ -730,7 +730,7 @@ function cmpOptions(sel,cols,selected){
 }
 function cmpCols(t,kind){
   const I=info(t);
-  return I.names.map((n,i)=>[i,n]).filter(([i])=>kind==='num'?I.types[i]==='num':I.types[i]!=='num'&&I.uniq[i].length>0);
+  return I.names.map((n,i)=>[i,n]).filter(([i])=>kind==='num'?I.types[i]==='num':I.uniq[i].length>0);
 }
 function renderCompare(){
   const base=T();if(!base)return;
