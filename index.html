@@ -157,17 +157,19 @@ dialog textarea{width:100%;height:160px;background:var(--bg);color:var(--tx);bor
     <div id="granBox"><label>日付のまとめ方</label><select id="vGran"><option value="y">年ごと</option><option value="m">月ごと</option><option value="d">日ごと</option></select></div></div>
     <div style="margin-top:8px"><button id="vNext">🔄 次の角度（分類を順に切替）</button></div></div>
   <div class="sec" id="compareSec">
-    <h4>④ 別の保存済み統計と比較</h4>
-    <p style="font-size:13px;color:var(--dim);line-height:1.6;margin:4px 0 10px">今開いている表と、もう1つの保存済み表を、共通する分類項目で対応させて比較用の表を作ります。例：年ごとの人口と物価。</p>
+    <h4>④ ほかの表・ファイルと比較（データ種類を問いません）</h4>
+    <p style="font-size:13px;color:var(--dim);line-height:1.6;margin:4px 0 10px">e-Statだけでなく、CSV・TSV・Excelから貼り付けた表・手入力の表など、table-padに保存した表を比較できます。先に上部の「取り込み」または貼り付けで表を追加してください。</p>
     <div class="ctl">
-      <div><label for="cmpTable">比較する表</label><select id="cmpTable"></select></div>
-      <div><label for="cmpKeyA">この表の共通項目</label><select id="cmpKeyA"></select></div>
-      <div><label for="cmpValA">この表の数値</label><select id="cmpValA"></select></div>
-      <div><label for="cmpKeyB">比較する表の共通項目</label><select id="cmpKeyB"></select></div>
-      <div><label for="cmpValB">比較する表の数値</label><select id="cmpValB"></select></div>
+      <div><label for="cmpTable">比較する保存済みの表</label><select id="cmpTable"></select></div>
+      <div><label for="cmpKeyA">現在の表：対応させる項目（例：年・地域・商品名）</label><select id="cmpKeyA"></select></div>
+      <div><label for="cmpValA">現在の表：グラフにする数値</label><select id="cmpValA"></select></div>
+      <div><label for="cmpUnitA">現在の数値の単位（任意）</label><input id="cmpUnitA" placeholder="例：人、円、%、件"></div>
+      <div><label for="cmpKeyB">比較する表：対応させる項目</label><select id="cmpKeyB"></select></div>
+      <div><label for="cmpValB">比較する表：グラフにする数値</label><select id="cmpValB"></select></div>
+      <div><label for="cmpUnitB">比較する数値の単位（任意）</label><input id="cmpUnitB" placeholder="例：人、円、%、件"></div>
     </div>
     <button id="cmpBuild" class="pri" style="margin-top:10px">＋ 比較用の表を作成してグラフで見る</button>
-    <div id="cmpStatus" role="status" style="font-size:13px;line-height:1.5;margin-top:8px;color:var(--dim)">2つの表に共通する項目（年・月・地域など）を選んでください。</div>
+    <div id="cmpStatus" role="status" style="font-size:13px;line-height:1.5;margin-top:8px;color:var(--dim)">年・地域・商品名などの共通項目と、数値列を選びます。CSVや手入力の表も対象です。</div>
   </div>
   <div class="sec"><h4>③ 絞り込み（スライサー）<span id="slCnt" style="float:right;font-weight:400"></span></h4><div id="slicers"></div><button id="slClr" style="margin-top:6px">絞り込みを全部解除</button></div>
 </div>
@@ -759,7 +761,7 @@ $('cmpBuild').onclick=()=>{
   keys.forEach(k=>{if(left.has(k))rows.push([k,a.title+'：'+IA.names[va],String(left.get(k).sum)]);if(right.has(k))rows.push([k,b.title+'：'+IB.names[vb],String(right.get(k).sum)])});
   const overlap=keys.filter(k=>left.has(k)&&right.has(k)).length,onlyA=keys.filter(k=>left.has(k)&&!right.has(k)).length,onlyB=keys.filter(k=>!left.has(k)&&right.has(k)).length;
   const unit=s=>{const m=String(s).match(/[（(]([^）)]+)[）)]/);return m?m[1]:''},ua=unit(IA.names[va]),ub=unit(IB.names[vb]);
-  const warning=ua&&ub?(ua===ub?'列名に記載された単位は一致しています。':'⚠ 単位が異なる可能性があります（'+ua+'／'+ub+'）。同じ軸での数値比較に注意してください。'):'⚠ 単位を列名から判定できません。比較前に単位を確認してください。';
+  const manualA=String($('cmpUnitA').value||'').trim(),manualB=String($('cmpUnitB').value||'').trim(),unitA=manualA||ua,unitB=manualB||ub;const warning=unitA&&unitB?(unitA===unitB?'単位は「'+unitA+'」で一致しています。':'⚠ 単位が異なります（'+unitA+'／'+unitB+'）。同じ縦軸での直接比較は避け、別軸または指数化を検討してください。'):'⚠ 単位が未指定です。比較結果の解釈前に単位を入力・確認してください。';
   const title='比較：'+a.title+' × '+b.title;
   const nt={id:uid(),title,d:rows,header:true,at:Date.now(),view:{cat:0,val:2,agg:'sum',type:'line',ser:1,sort:'orig',gran:'m',sl:{}}};
   tables.push(nt);cur=nt.id;save();VIEW='c';render();
