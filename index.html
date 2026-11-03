@@ -751,18 +751,20 @@ $('cmpTable').onchange=renderCompare;
 $('cmpBuild').onclick=()=>{
   const a=T(),b=tables.find(t=>t.id===$('cmpTable').value);if(!a||!b)return;
   const ka=+$('cmpKeyA').value,va=+$('cmpValA').value,kb=+$('cmpKeyB').value,vb=+$('cmpValB').value;
-  const IA=info(a),IB=info(b);
-  const toNum=x=>{const n=num(x);return n==null?null:n};
-  const map=new Map();
-  IB.body.forEach(r=>{const k=String(r[kb]??'').trim(),v=toNum(r[vb]);if(k&&v!=null)map.set(k,(map.get(k)||0)+v)});
-  const rows=[['共通項目：'+IA.names[ka],a.title+'：'+IA.names[va],b.title+'：'+IB.names[vb]]];
-  const seen=new Set();
-  IA.body.forEach(r=>{const k=String(r[ka]??'').trim(),v=toNum(r[va]);if(!k||v==null||seen.has(k))return;seen.add(k);rows.push([k,String(v),map.has(k)?String(map.get(k)):''])});
-  map.forEach((v,k)=>{if(!seen.has(k))rows.push([k,'',String(v)])});
-  if(rows.length<2){$('cmpStatus').textContent='共通項目に使えるデータがありません。列の選択を確認してください。';return}
+  const IA=info(a),IB=info(b),toNum=x=>{const n=num(x);return n==null?null:n};
+  const sumMap=(I,key,val)=>{const m=new Map();I.body.forEach(r=>{const k=String(r[key]??'').trim(),v=toNum(r[val]);if(!k||v==null)return;const z=m.get(k)||{sum:0,count:0};z.sum+=v;z.count++;m.set(k,z)});return m};
+  const left=sumMap(IA,ka,va),right=sumMap(IB,kb,vb),keys=[...new Set([...left.keys(),...right.keys()])];
+  if(!keys.length){$('cmpStatus').textContent='選択した列から比較できる数値が見つかりません。';return}
+  const rows=[['共通項目：'+IA.names[ka],'系列','値']];
+  keys.forEach(k=>{if(left.has(k))rows.push([k,a.title+'：'+IA.names[va],String(left.get(k).sum)]);if(right.has(k))rows.push([k,b.title+'：'+IB.names[vb],String(right.get(k).sum)])});
+  const overlap=keys.filter(k=>left.has(k)&&right.has(k)).length,onlyA=keys.filter(k=>left.has(k)&&!right.has(k)).length,onlyB=keys.filter(k=>!left.has(k)&&right.has(k)).length;
+  const unit=s=>{const m=String(s).match(/[（(]([^）)]+)[）)]/);return m?m[1]:''},ua=unit(IA.names[va]),ub=unit(IB.names[vb]);
+  const warning=ua&&ub?(ua===ub?'列名に記載された単位は一致しています。':'⚠ 単位が異なる可能性があります（'+ua+'／'+ub+'）。同じ軸での数値比較に注意してください。'):'⚠ 単位を列名から判定できません。比較前に単位を確認してください。';
   const title='比較：'+a.title+' × '+b.title;
-  const nt={id:uid(),title,d:rows,header:true,at:Date.now()};
-  tables.push(nt);cur=nt.id;save();VIEW='c';render();toast('比較用の表を作成しました。分類と2つの数値を選んでグラフにできます。');
+  const nt={id:uid(),title,d:rows,header:true,at:Date.now(),view:{cat:0,val:2,agg:'sum',type:'line',ser:1,sort:'orig',gran:'m',sl:{}}};
+  tables.push(nt);cur=nt.id;save();VIEW='c';render();
+  $('cmpStatus').textContent='比較用の表を保存しました。共通項目 '+overlap+' 件／左のみ '+onlyA+' 件／右のみ '+onlyB+' 件。'+warning;
+  toast('比較用の表を保存し、2系列のグラフを表示しました。');
 };
 function chg(f){const t=T();if(!t.view)t.view=recommend(t);f(t.view);touch();renderChart()}
 $('ctype').onclick=e=>{const b=e.target.closest('[data-ct]');if(!b)return;const t=T(),k=b.dataset.ct;
