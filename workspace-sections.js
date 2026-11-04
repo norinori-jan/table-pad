@@ -31,7 +31,7 @@ configs.forEach(([key,label])=>{const b=document.createElement('button');b.type=
 const header=document.querySelector('header');
 if(!header||!$('views')||!$('rv'))return;
 header.insertAdjacentElement('afterend',nav);
-const table=panels.table;nav.insertAdjacentElement('afterend',table);
+const table=panels.table;nav.insertAdjacentElement('afterend',table);\ntable.insertAdjacentElement('afterend',panels.gov);panels.gov.insertAdjacentElement('afterend',panels.news);
 const tableIds=['views','tabs','title','wrap','hint','bar','cv','lv','sv','xv','zv','dv','fv'];
 tableIds.forEach(id=>{const el=$(id);if(el)table.appendChild(el)});
 const gov=panels.gov;const gh=document.createElement('h2');gh.textContent='国内・政府系データ';gh.style.cssText='font-size:18px;margin:4px 0 6px';gov.appendChild(gh);
