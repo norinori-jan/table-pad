@@ -48,9 +48,12 @@ function move(){
 }
 move();
 const observer=new MutationObserver(()=>move());observer.observe(document.body,{childList:true,subtree:true});
+views.addEventListener('click',e=>{const v=e.target.closest('[data-v]');if(v&&v.dataset.v==='r')nav.querySelector('[data-workspace="news"]').click()});
 nav.addEventListener('click',e=>{
  const b=e.target.closest('button[data-workspace]');if(!b)return;
  const key=b.dataset.workspace;
+ if(key==='table'){const active=views.querySelector('[data-v="r"].on');if(active){const tableView=views.querySelector('[data-v="t"]');if(tableView)tableView.click()}}
+ if(key!=='news'){const cover=$('tpnc-cover'),close=$('tpnc-close');if(cover&&close&&cover.style.display!=='none')close.click()}
  Object.entries(panels).forEach(([k,p])=>{p.hidden=k!==key;nav.querySelector('[data-workspace="'+k+'"]').setAttribute('aria-pressed',k===key?'true':'false')});
 });
 if(location.hash==='#news'||location.hash==='#gov')nav.querySelector('[data-workspace="'+(location.hash==='#news'?'news':'gov')+'"]').click();
