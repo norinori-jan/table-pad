@@ -15,7 +15,7 @@ function host(){
  return root.querySelector('#'+HOST_ID);
 }
 function prepare(box){
- box.style.position='relative';box.style.inset='auto';box.style.right='auto';box.style.bottom='auto';box.style.left='auto';box.style.zIndex='auto';
+ box.style.position='relative';box.style.inset='auto';box.style.setProperty('right','auto','important');box.style.setProperty('bottom','auto','important');box.style.left='auto';box.style.setProperty('z-index','auto','important');
  box.style.display='block';box.style.width='100%';box.style.maxWidth='100%';box.style.margin='0';box.style.fontFamily='system-ui,sans-serif';
 }
 function mount(box){prepare(box);const target=host();if(box.parentNode!==target)target.appendChild(box);}
