@@ -1,7 +1,7 @@
 (()=>{'use strict';
 if(window.__tpNewsLite)return;window.__tpNewsLite=true;
 const KEY='tpNewsLite.v2', DAY='tpNewsLite.day.v2', LIMIT='tpNewsLite.limit.v2';
-const LAST_REQUEST='tpNewsLite.lastRequestAt.v1', MIN_INTERVAL=5000;
+const LAST_REQUEST='tpNewsLite.lastRequestAt.v1', MIN_INTERVAL=5000, WORKER_KEY='tpNewsLite.workerUrl.v1';
 const $=id=>document.getElementById(id);
 const today=()=>new Date().toISOString().slice(0,10);
 const read=(k,f)=>{try{return JSON.parse(localStorage.getItem(k)||'')}catch{return f}};
@@ -25,7 +25,7 @@ function mount(){
  const root=document.createElement('section');root.id='tpnl-root';
  root.innerHTML=`<style>#tpnl-root{font:14px/1.5 system-ui,sans-serif;border:1px solid #999;border-radius:12px;padding:16px;margin:18px 0;background:var(--card-bg,#fff);color:var(--text-color,#222)}#tpnl-root *{box-sizing:border-box}#tpnl-root .tpnl-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}#tpnl-root input,#tpnl-root select,#tpnl-root button{font:inherit;padding:7px;max-width:100%}#tpnl-root button{cursor:pointer}#tpnl-root button:disabled{cursor:not-allowed;opacity:.55}#tpnl-root .tpnl-track{height:8px;background:#ddd;border-radius:8px;overflow:hidden}#tpnl-bar{height:100%;width:0;background:#287d62}#tpnl-root .tpnl-item{padding:10px 0;border-bottom:1px solid #ddd;overflow-wrap:anywhere}#tpnl-root small{opacity:.75}#tpnl-error-detail{white-space:pre-wrap;overflow-wrap:anywhere;max-height:180px;overflow:auto;padding:8px;background:rgba(127,127,127,.12);border-radius:6px}</style>
  <h2>低通信量・世界ニュース見張り網</h2><p>見出し・媒体・日時・リンクのみ取得。画像や記事本文は自動取得しません。国内政府系情報は対象外です。</p>
- <div class="tpnl-row"><label>検索語 <input id="tpnl-q" value="world news" maxlength="120"></label><label>期間 <select id="tpnl-hours"><option value="24">24時間</option><option value="48">48時間</option><option value="168">7日間</option></select></label><label>件数 <select id="tpnl-max"><option>10</option><option selected>25</option><option>50</option></select></label></div>
+ <div class="tpnl-row"><label>ニュースWorker URL <input id="tpnl-worker" type="url" placeholder="https://table-pad-news.アカウント.workers.dev" style="min-width:min(100%,320px)"></label><button id="tpnl-worker-save" type="button">接続先を保存</button></div><div class="tpnl-row"><label>検索語 <input id="tpnl-q" value="world news" maxlength="120"></label><label>期間 <select id="tpnl-hours"><option value="24">24時間</option><option value="48">48時間</option><option value="168">7日間</option></select></label><label>件数 <select id="tpnl-max"><option>10</option><option selected>25</option><option>50</option></select></label></div>
  <div class="tpnl-row"><button id="tpnl-fetch">見出しを取得</button><button id="tpnl-export">JSON書き出し</button><button id="tpnl-clear">保存データ削除</button></div>
  <div class="tpnl-row"><label>1日上限（応答本文の推定） <select id="tpnl-limit"><option value="100000">100 KB</option><option value="250000">250 KB</option><option value="500000">500 KB</option><option value="1000000">1 MB</option><option value="2000000">2 MB</option></select></label></div>
  <div id="tpnl-meter"></div><div class="tpnl-track"><div id="tpnl-bar"></div></div><div class="tpnl-row"><b id="tpnl-count"></b><span id="tpnl-status" role="status" aria-live="polite"></span></div>
@@ -33,6 +33,8 @@ function mount(){
  <p><small>取得元: GDELT。GDELTへのリクエストは5秒以上間隔を空けます。通信量表示は正常なJSON応答本文のみの概算で、TLS/HTTPヘッダー等を含む実通信量ではありません。1回の応答が設定上限を超える可能性があります。世界中の全ニュースを網羅するものではありません。</small></p><div id="tpnl-list"></div>`;
  (document.querySelector('main')||document.querySelector('#app')||document.body).appendChild(root);
  $('tpnl-limit').value=String(limit());$('tpnl-limit').onchange=()=>{localStorage.setItem(LIMIT,$('tpnl-limit').value);render()};
+ $('tpnl-worker').value=localStorage.getItem(WORKER_KEY)||'';
+ $('tpnl-worker-save').onclick=()=>{const v=$('tpnl-worker').value.trim().replace(/\\/$/,'');if(!/^https:\\/\\/[a-z0-9.-]+(?::\\d+)?$/i.test(v)){ $('tpnl-status').textContent='Worker URLの形式を確認してください（https://から始まるURL）';return }localStorage.setItem(WORKER_KEY,v);$('tpnl-status').textContent='Worker接続先を保存しました。';};
  $('tpnl-fetch').onclick=fetchNews;
  $('tpnl-export').onclick=()=>{const a=document.createElement('a'),u=URL.createObjectURL(new Blob([JSON.stringify(getState(),null,2)],{type:'application/json'}));a.href=u;a.download='table-pad-world-news.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
  $('tpnl-clear').onclick=()=>{if(confirm('保存したニュース一覧を削除しますか？')){localStorage.removeItem(KEY);render()}};
@@ -47,21 +49,20 @@ async function fetchNews(){
  btn.disabled=true;status.textContent='取得中…';detail.hidden=true;detail.textContent='';
  try{
   const q=$('tpnl-q').value.trim()||'world news',max=Math.min(50,Math.max(10,Number($('tpnl-max').value)||25)),hours=Number($('tpnl-hours').value)||24;
-  const url='https://api.gdeltproject.org/api/v2/doc/doc?query='+encodeURIComponent(q)+'&mode=ArtList&format=json&maxrecords='+max+'&sort=DateDesc&timespan='+hours+'h';
-  // 記録は通信開始前に保存し、失敗時も5秒の間隔を守る。
+  const endpoint=localStorage.getItem(WORKER_KEY)||'';
+  if(!endpoint)throw Object.assign(new Error('ニュースWorker URLが未設定です。Cloudflare Workerを公開し、URLを入力して「接続先を保存」してください。'),{kind:'config'});
+  // Worker側でもDurable Objectで全端末共通の5秒間隔を強制する。
   localStorage.setItem(LAST_REQUEST,String(Date.now()));
   let res;
-  try{res=await fetch(url,{cache:'no-store'})}
-  catch(error){throw Object.assign(new Error('通信エラー: GDELTへ接続できませんでした。ネットワーク/CORS/ブラウザーの通信制限を確認してください。'),{kind:'network',cause:error})}
+  try{res=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({q,max,hours}),cache:'no-store'})}
+  catch(error){throw Object.assign(new Error('Worker通信エラー: Cloudflare Workerへ接続できません。URL・公開状態・CORS設定を確認してください。'),{kind:'network',cause:error})}
   const txt=await res.text();
-  if(!res.ok){
-   const message=`HTTPエラー: ${res.status} ${res.statusText||''}`.trim();
-   throw Object.assign(new Error(message),{kind:'http',detail:responsePreview(txt)});
-  }
   let data;
   try{data=JSON.parse(txt)}
-  catch(error){
-   throw Object.assign(new Error('JSON解析エラー: GDELTからJSON以外の応答が返されました。ニュースは保存していません。'),{kind:'parse',detail:responsePreview(txt)});
+  catch(error){throw Object.assign(new Error('JSON解析エラー: WorkerからJSON以外の応答が返されました。'),{kind:'parse',detail:responsePreview(txt)})}
+  if(!res.ok){
+   const message=data.message||data.error||`HTTPエラー: ${res.status} ${res.statusText||''}`;
+   throw Object.assign(new Error(message),{kind:data.error||'http',detail:responsePreview(data.detail||data.upstreamPreview||txt)});
   }
   if(!data||typeof data!=='object'||!Array.isArray(data.articles)){
    throw Object.assign(new Error('応答形式エラー: JSON内に articles 配列がありません。ニュースは保存していません。'),{kind:'format',detail:responsePreview(txt)});
