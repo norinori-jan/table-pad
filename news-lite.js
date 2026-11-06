@@ -26,18 +26,24 @@ const REGIONS=[
 ];
 
 function enrich(a){
- const raw=String(a.title||''),t=' '+raw.toLowerCase().normalize('NFKC').replace(/[^\\p{L}\\p{N}]+/gu,' ')+' ';
+ const raw=String(a.title||''),t=' '+raw.toLowerCase().normalize('NFKC').replace(/[^\p{L}\p{N}]+/gu,' ')+' ';
  const matches=CATS.map(c=>({c,score:c.terms.reduce((n,k)=>n+(t.includes(k)?(k.trim().length>=9?2:1):0),0)})).sort((x,y)=>y.score-x.score);
  const c=matches[0]?.score>0?matches[0].c:{id:'other',name:'その他'};
- const critical=['war','attack','missile','invasion','coup','earthquake','tsunami','hurricane','pandemic','ceasefire','sanction','nuclear','戦争','攻撃','侵攻','地震','津波','台風','感染症','停戦','制裁','核','爆発','война','землетряс','袭击','战争','地震'];
- const high=['president','prime minister','election','central bank','interest rate','inflation','artificial intelligence','semiconductor','climate','refugee','humanitarian','大統領','首相','選挙','中央銀行','金利','インフレ','人工知能','半導体','気候','難民','人道'];
- let score=35+(critical.some(k=>t.includes(k))?45:0)+(high.some(k=>t.includes(k))?25:0)+(c.id!=='other'?10:0);
- if(/opinion|horoscope|celebrity|entertainment|lifestyle|recipe|gossip|占い|芸能|娯楽|コラム/i.test(t))score-=25;
- if(/transcript|2003|archive|photo gallery/i.test(t))score-=15;
+ const critical=['war','invasion','missile strike','airstrike','coup','earthquake','tsunami','hurricane','pandemic','ceasefire','nuclear threat','terror attack','mass casualty','state of emergency','戦争','侵攻','ミサイル攻撃','空爆','クーデター','地震','津波','台風','感染症','停戦','核危機','テロ','非常事態','война','землетряс','袭击','战争','地震','حرب','زلزال'];
+ const high=['attack','military','defense','defence','sanction','election','president','prime minister','foreign minister','parliament','central bank','interest rate','inflation','debt','bankruptcy','trade war','artificial intelligence','semiconductor','cyberattack','climate','refugee','humanitarian','outbreak','energy crisis','大統領','首相','外相','議会','中央銀行','金利','インフレ','債務','破綻','制裁','軍事','防衛','選挙','人工知能','半導体','サイバー攻撃','難民','人道','感染','エネルギー危機','制裁','атака','армия','санкц','инфляц','人工智能','袭击','制裁','لاجئ','هجوم'];
+ const low=['horoscope','celebrity','entertainment','lifestyle','recipe','gossip','sports results','fashion','占い','芸能','娯楽','レシピ','ゴシップ','ファッション'];
+ const archive=['transcript','2003','archive','photo gallery','weekly horoscope','obituary','訃報','写真特集'];
+ const criticalHit=critical.some(k=>t.includes(k)),highHit=high.some(k=>t.includes(k)),lowHit=low.some(k=>t.includes(k)),archiveHit=archive.some(k=>t.includes(k));
+ let score=20+(c.id!=='other'?15:0)+(highHit?25:0)+(criticalHit?40:0);
+ if(lowHit)score-=25;if(archiveHit)score-=15;
  score=Math.max(0,Math.min(100,score));
+ const importanceLabel=score>=75?'高':score>=45?'中':'低';
  let region='地域不明';for(const x of REGIONS){if(x[0].test(t)){region=x[1];break}}
+ if(/\b(baghdad|iraq|iran|israel|gaza|palestine|syria|lebanon|yemen|saudi arabia|uae|qatar|jordan|kuwait|oman|bahrain)\b|バグダッド|イラク|イラン|イスラエル|ガザ|パレスチナ|シリア|レバノン|イエメン|サウジ/i.test(t))region='中東';
+ if(/\b(nigeria|kenya|ethiopia|sudan|somalia|ghana|congo|south africa|africa|morocco|algeria|tunisia|libya)\b|ナイジェリア|ケニア|エチオピア|スーダン|ソマリア|ガーナ|コンゴ|南アフリカ|アフリカ|モロッコ|アルジェリア|チュニジア|リビア/i.test(t))region='アフリカ';
+ if(/\b(usa|united states|washington dc|canada|mexico|brazil|argentina|chile|peru|colombia|venezuela)\b|米国|アメリカ|カナダ|メキシコ|ブラジル|アルゼンチン|チリ|ペルー|コロンビア|ベネズエラ/i.test(t))region='北米・中南米';
  /* Do not infer the story's geography from the publisher's country-code domain. */
- return {...a,date:String(a.date||a.seendate||''),category:c.name,categoryId:c.id,importance:score,importanceLabel:score>=75?'高':score>=50?'中':'低',region};
+ return {...a,date:String(a.date||a.seendate||''),category:c.name,categoryId:c.id,importance:score,importanceLabel,region};
 }
 function norm(s){return String(s||'').toLowerCase().normalize('NFKC').replace(/https?:\/\/\S+/g,' ').replace(/[^\p{L}\p{N}]+/gu,' ').trim()}
 function grams(s){const x=norm(s).replace(/\s/g,''),o=new Set();if(x.length<3){if(x)o.add(x);return o}for(let i=0;i<x.length-2;i++)o.add(x.slice(i,i+3));return o}
