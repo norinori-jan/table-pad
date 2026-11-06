@@ -1,5 +1,6 @@
 const ALLOWED_ORIGIN = "https://norinori-jan.github.io";
 const MIN_INTERVAL_MS = 5000;
+const UPSTREAM_BACKOFF_MS = 60000;
 const GDELT_URL = "https://api.gdeltproject.org/api/v2/doc/doc";
 
 function cors(origin) {
@@ -62,9 +63,11 @@ export class NewsRateLimiter {
     const input = await request.json();
     const now = Date.now();
     const gate = await this.ctx.storage.transaction(async txn => {
+      const blockedUntil = await txn.get("blockedUntil") || 0;
+      if (blockedUntil > now) return { allowed: false, waitMs: blockedUntil - now, reason: "upstream_backoff" };
       const lastAt = await txn.get("lastRequestAt") || 0;
       const waitMs = MIN_INTERVAL_MS - (now - lastAt);
-      if (waitMs > 0) return { allowed: false, waitMs };
+      if (waitMs > 0) return { allowed: false, waitMs, reason: "rate_limited" };
       await txn.put("lastRequestAt", now);
       return { allowed: true };
     });
@@ -73,8 +76,8 @@ export class NewsRateLimiter {
     const headers = cors(origin);
     if (!gate.allowed) {
       return json({
-        error: "rate_limited",
-        message: `GDELTの利用制限により、あと${(gate.waitMs / 1000).toFixed(1)}秒待ってください。`,
+        error: gate.reason,
+        message: gate.reason === "upstream_backoff" ? `GDELTが混雑しているため、あと${Math.ceil(gate.waitMs / 1000)}秒待ってください。自動再試行は行いません。` : `GDELTへの要求間隔を空けるため、あと${(gate.waitMs / 1000).toFixed(1)}秒待ってください。`,
         retryAfterMs: gate.waitMs
       }, 429, { ...headers, "Retry-After": String(Math.ceil(gate.waitMs / 1000)) });
     }
@@ -100,6 +103,17 @@ export class NewsRateLimiter {
     const body = await response.text();
     const bytes = new TextEncoder().encode(body).length;
     if (!response.ok) {
+      if (response.status === 429) {
+        const retryHeader = Number(response.headers.get("Retry-After") || 0);
+        const waitMs = Math.max(UPSTREAM_BACKOFF_MS, retryHeader > 0 ? retryHeader * 1000 : 0);
+        await this.ctx.storage.put("blockedUntil", Date.now() + waitMs);
+        return json({
+          error: "upstream_429",
+          message: `GDELTが429（Too Many Requests）を返しました。全端末で${Math.ceil(waitMs / 1000)}秒間、取得を停止します。`,
+          retryAfterMs: waitMs,
+          detail: body.slice(0, 1600)
+        }, 429, { ...headers, "Retry-After": String(Math.ceil(waitMs / 1000)) });
+      }
       return json({ error: "upstream_http_error", message: `GDELT HTTPエラー: ${response.status} ${response.statusText}`, detail: body.slice(0, 1600) }, 502, headers);
     }
 
