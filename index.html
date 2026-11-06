@@ -214,9 +214,29 @@ dialog::backdrop{background:rgba(3,7,12,.68);backdrop-filter:blur(5px)}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}button{transition:none}}
 </style>
 
+
+<style id="tp-premium-navigation">
+#views{align-items:stretch;gap:10px;padding-top:12px;padding-bottom:10px}
+.tp-nav-group{display:flex;align-items:center;gap:6px;flex:0 0 auto;padding-right:10px;border-right:1px solid rgba(162,173,187,.2)}
+.tp-nav-group:last-child{border-right:0;padding-right:0}
+.tp-nav-group>span{display:none}
+#views button{flex:0 0 auto;min-width:62px}
+#views button.on{box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+@media(min-width:760px){
+ #views{align-items:center;gap:18px}
+ .tp-nav-group{gap:7px;padding-right:18px}
+ .tp-nav-group>span{display:block;color:var(--dim);font-size:11px;letter-spacing:.08em;writing-mode:vertical-rl}
+ #views button{min-width:76px}
+}
+@media(max-width:600px){
+ #views{gap:8px}
+ .tp-nav-group{gap:5px;padding-right:8px}
+ .tp-nav-group button{min-height:44px;padding:9px 13px}
+}
+</style>
 </head><body>
 <header><b>▦ table-pad</b><button id="bNew" class="pri" title="空の表を作成">＋ 表を作成</button><button id="bImp">📂 取り込み</button><button id="bSync" title="音声・flow-mind連携の設定" aria-label="音声・flow-mind連携の設定">🎙 音声連携設定</button><button id="bSto" title="端末内の保存量を確認" aria-label="保存量を確認">📦 保存量</button><button id="bIO" title="表データの読み込み・書き出し" aria-label="表データの読み込み・書き出し">⇅ 入出力</button></header>
-<div id="views"><button data-v="t" class="on">▦ 表</button><button data-v="l">🗂 一覧</button><button data-v="s">📉 株価</button><button data-v="x">🧮 計算</button><button data-v="z">🔵 集合</button><button data-v="c">📊 グラフ</button><button data-v="d">📈 ダッシュ</button><button data-v="f">🔀 フロー</button><button data-v="r">🔎 情報源</button></div>
+<div id="views" aria-label="作業画面"><div class="tp-nav-group" aria-label="データ"><span>データ</span><button data-v="t" class="on">▦ 表</button><button data-v="l">一覧</button></div><div class="tp-nav-group" aria-label="分析"><span>分析</span><button data-v="s">株価</button><button data-v="x">計算</button><button data-v="z">集合</button><button data-v="c">グラフ</button><button data-v="d">ダッシュ</button></div><div class="tp-nav-group" aria-label="整理・参照"><span>整理・参照</span><button data-v="f">フロー</button><button data-v="r">情報源</button></div></div>
 <div id="tabs"></div>
 <input id="title" placeholder="表の名前">
 <div id="wrap"><table id="tb"></table></div>
