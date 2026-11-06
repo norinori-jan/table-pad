@@ -116,9 +116,20 @@ export class NewsRateLimiter {
       return json({ error: "gdelt_invalid_format", message: "GDELT応答にarticles配列がありません。", detail: body.slice(0, 1600) }, 502, headers);
     }
 
-    return new Response(body, {
+    // Return only fields consumed by table-pad; omit images, social metadata and article text.
+    const compact = {
+      articles: data.articles.slice(0, input.max).map(article => ({
+        title: String(article.title || "").slice(0, 500),
+        url: String(article.url || "").slice(0, 2000),
+        domain: String(article.domain || "").slice(0, 200),
+        seendate: String(article.seendate || "").slice(0, 40)
+      })).filter(article => article.url)
+    };
+    const compactBody = JSON.stringify(compact);
+    const compactBytes = new TextEncoder().encode(compactBody).length;
+    return new Response(compactBody, {
       status: 200,
-      headers: { ...headers, "Content-Type": "application/json; charset=utf-8", "X-Upstream-Bytes": String(bytes) }
+      headers: { ...headers, "Content-Type": "application/json; charset=utf-8", "X-Upstream-Bytes": String(bytes), "X-Response-Bytes": String(compactBytes) }
     });
   }
 }
