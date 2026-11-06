@@ -50,7 +50,8 @@ function enrich(a){
  if(lowHit)score-=25;if(archiveHit)score-=15;
  score=Math.max(0,Math.min(100,score));
  const importanceLabel=score>=75?'高':score>=45?'中':'低';
- let region='地域不明';for(const x of REGIONS){if(x[0].test(t)){region=x[1];break}}\n const country=detectCountry(t);
+ let region='地域不明';for(const x of REGIONS){if(x[0].test(t)){region=x[1];break}}
+ const country=detectCountry(t);
  if(/\b(baghdad|iraq|iran|israel|gaza|palestine|syria|lebanon|yemen|saudi arabia|uae|qatar|jordan|kuwait|oman|bahrain)\b|バグダッド|イラク|イラン|イスラエル|ガザ|パレスチナ|シリア|レバノン|イエメン|サウジ/i.test(t))region='中東';
  if(/\b(nigeria|kenya|ethiopia|sudan|somalia|ghana|congo|south africa|africa|morocco|algeria|tunisia|libya)\b|ナイジェリア|ケニア|エチオピア|スーダン|ソマリア|ガーナ|コンゴ|南アフリカ|アフリカ|モロッコ|アルジェリア|チュニジア|リビア/i.test(t))region='アフリカ';
  if(/\b(usa|united states|washington dc|canada|mexico|brazil|argentina|chile|peru|colombia|venezuela)\b|米国|アメリカ|カナダ|メキシコ|ブラジル|アルゼンチン|チリ|ペルー|コロンビア|ベネズエラ/i.test(t))region='北米・中南米';
@@ -73,7 +74,8 @@ function render(){
  const d=day(),s=state(),l=limit(),items=balance(dedupe(s.items),Math.min(150,s.items.length));
  $('tpnl-meter').textContent='本日のAPI応答本文（推定） '+fmt(d.bytes)+' / '+fmt(l)+'・成功 '+d.requests+' 回';
  $('tpnl-bar').style.width=Math.min(100,d.bytes/Math.max(1,l)*100)+'%';$('tpnl-count').textContent=s.items.length+' 件保存';
- const f=$('tpnl-category')?.value||'all',region=$('tpnl-region')?.value||'all',country=$('tpnl-country')?.value||'all',byCategory=f==='all'?items:items.filter(a=>a.categoryId===f),byRegion=region==='all'?byCategory:byCategory.filter(a=>a.region===region),shown=country==='all'?byRegion:byRegion.filter(a=>(a.country||'国不明')===country);\n const countrySelect=$('tpnl-country'),selectedCountry=countrySelect.value,countryOptions=[...new Set(items.map(a=>a.country||'国不明'))].sort((a,b)=>a.localeCompare(b,'ja'));countrySelect.innerHTML='<option value=\"all\">全ての国</option>'+countryOptions.map(c=>'<option>'+esc(c)+'</option>').join('');countrySelect.value=countryOptions.includes(selectedCountry)?selectedCountry:'all';
+ const f=$('tpnl-category')?.value||'all',region=$('tpnl-region')?.value||'all',country=$('tpnl-country')?.value||'all',byCategory=f==='all'?items:items.filter(a=>a.categoryId===f),byRegion=region==='all'?byCategory:byCategory.filter(a=>a.region===region),shown=country==='all'?byRegion:byRegion.filter(a=>(a.country||'国不明')===country);
+ const countrySelect=$('tpnl-country'),selectedCountry=countrySelect.value,countryOptions=[...new Set(items.map(a=>a.country||'国不明'))].sort((a,b)=>a.localeCompare(b,'ja'));countrySelect.innerHTML='<option value=\"all\">全ての国</option>'+countryOptions.map(c=>'<option>'+esc(c)+'</option>').join('');countrySelect.value=countryOptions.includes(selectedCountry)?selectedCountry:'all';
  $('tpnl-summary').textContent='分野内訳：'+(fmtSummary(items)||'まだありません')+'。地域・国は見出しに明記された地名・国名からの推定です。媒体所在地だけでは記事対象地域を決めません。特定できない場合は不明とします。';
  $('tpnl-list').innerHTML=shown.map(a=>{const u=safe(a.url),mark=a.importance>=75?'🔴':a.importance>=50?'🟠':'⚪';return '<article class="tpnl-item"><div class="tpnl-meta">'+mark+' 重要度 '+a.importanceLabel+' '+a.importance+'点 ・ '+esc(a.category)+' ・ '+esc(a.region)+' ・ '+esc(a.country||'国不明')+'</div><small>'+esc(a.domain)+' · '+esc(a.date)+'</small><br>'+(u?'<a target="_blank" rel="noopener noreferrer" href="'+esc(u)+'">'+esc(a.title)+'</a>':esc(a.title))+'</article>'}).join('')||'該当するニュースはありません。';
 }
