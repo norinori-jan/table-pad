@@ -235,15 +235,16 @@ dialog::backdrop{background:rgba(3,7,12,.68);backdrop-filter:blur(5px)}
 }
 </style>
 </head><body>
-<header><b>▦ table-pad</b><button id="bNew" class="pri" title="空の表を作成">＋ 表を作成</button><button id="bImp">📂 取り込み</button><button id="bSync" title="音声・flow-mind連携の設定" aria-label="音声・flow-mind連携の設定">🎙 音声連携設定</button><button id="bSto" title="端末内の保存量を確認" aria-label="保存量を確認">📦 保存量</button><button id="bIO" title="表データの読み込み・書き出し" aria-label="表データの読み込み・書き出し">⇅ 入出力</button></header>
+<header><b>▦ table-pad</b><div class="tp-head-group" aria-label="作成・取り込み"><span>データ</span><button id="bNew" class="pri" title="空の表を作成">＋ 表を作成</button><button id="bImp">📂 取り込み</button></div><div class="tp-head-group" aria-label="連携"><span>連携</span><button id="bSync" title="音声・flow-mind連携の設定" aria-label="音声・flow-mind連携の設定">🎙 音声連携設定</button></div><div class="tp-head-group" aria-label="保存管理"><span>保存管理</span><button id="bSto" title="端末内の保存量を確認" aria-label="保存量を確認">📦 保存量</button><button id="bIO" title="表データの読み込み・書き出し" aria-label="表データの読み込み・書き出し">⇅ 入出力</button></div></header>
 <div id="views" aria-label="作業画面"><div class="tp-nav-group" aria-label="データ"><span>データ</span><button data-v="t" class="on">▦ 表</button><button data-v="l">一覧</button></div><div class="tp-nav-group" aria-label="分析"><span>分析</span><button data-v="s">株価</button><button data-v="x">計算</button><button data-v="z">集合</button><button data-v="c">グラフ</button><button data-v="d">ダッシュ</button></div><div class="tp-nav-group" aria-label="整理・参照"><span>整理・参照</span><button data-v="f">フロー</button><button data-v="r">情報源</button></div></div>
 <div id="tabs"></div>
 <input id="title" placeholder="表の名前">
 <div id="wrap"><table id="tb"></table></div>
 <div id="hint"></div>
-<div id="bar">
+<div id="bar"><details id="tpTableTools"><summary><span>表の操作</span><small>行・列の編集／コピー／音声入力</small><b aria-hidden="true">⌃</b></summary><div class="tp-tool-content">
   <div class="row"><button id="rUp">▲ 行</button><button id="rDn">▼ 行</button><button id="cLf">◀ 列</button><button id="cRt">▶ 列</button><button id="aR">＋行</button><button id="aC">＋列</button><button id="sT">↕ 並べ替え</button><button id="dR" class="dng">行削除</button><button id="dC" class="dng">列削除</button></div>
   <div class="row"><button id="vc" class="pri">🎙 声で入れる</button><button id="hdr">1行目=見出し</button><button id="cp">📋 コピー</button><button id="ps">📥 貼り付け</button><button id="un">↶ 元に戻す</button><button id="dT" class="dng">表を削除</button></div>
+  </div></details>
 </div>
 <div id="cv" hidden>
   <div class="sec" id="autoChartGuide"><h4>この表からグラフを作る</h4><div id="autoChartText" style="font-size:14px;line-height:1.55;margin-bottom:8px">表の列を自動判定して、おすすめのグラフを提案します。</div><button id="vAuto" class="pri" style="width:100%">✨ この表に合うグラフを自動設定</button></div>
@@ -2079,5 +2080,47 @@ if('serviceWorker' in navigator&&location.protocol.startsWith('http')){navigator
  byId('tpClearBoth').addEventListener('click',()=>{english.value='';japanese.value='';});
 })();
 </script>
+
+<style id="tp-premium-workspace">
+/* Header actions: grouped by task without changing existing control IDs */
+header .tp-head-group{display:flex;align-items:center;gap:6px;padding-left:10px;border-left:1px solid rgba(162,173,187,.2);min-width:0}
+.tp-head-group>span{display:none}
+#bar{padding:7px 10px calc(7px + env(safe-area-inset-bottom))}
+#tpTableTools>summary{display:flex;align-items:center;gap:10px;min-height:42px;list-style:none;cursor:pointer;user-select:none;color:var(--tx);font-size:13px;font-weight:650}
+#tpTableTools>summary::-webkit-details-marker{display:none}
+#tpTableTools>summary span{background:#344b5d;border:1px solid rgba(125,169,200,.35);border-radius:10px;padding:8px 13px}
+#tpTableTools>summary small{color:var(--dim);font-size:11px;font-weight:400;flex:1}
+#tpTableTools>summary b{color:var(--dim);font-size:16px;transition:transform .15s}
+#tpTableTools[open]>summary b{transform:rotate(180deg)}
+.tp-tool-content{padding-top:8px;max-height:min(38dvh,300px);overflow-y:auto;overscroll-behavior:contain}
+#bar .row{flex-wrap:nowrap}
+/* Shared workspace rhythm and desktop multi-column analysis */
+#cv,#dv,#fv,#lv,#sv,#xv,#zv{max-width:100%;margin:0 auto}
+#chartBox{min-height:120px}
+#dcards{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+@media(min-width:900px){
+ #cv{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(320px,.85fr);gap:14px;align-items:start}
+ #cv>#autoChartGuide,#cv>#why,#cv>#tip,#cv>#chartBox,#cv>div[style*="display:flex"]{grid-column:1/-1}
+ #cv>.sec:not(#autoChartGuide):not(#compareSec){min-width:0}
+ #cv>#compareSec{grid-column:1/-1}
+ #cv>#chartBox{min-height:300px}
+ #dv{display:block}
+ #dcards{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+ #wrap{max-height:68vh}
+}
+@media(max-width:759px){
+ body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+ #bar{padding:5px 8px calc(5px + env(safe-area-inset-bottom))}
+ #tpTableTools>summary{min-height:42px}
+ #tpTableTools>summary small{display:none}
+ .tp-tool-content{max-height:42dvh}
+ header{gap:6px}
+ header .tp-head-group{gap:5px;padding-left:7px}
+ header .tp-head-group>span{display:none}
+ header button{font-size:12px;min-height:40px;padding:7px 9px}
+ #dcards{grid-template-columns:minmax(0,1fr)}
+}
+@media(min-width:760px) and (max-width:899px){#dcards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
 </body></html>
 
