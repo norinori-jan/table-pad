@@ -9,6 +9,7 @@ GitHub Pages の table-pad から Cloudflare Worker を呼び出し、Worker が
 - 設定: `wrangler.news.toml`
 - Durable Object: `NewsRateLimiter`（全利用者で共有する1つのゲート）
 - GDELTへの要求間隔: Durable Object内で最低5秒
+- GDELTが429を返した場合: 全端末共通で最低60秒のクールダウンを保存し、再試行を抑止
 - Workerの応答: `title / url / domain / seendate` のみ。画像・記事本文・SNSメタデータは返しません。
 - 既存保存キー `tpNewsLite.v2`、日次使用量キー、上限設定は維持します。
 
@@ -39,12 +40,13 @@ Worker URLは端末の localStorage に保存されます。各端末で初回�
 - GitHub Pages Origin の POST が JSON を返すこと。
 - 別Originからのブラウザー呼び出しが拒否されること。
 - 連続POSTは2回目が 429 となり、`Retry-After` が返ること。
+- GDELT自体が429を返した場合、Workerが全端末共通のクールダウンを開始し、次の要求にも待機時間を返すこと。
 - GDELTがレート制限文や不正JSONを返した場合、記事として保存されないこと。
 - 正常応答は4項目だけになり、既存 `tpNewsLite.v2` に保存されること。
 
 ## 制限・注意
 
 - Origin制限はブラウザー向けCORS制御であり、秘密鍵による認証ではありません。curl等でOriginを偽装する利用者までは排除できません。
-- Durable ObjectはWorker経由の要求を全端末で直列化しますが、GDELT側の共有IP判定・追加制限を解除するものではありません。
+- Durable ObjectはWorker経由の要求間隔とGDELTの429後のクールダウンを全端末で共有しますが、GDELT側の共有IP判定・追加制限を解除するものではありません。
 - 取得できない場合はWorkerのレスポンス本文とCloudflare Logsを確認してください。GDELTに対して連続再試行しないでください。
-- この変更は `fix/news-compare-integration` ブランチ上です。mainへのマージや公開設定変更は行っていません。
+- この変更は `fix/news-filter-classification-429` ブランチ上です。mainへのマージや公開設定変更は行っていません。
