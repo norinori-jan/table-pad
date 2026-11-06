@@ -34,7 +34,7 @@ function mount(){
  (document.querySelector('main')||document.querySelector('#app')||document.body).appendChild(root);
  $('tpnl-limit').value=String(limit());$('tpnl-limit').onchange=()=>{localStorage.setItem(LIMIT,$('tpnl-limit').value);render()};
  $('tpnl-worker').value=localStorage.getItem(WORKER_KEY)||'';
- $('tpnl-worker-save').onclick=()=>{const v=$('tpnl-worker').value.trim().replace(/\/$/,'');if(!/^https:\\/\\/[a-z0-9.-]+(?::\\d+)?$/i.test(v)){ $('tpnl-status').textContent='Worker URLの形式を確認してください（https://から始まるURL）';return }localStorage.setItem(WORKER_KEY,v);$('tpnl-status').textContent='Worker接続先を保存しました。';};
+ $('tpnl-worker-save').onclick=()=>{const v=$('tpnl-worker').value.trim().replace(/\/$/,'');let u;try{u=new URL(v)}catch{}if(!u||u.protocol!=='https:'||u.username||u.password||u.pathname!=='/'||u.search||u.hash){$('tpnl-status').textContent='Worker URLの形式を確認してください（https://から始まるURL）';return}localStorage.setItem(WORKER_KEY,v);$('tpnl-status').textContent='Worker接続先を保存しました。';};
  $('tpnl-fetch').onclick=fetchNews;
  $('tpnl-export').onclick=()=>{const a=document.createElement('a'),u=URL.createObjectURL(new Blob([JSON.stringify(getState(),null,2)],{type:'application/json'}));a.href=u;a.download='table-pad-world-news.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
  $('tpnl-clear').onclick=()=>{if(confirm('保存したニュース一覧を削除しますか？')){localStorage.removeItem(KEY);render()}};
