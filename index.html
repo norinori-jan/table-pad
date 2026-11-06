@@ -2095,6 +2095,14 @@ header .tp-head-group{display:flex;align-items:center;gap:6px;padding-left:10px;
 .tp-tool-content{padding-top:8px;max-height:min(38dvh,300px);overflow-y:auto;overscroll-behavior:contain}
 #bar .row{flex-wrap:nowrap}
 /* Shared workspace rhythm and desktop multi-column analysis */
+/* Explicitly preserve the native hidden state when responsive display rules apply. */
+#cv[hidden],#dv[hidden],#fv[hidden],#lv[hidden],#sv[hidden],#xv[hidden],#zv[hidden],#rv[hidden]{display:none!important}
+#cv:not([hidden]),#dv:not([hidden]),#fv:not([hidden]),#lv:not([hidden]),#sv:not([hidden]),#xv:not([hidden]),#zv:not([hidden]),#rv:not([hidden]){box-sizing:border-box}
+#cv,#dv,#fv,#lv,#sv,#xv,#zv,#rv{width:100%;padding:10px clamp(12px,2vw,24px)}
+#cv>.sec,#dv>.sec{min-width:0}
+#chartBox{width:100%;min-width:0;overflow-x:auto}
+#dcards>.dc{min-width:0;overflow:hidden}
+
 #cv,#dv,#fv,#lv,#sv,#xv,#zv{max-width:100%;margin:0 auto}
 #chartBox{min-height:120px}
 #dcards{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
