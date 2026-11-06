@@ -26,7 +26,7 @@ const REGIONS=[
 ];
 
 function enrich(a){
- const raw=String(a.title||''),t=' '+raw.toLowerCase().normalize('NFKC')+' ';
+ const raw=String(a.title||''),t=' '+raw.toLowerCase().normalize('NFKC').replace(/[^\\p{L}\\p{N}]+/gu,' ')+' ';
  const matches=CATS.map(c=>({c,score:c.terms.reduce((n,k)=>n+(t.includes(k)?(k.trim().length>=9?2:1):0),0)})).sort((x,y)=>y.score-x.score);
  const c=matches[0]?.score>0?matches[0].c:{id:'other',name:'その他'};
  const critical=['war','attack','missile','invasion','coup','earthquake','tsunami','hurricane','pandemic','ceasefire','sanction','nuclear','戦争','攻撃','侵攻','地震','津波','台風','感染症','停戦','制裁','核','爆発','война','землетряс','袭击','战争','地震'];
