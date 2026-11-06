@@ -47,11 +47,11 @@ function dedupe(items){
  return out;
 }
 function balance(items,max){const buckets=new Map(),unknown=[];for(const a of items){if(a.region==='地域不明'){unknown.push(a);continue}if(!buckets.has(a.region))buckets.set(a.region,[]);buckets.get(a.region).push(a)}
- const regions=[...buckets.keys()],out=[];while(regions.some(r=>buckets.get(r).length)){for(const r of regions){const a=buckets.get(r).shift();if(a)out.push(a)}}out.push(...unknown);return out.sort((a,b)=>b.importance-a.importance).slice(0,max)}
-function ranked(items){return balance(dedupe(items),Math.min(50,items.length))}
+ const regions=[...buckets.keys()],out=[];while(regions.some(r=>buckets.get(r).length)){for(const r of regions){const a=buckets.get(r).shift();if(a)out.push(a)}}out.push(...unknown);return out.slice(0,max)}
+function ranked(items,max=25){return balance(dedupe(items),Math.min(max,items.length))}
 function fmtSummary(items){const m=new Map();items.forEach(a=>m.set(a.category,(m.get(a.category)||0)+1));return [...m].sort((a,b)=>b[1]-a[1]).map(x=>x[0]+' '+x[1]).join(' ・ ')}
 function render(){
- const d=day(),s=state(),l=limit(),items=s.items.map(enrich).sort((a,b)=>b.importance-a.importance||String(b.date||'').localeCompare(String(a.date||''))).slice(0,150);
+ const d=day(),s=state(),l=limit(),items=balance(dedupe(s.items),Math.min(150,s.items.length));
  $('tpnl-meter').textContent='本日のAPI応答本文（推定） '+fmt(d.bytes)+' / '+fmt(l)+'・成功 '+d.requests+' 回';
  $('tpnl-bar').style.width=Math.min(100,d.bytes/Math.max(1,l)*100)+'%';$('tpnl-count').textContent=s.items.length+' 件保存';
  const f=$('tpnl-category')?.value||'all',shown=f==='all'?items:items.filter(a=>a.categoryId===f);
@@ -84,7 +84,7 @@ async function fetchNews(){
   if(!res.ok)throw Object.assign(new Error(data.message||data.error||'HTTPエラー: '+res.status),{kind:data.error||'http',detail:String(data.detail||data.upstreamPreview||txt).slice(0,1600)});
   if(!data||!Array.isArray(data.articles))throw Object.assign(new Error('応答形式エラー: articles配列がありません。ニュースは保存していません。'),{kind:'format',detail:txt.slice(0,1600)});
   const size=new TextEncoder().encode(txt).length;if(size>l-d.bytes)throw Object.assign(new Error('応答サイズ超過: 今回の応答 '+fmt(size)+' は本日の残り上限 '+fmt(Math.max(0,l-d.bytes))+' を超えるため保存・計上しませんでした。'),{kind:'limit'});
-  const s=state(),newRanked=ranked(data.articles),merged=ranked([...s.items,...newRanked]);s.items=merged.slice(0,1000);
+  const s=state(),newRanked=ranked(data.articles,max),merged=dedupe([...s.items,...newRanked]);s.items=merged.slice(0,1000);
   d.bytes+=size;d.requests++;localStorage.setItem(KEY,JSON.stringify(s));localStorage.setItem(DAY,JSON.stringify(d));
   status.textContent='取得 '+data.articles.length+' 件 → 重複整理後 '+newRanked.length+' 件。分野・重要度・地域を推定しました。応答 '+fmt(size)+(d.bytes>=l?'。設定上限に達したため以降停止':'');render();
  }catch(error){status.textContent=error.message||'取得に失敗しました。';if(error.detail){detail.textContent=error.detail;detail.hidden=false}else if(error.kind==='network'&&error.cause){detail.textContent=String(error.cause.message||error.cause);detail.hidden=false}}
