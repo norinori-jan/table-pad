@@ -49,4 +49,4 @@ Worker URLは端末の localStorage に保存されます。各端末で初回�
 - Origin制限はブラウザー向けCORS制御であり、秘密鍵による認証ではありません。curl等でOriginを偽装する利用者までは排除できません。
 - Durable ObjectはWorker経由の要求間隔とGDELTの429後のクールダウンを全端末で共有しますが、GDELT側の共有IP判定・追加制限を解除するものではありません。
 - 取得できない場合はWorkerのレスポンス本文とCloudflare Logsを確認してください。GDELTに対して連続再試行しないでください。
-- この変更は `fix/news-compare-integration` ブランチ上です。mainへのマージや公開設定変更は行っていません。
+- この変更は `fix/news-filter-classification-429` ブランチ上です。mainへのマージや公開設定変更は行っていません。
