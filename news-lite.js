@@ -37,7 +37,7 @@ function enrich(a){
  score=Math.max(0,Math.min(100,score));
  let region='地域不明';for(const x of REGIONS){if(x[0].test(t)){region=x[1];break}}
  /* Do not infer the story's geography from the publisher's country-code domain. */
- return {...a,category:c.name,categoryId:c.id,importance:score,importanceLabel:score>=75?'高':score>=50?'中':'低',region};
+ return {...a,date:String(a.date||a.seendate||''),category:c.name,categoryId:c.id,importance:score,importanceLabel:score>=75?'高':score>=50?'中':'低',region};
 }
 function norm(s){return String(s||'').toLowerCase().normalize('NFKC').replace(/https?:\/\/\S+/g,' ').replace(/[^\p{L}\p{N}]+/gu,' ').trim()}
 function grams(s){const x=norm(s).replace(/\s/g,''),o=new Set();if(x.length<3){if(x)o.add(x);return o}for(let i=0;i<x.length-2;i++)o.add(x.slice(i,i+3));return o}
