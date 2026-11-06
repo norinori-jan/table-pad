@@ -24,9 +24,9 @@ const REGIONS=[
 [/\b(africa|nigeria|kenya|ethiopia|sudan|somalia|south africa|ghana|congo)\b|アフリカ|ナイジェリア|ケニア|エチオピア|スーダン|ソマリア|南アフリカ|コンゴ/i,'アフリカ'],
 [/\b(world|global|international|united nations)\b|世界|国際|国連/i,'世界・複数地域']
 ];
-const TLD={cn:'東アジア・南アジア・太平洋',jp:'東アジア・南アジア・太平洋',kr:'東アジア・南アジア・太平洋',tw:'東アジア・南アジア・太平洋',in:'東アジア・南アジア・太平洋',id:'東アジア・南アジア・太平洋',ph:'東アジア・南アジア・太平洋',au:'東アジア・南アジア・太平洋',uk:'欧州',de:'欧州',fr:'欧州',it:'欧州',es:'欧州',pt:'欧州',gr:'欧州',ru:'欧州',ua:'欧州',pl:'欧州',eg:'アフリカ',ng:'アフリカ',ke:'アフリカ',za:'アフリカ',br:'北米・中南米',mx:'北米・中南米',ar:'北米・中南米',cl:'北米・中南米',ca:'北米・中南米',us:'北米・中南米',il:'中東',sa:'中東',ae:'中東',tr:'中東'};
+
 function enrich(a){
- const raw=String(a.title||''),t=' '+raw.toLowerCase().normalize('NFKC')+' ',d=String(a.domain||'').toLowerCase();
+ const raw=String(a.title||''),t=' '+raw.toLowerCase().normalize('NFKC')+' ';
  const matches=CATS.map(c=>({c,score:c.terms.reduce((n,k)=>n+(t.includes(k)?(k.trim().length>=9?2:1):0),0)})).sort((x,y)=>y.score-x.score);
  const c=matches[0]?.score>0?matches[0].c:{id:'other',name:'その他'};
  const critical=['war','attack','missile','invasion','coup','earthquake','tsunami','hurricane','pandemic','ceasefire','sanction','nuclear','戦争','攻撃','侵攻','地震','津波','台風','感染症','停戦','制裁','核','爆発','война','землетряс','袭击','战争','地震'];
