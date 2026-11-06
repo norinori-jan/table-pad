@@ -1923,6 +1923,8 @@ if('serviceWorker' in navigator&&location.protocol.startsWith('http')){navigator
    <button id="tpOpenGoogle" type="button">Google Translate</button>
    <button id="tpSpeakEnglish" type="button">&#33521;&#35486;&#12434;&#35501;&#12415;&#19978;&#12370;</button>
    <button id="tpStopSpeak" type="button">&#20572;&#27490;</button>
+   <button id="tpToSpeak" type="button">&#128483; 英会話にする</button>
+   <button id="tpCopyCode" type="button">&#128203; コードをコピー</button>
   </div>
   <label for="tpJapanese">&#9313; &#26085;&#26412;&#35486; output (paste translation here)</label>
   <textarea id="tpJapanese" placeholder="Paste Japanese translation here..."></textarea>
@@ -1964,6 +1966,15 @@ if('serviceWorker' in navigator&&location.protocol.startsWith('http')){navigator
   speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(english.value); u.lang='en-US'; u.rate=0.85; speechSynthesis.speak(u);
  });
  byId('tpStopSpeak').addEventListener('click',()=>{if('speechSynthesis' in window)speechSynthesis.cancel();});
+ /*tp-to-speak*/
+ function snPayload(){const e=english.value.trim();if(!e){alert('先に英文を貼ってください。');return null}
+  const j=japanese.value.trim();const first=(e.match(/^[^.!?\n]{5,100}/)||[e])[0].trim().slice(0,60);
+  return {t:first,en:e.slice(0,6000),jp:j.slice(0,6000)}}
+ function snEnc(o){const b=new TextEncoder().encode(JSON.stringify(o));let s='';for(const x of b)s+=String.fromCharCode(x);return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+ byId('tpToSpeak').addEventListener('click',()=>{const o=snPayload();if(!o)return;
+  try{localStorage.setItem('dei_news_in',JSON.stringify(Object.assign({ts:Date.now()},o)))}catch(e){}
+  window.open('https://norinori-jan.github.io/speak-native/index.html#news='+snEnc(o),'_blank','noopener')});
+ byId('tpCopyCode').addEventListener('click',()=>{const o=snPayload();if(!o)return;copyText('SNNEWS:'+snEnc(o),english)});
  byId('tpClearBoth').addEventListener('click',()=>{english.value='';japanese.value='';});
 })();
 </script>
