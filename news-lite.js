@@ -10,11 +10,11 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const safe=s=>{try{const u=new URL(String(s||''));return /^https?:$/.test(u.protocol)?u.href:''}catch{return ''}};
 const fmt=n=>n<1024?n+' B':n<1048576?(n/1024).toFixed(1)+' KB':(n/1048576).toFixed(2)+' MB';
 const CATS=[
-{id:'security',name:'政治・外交・安全保障',terms:['war','attack','missile','military','defense','invasion','ceasefire','sanction','nato','coup','election','president','prime minister','diplomacy','iran','israel','ukraine','taiwan','戦争','攻撃','ミサイル','軍事','防衛','侵攻','停戦','制裁','選挙','大統領','首相','外交','台湾','ウクライナ','война','атака','армия','战争','袭击','军事','外交','إيران','حرب']},
-{id:'economy',name:'経済・金融',terms:['economy','inflation','interest rate','central bank','federal reserve','stock market','trade','tariff','bank','debt','gdp','unemployment','currency','bitcoin','oil price','経済','金融','物価','インフレ','金利','中央銀行','株式','市場','貿易','関税','銀行','債務','雇用','通貨','原油','экономика','инфляц','рынок','经济','金融','通胀','利率','贸易','银行']},
-{id:'science',name:'科学・技術・AI',terms:['artificial intelligence','machine learning','robot','semiconductor','chip','quantum','space','nasa','satellite','research','scientist','technology','cyber','科学','技術','人工知能','半導体','量子','宇宙','衛星','研究','ロボット','サイバー','технолог','исследован','人工智能','芯片','科技','机器人','ذكاء اصطناعي']},
-{id:'disaster',name:'災害・環境・エネルギー',terms:['earthquake','tsunami','typhoon','hurricane','flood','wildfire','volcano','climate','global warming','emissions','renewable energy','nuclear plant','disaster','災害','地震','津波','台風','洪水','山火事','火山','気候','温暖化','再生可能エネルギー','原発','землетряс','наводнен','地震','洪水','气候','能源','زلزال','مناخ']},
-{id:'society',name:'社会・人道・健康',terms:['humanitarian','refugee','migration','protest','strike','human rights','health','outbreak','epidemic','pandemic','hospital','education','crime','court','社会','人道','難民','移民','抗議','人権','医療','感染','病院','教育','裁判','бежен','протест','здравоохран','难民','人权','医疗','لاجئ','احتجاج','صحة']}
+{id:'security',name:'政治・外交・安全保障',terms:['war','attack','missile','military','defense','defence','invasion','ceasefire','sanction','nato','coup','election','president','prime minister','foreign minister','minister of defense','diplomacy','diplomatic','parliament','government','security','hostage','terrorism','peace talks','border clash','armed forces','iran','israel','ukraine','taiwan','戦争','攻撃','ミサイル','軍事','防衛','侵攻','停戦','制裁','選挙','大統領','首相','外相','国防相','外交','議会','政府','安全保障','人質','テロ','和平交渉','война','атака','армия','战争','袭击','军事','外交','إيران','حرب','وزير الخارجية','انتخابات']},
+{id:'economy',name:'経済・金融',terms:['economy','economic','inflation','interest rate','central bank','federal reserve','stock market','market','trade','tariff','bank','debt','gdp','unemployment','currency','bitcoin','cryptocurrency','oil price','investment','investor','company','companies','business','billion','trillion','budget','finance','financial','経済','金融','物価','インフレ','金利','中央銀行','株式','市場','貿易','関税','銀行','債務','雇用','通貨','原油','投資','企業','財政','миллиард','экономика','инфляц','рынок','经济','金融','通胀','利率','贸易','银行','债务','投资','公司']},
+{id:'science',name:'科学・技術・AI',terms:['artificial intelligence','machine learning','generative ai',' ai ','robot','semiconductor','chip','quantum','space','nasa','satellite','research','scientist','technology','tech','cyber','software','data center','computer','innovation','科学','技術','人工知能','半導体','量子','宇宙','衛星','研究','ロボット','サイバー','ソフトウェア','технолог','исследован','人工智能','芯片','科技','机器人','ذكاء اصطناعي']},
+{id:'disaster',name:'災害・環境・エネルギー',terms:['earthquake','tsunami','typhoon','hurricane','flood','wildfire','volcano','climate','global warming','emissions','renewable energy','nuclear plant','disaster','storm','drought','heatwave','energy crisis','power outage','災害','地震','津波','台風','洪水','山火事','火山','気候','温暖化','再生可能エネルギー','原発','干ばつ','猛暑','停電','землетряс','наводнен','地震','洪水','气候','能源','زلزال','مناخ']},
+{id:'society',name:'社会・人道・健康',terms:['humanitarian','refugee','migration','migrant','protest','strike','human rights','health','outbreak','epidemic','pandemic','hospital','education','crime','court','poverty','food crisis','aid worker','social','society','人口','社会','人道','難民','移民','抗議','人権','医療','感染','病院','教育','裁判','貧困','食料危機','福祉','бежен','протест','здравоохран','难民','人权','医疗','لاجئ','احتجاج','صحة']}
 ];
 const REGIONS=[
 [/\b(usa|united states|america|canada|mexico|brazil|argentina|chile|peru)\b|米国|アメリカ|カナダ|ブラジル|アルゼンチン|メキシコ/i,'北米・中南米'],
@@ -26,8 +26,9 @@ const REGIONS=[
 ];
 const TLD={cn:'東アジア・南アジア・太平洋',jp:'東アジア・南アジア・太平洋',kr:'東アジア・南アジア・太平洋',tw:'東アジア・南アジア・太平洋',in:'東アジア・南アジア・太平洋',id:'東アジア・南アジア・太平洋',ph:'東アジア・南アジア・太平洋',au:'東アジア・南アジア・太平洋',uk:'欧州',de:'欧州',fr:'欧州',it:'欧州',es:'欧州',pt:'欧州',gr:'欧州',ru:'欧州',ua:'欧州',pl:'欧州',eg:'アフリカ',ng:'アフリカ',ke:'アフリカ',za:'アフリカ',br:'北米・中南米',mx:'北米・中南米',ar:'北米・中南米',cl:'北米・中南米',ca:'北米・中南米',us:'北米・中南米',il:'中東',sa:'中東',ae:'中東',tr:'中東'};
 function enrich(a){
- const t=String(a.title||'').toLowerCase(),d=String(a.domain||'').toLowerCase();
- const c=CATS.find(x=>x.terms.some(k=>t.includes(k)))||{id:'other',name:'その他'};
+ const raw=String(a.title||''),t=' '+raw.toLowerCase().normalize('NFKC')+' ',d=String(a.domain||'').toLowerCase();
+ const matches=CATS.map(c=>({c,score:c.terms.reduce((n,k)=>n+(t.includes(k)?(k.trim().length>=9?2:1):0),0)})).sort((x,y)=>y.score-x.score);
+ const c=matches[0]?.score>0?matches[0].c:{id:'other',name:'その他'};
  const critical=['war','attack','missile','invasion','coup','earthquake','tsunami','hurricane','pandemic','ceasefire','sanction','nuclear','戦争','攻撃','侵攻','地震','津波','台風','感染症','停戦','制裁','核','爆発','война','землетряс','袭击','战争','地震'];
  const high=['president','prime minister','election','central bank','interest rate','inflation','artificial intelligence','semiconductor','climate','refugee','humanitarian','大統領','首相','選挙','中央銀行','金利','インフレ','人工知能','半導体','気候','難民','人道'];
  let score=35+(critical.some(k=>t.includes(k))?45:0)+(high.some(k=>t.includes(k))?25:0)+(c.id!=='other'?10:0);
@@ -65,7 +66,7 @@ function mount(){
  $('tpnl-limit').value=String(limit());$('tpnl-limit').onchange=()=>{localStorage.setItem(LIMIT,$('tpnl-limit').value);render()};
  $('tpnl-worker').value=localStorage.getItem(WORKER)||'';
  $('tpnl-worker-save').onclick=()=>{const v=$('tpnl-worker').value.trim().replace(/\/$/,'');let u;try{u=new URL(v)}catch{}if(!u||u.protocol!=='https:'||u.username||u.password||u.pathname!=='/'||u.search||u.hash){$('tpnl-status').textContent='Worker URLの形式を確認してください（https://から始まるURL）';return}localStorage.setItem(WORKER,v);$('tpnl-status').textContent='Worker接続先を保存しました。'};
- $('tpnl-category').onchange=render;$('tpnl-fetch').onclick=fetchNews;
+ $('tpnl-category').onchange=render;$('tpnl-region').onchange=render;$('tpnl-fetch').onclick=fetchNews;
  $('tpnl-export').onclick=()=>{const a=document.createElement('a'),u=URL.createObjectURL(new Blob([JSON.stringify(state(),null,2)],{type:'application/json'}));a.href=u;a.download='table-pad-world-news.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
  $('tpnl-clear').onclick=()=>{if(confirm('保存したニュース一覧を削除しますか？')){localStorage.removeItem(KEY);render()}};render();
 }
