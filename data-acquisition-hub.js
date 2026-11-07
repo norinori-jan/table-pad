@@ -3,11 +3,11 @@
 if(window.TablePadAcquisitionHub)return;
 const C=[
 {id:'weather',icon:'🌦️',name:'気象・防災',keys:/天気|気温|雨|降水|気象|台風|地震|防災/,desc:'気象庁などの公的データ',action:'weather'},
-{id:'stats',icon:'📊',name:'人口・統計・社会',keys:/人口|統計|物価|賃金|雇用|失業|消費|世帯|GDP|経済指標/,desc:'e-Stat・政府統計など',url:'https://www.e-stat.go.jp/'},
+{id:'stats',icon:'📊',name:'人口・統計・社会',keys:/人口|統計|物価|賃金|雇用|失業|消費|世帯|GDP|経済指標|都道府県別|市区町村別/,desc:'e-Stat APIで統計を検索・取得して端末内の表に保存（API IDが必要）',action:'estat',url:'https://www.e-stat.go.jp/api/'},
 {id:'finance',icon:'💹',name:'株価・金融',keys:/株|株価|為替|ドル|円|金利|金融|指数|銘柄/,desc:'株価データ・日本銀行統計',action:'stock',url:'https://www.stat-search.boj.or.jp/'},
-{id:'news',icon:'🌍',name:'ニュース・出来事',keys:/ニュース|報道|出来事|国際|世界|政治|紛争|戦争/,desc:'公開ニュース検索',action:'news'},
+{id:'news',icon:'🌍',name:'国際ニュース・出来事',keys:/ニュース|報道|出来事|国際|世界|各国|海外|政治|紛争|戦争|国別比較|国際情勢/,desc:'GDELT公開ニュース検索から日時・媒体・見出し・URLを取得して表に保存',action:'news'},
 {id:'transport',icon:'🚆',name:'交通・運行',keys:/電車|鉄道|交通|遅延|運行|路線/,desc:'交通公式情報・自分の観測',action:'train',url:'https://www.mlit.go.jp/tetudo/'},
-{id:'place',icon:'🗺️',name:'地図・地域',keys:/地図|場所|住所|地形|標高|地域|土地|施設/,desc:'国土地理院などの地理情報',url:'https://www.gsi.go.jp/'},
+{id:'place',icon:'🗺️',name:'地図・地域',keys:/地図|場所|住所|地形|標高|地域|土地|施設/,desc:'国土地理院などの地理情報',url:'https://www.gsi.go.jp/'},\n{id:'process',icon:'🧰',name:'保存済みデータを加工',keys:/加工|関数|並べ替え|ソート|集計|平均|合計|重複|絞り込み|フィルター|ランキング|CSV保存|ローカル保存/,desc:'端末に保存した表から適用関数を推薦し、加工結果を別表・CSV・JSONとして保存',action:'workbench'},
 {id:'other',icon:'🔎',name:'その他・自由入力',keys:/.*/,desc:'目的に合う取得先を一緒に選びます'}
 ];
 const $=id=>document.getElementById(id);
@@ -19,7 +19,7 @@ function recommend(){const q=$('tpAcqPurpose').value.trim();const matches=q?C.fi
 function detail(){if(!selected){$('tpAcqDetail').textContent='目的を入力し、候補を選んでください。候補が見つからない場合は「その他・自由入力」を選べます。';$('tpAcqStart').disabled=true;$('tpAcqStart').textContent='取得先を選択してください';return}$('tpAcqDetail').innerHTML='<b>'+selected.icon+' '+esc(selected.name)+'</b><br>'+esc(selected.desc)+(selected.url?'<br>候補：<a href="'+esc(selected.url)+'" target="_blank" rel="noopener noreferrer">'+esc(selected.url)+'</a>':'')+'<br><span class="muted">目的：「'+esc($('tpAcqPurpose').value.trim()||'未入力')+'」</span>';$('tpAcqStart').disabled=!(selected.action||selected.url);$('tpAcqStart').textContent=selected.action?'アプリ内の取得機能を開く':selected.url?'公式取得先を開く':'取得先を選択してください'}
 function open(){ensure();$('tpAcq').classList.add('on');$('tpAcqPurpose').focus();recommend()}
 function close(){$('tpAcq')?.classList.remove('on')}
-function start(){if(!selected)return;if(selected.action&&window.TablePadRealWorld){close();window.TablePadRealWorld.open();setTimeout(()=>{const tab=document.querySelector('[data-rwe-kind="'+selected.action+'"]');if(tab)tab.click();else if(selected.url)window.open(selected.url,'_blank','noopener,noreferrer')},80);return}if(selected.url){window.open(selected.url,'_blank','noopener,noreferrer');$('tpAcqDetail').textContent='公式取得先を別画面で開きました。取得したデータを確認してから、表へ取り込んでください。';return}$('tpAcqDetail').textContent='この目的に対応する取得先はまだ登録されていません。別の目的候補を選んでください。'}
+function start(){if(!selected)return;if(selected.action==='estat'){close();const b=document.querySelector('#tpEStatObs button');if(b){b.click();return}$('tpAcqDetail').textContent='e-Stat取得画面が読み込まれていません。アプリを更新して再度お試しください。';return}if(selected.action==='workbench'){close();if(window.TablePadDataWorkbench){window.TablePadDataWorkbench.open();return}$('tpAcqDetail').textContent='データ加工機能が読み込まれていません。アプリを更新して再度お試しください。';return}if(selected.action&&window.TablePadRealWorld){close();window.TablePadRealWorld.open();setTimeout(()=>{const tab=document.querySelector('[data-rwe-kind="'+selected.action+'"]');if(tab)tab.click();else if(selected.url)window.open(selected.url,'_blank','noopener,noreferrer')},80);return}if(selected.url){window.open(selected.url,'_blank','noopener,noreferrer');$('tpAcqDetail').textContent='公式取得先を別画面で開きました。これはリンクを開いた段階です。取得完了後、必要に応じてファイルを保存・取り込んでください。';return}$('tpAcqDetail').textContent='この目的に対応する取得先はまだ登録されていません。別の目的候補を選んでください。'}
 function sample(){const q=$('tpAcqPurpose').value.trim()||'目的未設定';const rows=[['目的','項目','値','単位','情報源','取得日時'],[q,'サンプル値','','','サンプル（実データではありません）',new Date().toISOString()]];if(typeof window.newTable==='function'){close();window.newTable('目的から作成：'+q,rows)}else $('tpAcqDetail').textContent='表作成機能がまだ利用できません。'}
 function inject(){if($('tpAcqButton'))return;const b=document.createElement('button');b.id='tpAcqButton';b.type='button';b.textContent='🎯 目的からデータを集める';b.style.cssText='min-height:42px;padding:8px 12px;border-radius:10px;border:1px solid #3987ca;background:#176fc0;color:#fff;font-weight:700;cursor:pointer';b.onclick=open;const h=document.querySelector('header');if(h)h.appendChild(b);else document.body.prepend(b)}
 window.TablePadAcquisitionHub={open,close,recommend,CATEGORIES:C};
