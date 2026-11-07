@@ -7,7 +7,7 @@ const C=[
 {id:'finance',icon:'💹',name:'株価・金融',keys:/株|株価|為替|ドル|円|金利|金融|指数|銘柄/,desc:'株価データ・日本銀行統計',action:'stock',url:'https://www.stat-search.boj.or.jp/'},
 {id:'news',icon:'🌍',name:'国際ニュース・出来事',keys:/ニュース|報道|出来事|国際|世界|各国|海外|政治|紛争|戦争|国別比較|国際情勢/,desc:'GDELT公開ニュース検索から日時・媒体・見出し・URLを取得して表に保存',action:'news'},
 {id:'transport',icon:'🚆',name:'交通・運行',keys:/電車|鉄道|交通|遅延|運行|路線/,desc:'交通公式情報・自分の観測',action:'train',url:'https://www.mlit.go.jp/tetudo/'},
-{id:'place',icon:'🗺️',name:'地図・地域',keys:/地図|場所|住所|地形|標高|地域|土地|施設/,desc:'国土地理院などの地理情報',url:'https://www.gsi.go.jp/'},\n{id:'process',icon:'🧰',name:'保存済みデータを加工',keys:/加工|関数|並べ替え|ソート|集計|平均|合計|重複|絞り込み|フィルター|ランキング|CSV保存|ローカル保存/,desc:'端末に保存した表から適用関数を推薦し、加工結果を別表・CSV・JSONとして保存',action:'workbench'},
+{id:'place',icon:'🗺️',name:'地図・地域',keys:/地図|場所|住所|地形|標高|地域|土地|施設/,desc:'国土地理院などの地理情報',url:'https://www.gsi.go.jp/'},{id:'process',icon:'🧰',name:'保存済みデータを加工',keys:/加工|関数|並べ替え|ソート|集計|平均|合計|重複|絞り込み|フィルター|ランキング|CSV保存|ローカル保存/,desc:'端末に保存した表から適用関数を推薦し、加工結果を別表・CSV・JSONとして保存',action:'workbench'},
 {id:'other',icon:'🔎',name:'その他・自由入力',keys:/.*/,desc:'目的に合う取得先を一緒に選びます'}
 ];
 const $=id=>document.getElementById(id);
