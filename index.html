@@ -1,7 +1,7 @@
 ﻿<!doctype html>
 <html lang="ja"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0f1117"><meta name="tp-rev" content="tp-r7"><title>table-pad</title><link rel="manifest" href="manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f1117"><meta name="tp-rev" content="tp-r8"><title>table-pad</title><link rel="manifest" href="manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes">
 <style>
 :root{--bg:#0f1117;--p:#181b24;--p2:#222735;--bd:#323a4d;--tx:#eef1f7;--dim:#9aa3b8;--blue:#4A9EFF;--gold:#F5C842;--red:#FF6B6B;--grn:#4AE09A}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -133,15 +133,22 @@ dialog textarea{width:100%;height:160px;background:var(--bg);color:var(--tx);bor
     line-height:1.3;
   }
 }
+.fx{color:#8fd3ff}.fe{color:var(--red)!important}tr.slh td input{opacity:.32}
+.fxrow{display:block;width:100%;text-align:left;margin:4px 0;padding:8px 10px;min-height:0}.fxrow b{color:var(--gold)}.fxrow span{color:var(--tx);margin-left:6px;font-size:13px}.fxrow small{display:block;color:var(--dim);font-size:11px;line-height:1.5;margin-top:2px;word-break:break-all}
+#slBan{margin:0 12px 8px;padding:8px 10px;border:1px solid var(--gold);background:rgba(245,200,66,.10);border-radius:12px;font-size:13px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}#slBan[hidden]{display:none}#slBan span{flex:1 0 100%}#slBan button{padding:5px 10px;min-height:32px;font-size:13px}
+#tsl{margin:0 12px 8px;background:var(--p);border:1px solid var(--bd);border-radius:12px;padding:8px 10px}#tsl.on{border-color:var(--gold)}#tsl summary{font-size:13px;color:var(--dim);font-weight:700}
+#fxd,#lcd,#lsn,#lsq,#lhd{max-width:560px;width:calc(100% - 24px)}table.lsnt{border-collapse:collapse;min-width:100%}table.lsnt th,table.lsnt td{border:1px solid var(--bd);padding:4px 6px;text-align:left;white-space:nowrap}table.lsnt th{background:var(--p2)}.chip.on{border-color:var(--gold);color:var(--gold)}#fxd{max-width:520px}#lhd{max-height:90vh;overflow:auto}.hdf label{display:block;font-size:12px;color:var(--dim);margin-top:8px}.hdf input,.hdf select,.hdf textarea,#lhdBody input{width:100%;font:inherit;font-size:16px;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:9px;box-sizing:border-box}input.fxi{width:100%;font:16px ui-monospace,Menlo,monospace;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:10px}
 </style></head><body>
 <header><b>▦ table-pad</b><button id="bNew" class="pri" title="空の表を作成">＋ 表を作成</button><button id="bImp">📂 取り込み</button><button id="bSync" title="音声・flow-mind連携の設定" aria-label="音声・flow-mind連携の設定">🎙 音声連携設定</button><button id="bSto" title="端末内の保存量を確認" aria-label="保存量を確認">📦 保存量</button><button id="bIO" title="表データの読み込み・書き出し" aria-label="表データの読み込み・書き出し">⇅ 入出力</button></header>
 <div id="views"><button data-v="t" class="on">▦ 表</button><button data-v="l">🗂 一覧</button><button data-v="s">📉 株価</button><button data-v="x">🧮 計算</button><button data-v="z">🔵 集合</button><button data-v="c">📊 グラフ</button><button data-v="d">📈 ダッシュ</button><button data-v="f">🔀 フロー</button><button data-v="r">🔎 情報源</button></div>
 <div id="tabs"></div>
+<div id="slBan" hidden></div>
 <input id="title" placeholder="表の名前">
 <div id="wrap"><table id="tb"></table></div>
 <div id="hint"></div>
+<details id="tsl"><summary>🔪 表の絞り込み（スライサー）<span id="tslCnt" style="float:right;font-weight:400"></span></summary><div id="tslb" style="margin-top:8px"></div></details>
 <div id="bar">
-  <div class="row"><button id="rUp">▲ 行</button><button id="rDn">▼ 行</button><button id="cLf">◀ 列</button><button id="cRt">▶ 列</button><button id="aR">＋行</button><button id="aC">＋列</button><button id="sT">↕ 並べ替え</button><button id="dR" class="dng">行削除</button><button id="dC" class="dng">列削除</button></div>
+  <div class="row"><button id="rUp">▲ 行</button><button id="rDn">▼ 行</button><button id="cLf">◀ 列</button><button id="cRt">▶ 列</button><button id="aR">＋行</button><button id="aC">＋列</button><button id="sT">↕ 並べ替え</button><button id="fxB">ƒ 関数</button><button id="tplB">📚 学習表</button><button id="cdB">🃏 暗記</button><button id="snB">🌐 サブネット</button><button id="sqB">↔ シーケンス</button><button id="hdB">🎧 受電</button><button id="dR" class="dng">行削除</button><button id="dC" class="dng">列削除</button></div>
   <div class="row"><button id="vc" class="pri">🎙 声で入れる</button><button id="hdr">1行目=見出し</button><button id="cp">📋 コピー</button><button id="ps">📥 貼り付け</button><button id="un">↶ 元に戻す</button><button id="dT" class="dng">表を削除</button></div>
 </div>
 <div id="cv" hidden>
@@ -196,6 +203,24 @@ dialog textarea{width:100%;height:160px;background:var(--bg);color:var(--tx);bor
   <div id="flowBox"></div>
 </div>
 <div id="rv" hidden><section style="padding:12px 12px 4px"><h2 style="margin:0 0 6px;font-size:18px">ニュース・情報源</h2><p style="margin:0 0 10px;color:var(--dim);font-size:13px;line-height:1.5">下の媒体名を押すと、そのニュースサイト本体へ直接移動します。記事は各サイト内の検索窓で探してください。キーワードを使って複数媒体を横断検索したい場合は、Google News検索を利用できます。</p><div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px"><a href="https://www.theguardian.com/" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:10px 12px;border:1px solid var(--bd);border-radius:9px;background:var(--p);color:var(--tx);text-decoration:none;font:inherit">The Guardian ↗</a><a href="https://www.nytimes.com/" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:10px 12px;border:1px solid var(--bd);border-radius:9px;background:var(--p);color:var(--tx);text-decoration:none;font:inherit">The New York Times ↗</a><a href="https://www.reuters.com/" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:10px 12px;border:1px solid var(--bd);border-radius:9px;background:var(--p);color:var(--tx);text-decoration:none;font:inherit">Reuters ↗</a><a href="https://www.cnbc.com/" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:10px 12px;border:1px solid var(--bd);border-radius:9px;background:var(--p);color:var(--tx);text-decoration:none;font:inherit">CNBC ↗</a><a href="https://finance.yahoo.com/" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:10px 12px;border:1px solid var(--bd);border-radius:9px;background:var(--p);color:var(--tx);text-decoration:none;font:inherit">Yahoo Finance ↗</a><a href="https://apnews.com/" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:10px 12px;border:1px solid var(--bd);border-radius:9px;background:var(--p);color:var(--tx);text-decoration:none;font:inherit">AP News ↗</a><a href="https://www.bbc.com/news" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:10px 12px;border:1px solid var(--bd);border-radius:9px;background:var(--p);color:var(--tx);text-decoration:none;font:inherit">BBC News ↗</a><a href="https://news.google.com/" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:10px 12px;border:1px solid var(--bd);border-radius:9px;background:var(--p);color:var(--tx);text-decoration:none;font:inherit">Google News ↗</a></div><h3 style="font-size:15px;margin:8px 0">Google Newsで横断検索</h3><input id="newsQuery" type="search" placeholder="例：Japan economy / Apple earnings" style="box-sizing:border-box;width:100%;padding:11px;background:var(--p);color:var(--tx);border:1px solid var(--bd);border-radius:9px;font:inherit;margin:0 0 8px"><div class="resource-tools" style="padding:0 0 10px"><button type="button" data-news-search="google">Google Newsで検索 ↗</button></div></section><hr style="border:0;border-top:1px solid var(--bd);margin:8px 12px"><section style="padding:4px 12px"><h2 style="margin:0 0 6px;font-size:18px">情報源リンク集</h2><input id="rSearch" type="search" placeholder="情報源を絞り込む（HTML、株式、世界、翻訳など）" style="box-sizing:border-box;width:100%;padding:11px;background:var(--p);color:var(--tx);border:1px solid var(--bd);border-radius:9px;font:inherit;margin:0 0 8px"><div class="resource-tools"><button type="button" id="rSelectVisible">表示中を選択</button><button type="button" id="rClear">選択解除</button><button type="button" id="rCopySelected">選択したリンクをコピー</button><button type="button" id="rCopyVisible">表示中のリンクを全部コピー</button></div><div id="rSummary">媒体名を押すと公式サイトへ直接移動します。情報源リンクは複数選択してまとめてコピーできます。</div><div id="rCards" class="resource-grid"></div></section><textarea id="rCopyFallback" aria-label="コピー用テキスト" readonly style="position:fixed;left:-9999px;top:0"></textarea></div><div id="toast"></div>
+<dialog id="fxd"><div style="font-weight:700;margin-bottom:6px">ƒ 関数（セルの計算式）</div>
+  <div id="fxQuick" style="margin-bottom:8px"></div>
+  <div style="font-size:12px;color:var(--dim);line-height:1.6;margin-bottom:6px">セルに <b>=SUM(B2:B9)</b> のように「=」から書くと計算します。他の表は <b>商品!A2:C9</b>、列は見出し名（<b>金額</b>、<b>商品[価格]</b>）でも書けます。先頭に ' を付けると「=」を文字として残せます。</div>
+  <input id="fxTest" class="fxi" placeholder="=SUM(金額)" autocomplete="off" autocapitalize="off" spellcheck="false">
+  <div style="display:flex;gap:6px;margin:6px 0"><button id="fxRun">試し計算</button><button id="fxPutBtn" class="pri">選んだセルに入れる</button><span id="fxRes" style="align-self:center;font-size:14px;color:var(--gold);word-break:break-all"></span></div>
+  <input id="fxS" class="fxi" placeholder="関数を探す（合計・SUMIF・日付…）" autocomplete="off" style="margin-bottom:6px">
+  <div id="fxList" style="max-height:40vh;overflow:auto"></div>
+  <div style="display:flex;justify-content:flex-end;margin-top:8px"><button id="fxX">閉じる</button></div></dialog>
+<dialog id="lcd"><div style="font-weight:700;margin-bottom:8px">🃏 暗記カード（いまの表から）</div><div id="lcdBody"></div><div style="display:flex;justify-content:space-between;margin-top:10px"><button id="lcdReset">進み具合を戻す</button><button id="lcdX">閉じる</button></div></dialog>
+<dialog id="lsn"><div style="font-weight:700;margin-bottom:8px">🌐 サブネットの図解</div>
+<label style="font-size:12px;color:var(--dim)">ネットワーク（例 192.168.10.0/24）</label><input id="lsnIn" class="fxi" value="192.168.10.0/24" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" style="margin-bottom:8px">
+<div class="ctl"><div><label>等分する数</label><select id="lsnSplit"><option>2</option><option selected>4</option><option>8</option><option>16</option><option>32</option><option>64</option></select></div></div>
+<label style="font-size:12px;color:var(--dim);display:block;margin-top:8px">または、必要なホスト数（入れると等分より優先。例 営業:50, 開発:20, 10）</label><input id="lsnNeed" class="fxi" placeholder="営業:50, 開発:20, 管理:5" autocomplete="off" style="margin-bottom:8px">
+<div id="lsnMsg" style="font-size:13px;line-height:1.6;margin:6px 0"></div><div id="lsnBar" style="display:flex;height:34px;border-radius:8px;overflow:hidden;gap:2px;margin:8px 0"></div><div id="lsnTbl" style="font-size:12px"></div>
+<div style="display:flex;justify-content:space-between;margin-top:10px"><button id="lsnMake" class="pri">▦ 表にする</button><button id="lsnX">閉じる</button></div></dialog>
+<dialog id="lhd"><div style="font-weight:700;margin-bottom:8px">🎧 受電メモ・進捗管理・切り分け</div><div id="lhdBody"></div><div style="display:flex;justify-content:flex-end;margin-top:10px"><button id="lhdX">閉じる</button></div></dialog>
+<dialog id="lsq"><div style="font-weight:700;margin-bottom:8px">↔ シーケンス図（いまの表から）</div><div id="lsqBody"></div><div style="display:flex;justify-content:flex-end;margin-top:10px"><button id="lsqX">閉じる</button></div></dialog>
+<dialog id="tpld"><div style="font-weight:700;margin-bottom:8px">📚 学習表（ひな形）</div><input id="tplQ" class="fxi" placeholder="探す（例 Git・英語・暗号・切り分け）" autocomplete="off" style="margin-bottom:8px"><div id="tplList" style="max-height:60vh;overflow:auto"></div><div style="display:flex;justify-content:flex-end;margin-top:8px"><button id="tplX">閉じる</button></div></dialog>
 <dialog id="imp"><div style="font-weight:700;margin-bottom:8px">📂 表データの取り込み（会計ソフトのCSVなど）</div>
   <div style="display:flex;gap:6px;flex-wrap:wrap"><button id="iFile" class="pri">ファイルを選ぶ</button><button id="iPaste">貼り付け</button><button id="iSample">会計サンプル</button></div>
   <input type="file" id="iInp" accept=".csv,.tsv,.txt,text/csv,text/plain,text/tab-separated-values" hidden>
@@ -227,7 +252,8 @@ let tables=[], cur=null, sel={r:0,c:0}, hist=[], vr=null;
 const $=id=>document.getElementById(id);
 function uid(){return 't'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
 function load(){try{tables=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){tables=[]} cur=localStorage.getItem(CUR);}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(tables));localStorage.setItem(CUR,cur||'')}catch(e){}}
+let GEN=0;
+function save(){GEN++;try{localStorage.setItem(KEY,JSON.stringify(tables));localStorage.setItem(CUR,cur||'')}catch(e){}}
 function T(){return tables.find(t=>t.id===cur)}
 function mk(title,rows,cols){const d=[];for(let r=0;r<rows;r++){d.push(Array(cols).fill(''))}return{id:uid(),title:title||'新しい表',d,header:true,at:Date.now()}}
 function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',1800)}
@@ -244,44 +270,45 @@ function renderTable(){
   renderTabs();
   const t=T(); const tb=$('tb');
   const has=!!t;
-  ['rUp','rDn','cLf','cRt','aR','aC','dR','dC','vc','hdr','cp','ps','un','dT','sT'].forEach(i=>$(i).disabled=!has);
+  ['rUp','rDn','cLf','cRt','aR','aC','dR','dC','vc','hdr','cp','ps','un','dT','sT','fxB','tplB','cdB','snB','sqB','hdB'].forEach(i=>$(i).disabled=!has);
   $('title').style.display=has?'':'none'; $('wrap').style.display=has?'':'none';
   if(!t){tb.innerHTML='';$('hint').textContent='「＋ 新しい表」で表を作れます';return}
   $('title').value=t.title;
   const RC=400;sel.r=Math.min(sel.r,t.d.length-1,RC-1);sel.c=Math.min(sel.c,t.d[0].length-1);
+  const FG=fxGrid(t),SV=fxIsSl(t)?slVis(t):null;
   let h='<tr><th class="corner"></th>';
   for(let c=0;c<t.d[0].length;c++)h+='<th class="ch'+(c===sel.c?' on':'')+'" data-ch="'+c+'">⋮⋮ '+colName(c)+'</th>';
   h+='</tr>';
   t.d.forEach((row,r)=>{if(r>=RC)return;
-    h+='<tr class="'+(t.header&&r===0?'hd':'')+'"><th class="h'+(r===sel.r?' on':'')+'" data-rh="'+r+'">'+(r+1)+'</th>';
-    row.forEach((v,c)=>{h+='<td data-r="'+r+'" data-c="'+c+'" class="'+(r===sel.r&&c===sel.c?'sel':(r===sel.r?'selr':(c===sel.c?'selc':'')))+'"><input value="'+esc(v)+'" data-r="'+r+'" data-c="'+c+'" enterkeyhint="next"></td>'});
+    h+='<tr class="'+(t.header&&r===0?'hd':'')+(SV&&SV[r]===false?' slh':'')+'"><th class="h'+(r===sel.r?' on':'')+'" data-rh="'+r+'">'+(r+1)+'</th>';
+    row.forEach((v,c)=>{h+='<td data-r="'+r+'" data-c="'+c+'" class="'+(r===sel.r&&c===sel.c?'sel':(r===sel.r?'selr':(c===sel.c?'selc':'')))+'"><input'+(fxIsF(v)?' class="fx'+(fxIsErrStr(FG.v[r][c])?' fe':'')+'"':'')+' value="'+esc(FG.v[r][c])+'" data-r="'+r+'" data-c="'+c+'" enterkeyhint="next"></td>'});
     h+='</tr>'});
   tb.innerHTML=h;
   $('hdr').textContent=t.header?'1行目=見出し ✓':'1行目=見出し';
-  $('hint').textContent='選んだ場所：'+(sel.r+1)+'行 '+colName(sel.c)+'列　／　左の番号・上のABCを押したまま動かすと移動できます'+(t.d.length>RC?'　※表は先頭'+RC+'行だけ表示（グラフ・ダッシュは全'+t.d.length+'行）':'');
+  $('hint').textContent='選んだ場所：'+(sel.r+1)+'行 '+colName(sel.c)+'列　／　左の番号・上のABCを押したまま動かすと移動できます'+(t.d.length>RC?'　※表は先頭'+RC+'行だけ表示（グラフ・ダッシュは全'+t.d.length+'行）':'')+fxHint();
 }
 // 編集
 $('tb').addEventListener('focusin',e=>{const i=e.target;if(i.tagName!=='INPUT')return;const r=+i.dataset.r,c=+i.dataset.c;if(r!==sel.r||c!==sel.c){sel={r,c};markSel()}});
 function markSel(){document.querySelectorAll('#tb td').forEach(td=>{const r=+td.dataset.r,c=+td.dataset.c;td.className=(r===sel.r&&c===sel.c)?'sel':(r===sel.r?'selr':(c===sel.c?'selc':''))});
   document.querySelectorAll('#tb th.h').forEach(h=>h.classList.toggle('on',+h.dataset.rh===sel.r));
   document.querySelectorAll('#tb th.ch').forEach(h=>h.classList.toggle('on',+h.dataset.ch===sel.c));
-  $('hint').textContent='選んだ場所：'+(sel.r+1)+'行 '+colName(sel.c)+'列　／　左の番号・上のABCを押したまま動かすと移動できます'}
+  $('hint').textContent='選んだ場所：'+(sel.r+1)+'行 '+colName(sel.c)+'列　／　左の番号・上のABCを押したまま動かすと移動できます'+fxHint()}
 let editSnap=false;
 $('tb').addEventListener('input',e=>{const i=e.target;if(i.tagName!=='INPUT')return;const t=T();if(!editSnap){push();editSnap=true;clearTimeout(editSnap.h);setTimeout(()=>editSnap=false,1500)}t.d[+i.dataset.r][+i.dataset.c]=i.value;touch()});
 $('tb').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT'){e.preventDefault();const t=T();const r=+e.target.dataset.r+1,c=+e.target.dataset.c;if(r>=t.d.length){push();t.d.push(Array(t.d[0].length).fill(''));touch();sel={r,c};render()}else sel={r,c};focusSel()}});
 function focusSel(){const i=document.querySelector('#tb input[data-r="'+sel.r+'"][data-c="'+sel.c+'"]');if(i){i.focus();i.scrollIntoView({block:'nearest',inline:'nearest'})}markSel()}
 // 行列操作
 function mv(arr,a,b){if(b<0||b>=arr.length||a===b)return false;const x=arr.splice(a,1)[0];arr.splice(b,0,x);return true}
-function moveRow(a,b){const t=T();if(mv(t.d,a,b)){sel.r=b;touch();render();return true}return false}
-function moveCol(a,b){const t=T();if(b<0||b>=t.d[0].length||a===b)return false;t.d.forEach(r=>mv(r,a,b));sel.c=b;touch();render();return true}
+function moveRow(a,b){const t=T();if(mv(t.d,a,b)){fxOp(t,{kind:'mov',axis:'r',from:a,to:b});sel.r=b;touch();render();return true}return false}
+function moveCol(a,b){const t=T();if(b<0||b>=t.d[0].length||a===b)return false;t.d.forEach(r=>mv(r,a,b));fxOp(t,{kind:'mov',axis:'c',from:a,to:b});sel.c=b;touch();render();return true}
 $('rUp').onclick=()=>{push();moveRow(sel.r,sel.r-1)||hist.pop()};$('rDn').onclick=()=>{push();moveRow(sel.r,sel.r+1)||hist.pop()};
 $('cLf').onclick=()=>{push();moveCol(sel.c,sel.c-1)||hist.pop()};$('cRt').onclick=()=>{push();moveCol(sel.c,sel.c+1)||hist.pop()};
-$('aR').onclick=()=>{const t=T();push();t.d.splice(sel.r+1,0,Array(t.d[0].length).fill(''));sel.r++;touch();render();focusSel()};
-$('aC').onclick=()=>{const t=T();push();t.d.forEach(r=>r.splice(sel.c+1,0,''));sel.c++;touch();render();focusSel()};
-$('dR').onclick=()=>{const t=T();if(t.d.length<=1){toast('最後の1行は消せません');return}if(!confirm((sel.r+1)+'行目を削除しますか？'))return;push();t.d.splice(sel.r,1);touch();render()};
-$('dC').onclick=()=>{const t=T();if(t.d[0].length<=1){toast('最後の1列は消せません');return}if(!confirm(colName(sel.c)+'列を削除しますか？'))return;push();t.d.forEach(r=>r.splice(sel.c,1));touch();render()};
+$('aR').onclick=()=>{const t=T();push();t.d.splice(sel.r+1,0,Array(t.d[0].length).fill(''));fxOp(t,{kind:'ins',axis:'r',at:sel.r+1});sel.r++;touch();render();focusSel()};
+$('aC').onclick=()=>{const t=T();push();t.d.forEach(r=>r.splice(sel.c+1,0,''));fxOp(t,{kind:'ins',axis:'c',at:sel.c+1});sel.c++;touch();render();focusSel()};
+$('dR').onclick=()=>{const t=T();if(t.d.length<=1){toast('最後の1行は消せません');return}if(!confirm((sel.r+1)+'行目を削除しますか？'))return;push();t.d.splice(sel.r,1);fxOp(t,{kind:'del',axis:'r',at:sel.r});touch();render()};
+$('dC').onclick=()=>{const t=T();if(t.d[0].length<=1){toast('最後の1列は消せません');return}if(!confirm(colName(sel.c)+'列を削除しますか？'))return;push();t.d.forEach(r=>r.splice(sel.c,1));fxOp(t,{kind:'del',axis:'c',at:sel.c});touch();render()};
 $('hdr').onclick=()=>{const t=T();push();t.header=!t.header;touch();render()};
-$('un').onclick=()=>{if(!hist.length){toast('戻せる操作がありません');return}const t=T(),old=JSON.parse(hist.pop());Object.assign(t,old);touch();render();toast('元に戻しました')};
+$('un').onclick=()=>{if(!hist.length){toast('戻せる操作がありません');return}const t=T(),old=JSON.parse(hist.pop());if(old.__x){old.__x.forEach(x=>{const o=tables.find(y=>y.id===x.id);if(o)o.d=x.d});delete old.__x}Object.assign(t,old);GEN++;touch();render();toast('元に戻しました')};
 $('title').oninput=()=>{const t=T();t.title=$('title').value;touch();renderTabs()};
 // 表の追加・切替・削除
 $('bNew').onclick=()=>{const t=mk('新しい表',4,3);t.d[0]=['項目','内容','メモ'];tables.push(t);cur=t.id;hist=[];sel={r:1,c:0};save();render();focusSel()};
@@ -304,8 +331,8 @@ $('tb').addEventListener('pointermove',e=>{
 function endDrag(){if(!drag)return;document.querySelectorAll('.drop,.dropc').forEach(x=>x.classList.remove('drop','dropc'));const d=drag;drag=null;if(d.moved&&d.to!==d.i){push();d.k==='r'?moveRow(d.i,d.to):moveCol(d.i,d.to);toast('移動しました')}}
 $('tb').addEventListener('pointerup',endDrag);$('tb').addEventListener('pointercancel',()=>{drag=null});
 // コピー（TSV＝Excel/Numbers/Sheetsにそのまま貼れる）／貼り付け
-function tsv(t){return t.d.map(r=>r.map(v=>/[\t\n"]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v).join('\t')).join('\n')}
-function md(t){const w=t.d[0].length;const rows=t.d.map(r=>'| '+r.map(v=>v.replace(/\|/g,'\\|').replace(/\n/g,' ')).join(' | ')+' |');rows.splice(1,0,'|'+Array(w).fill(' --- ').join('|')+'|');return rows.join('\n')}
+function tsv(t){return fxGrid(t).v.map(r=>r.map(v=>/[\t\n"]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v).join('\t')).join('\n')}
+function md(t){const w=t.d[0].length;const rows=fxGrid(t).v.map(r=>'| '+r.map(v=>v.replace(/\|/g,'\\|').replace(/\n/g,' ')).join(' | ')+' |');rows.splice(1,0,'|'+Array(w).fill(' --- ').join('|')+'|');return rows.join('\n')}
 $('cp').onclick=async()=>{const t=T();const s=tsv(t);try{await navigator.clipboard.writeText(s);toast('コピーしました（Excel等にそのまま貼れます）')}catch(e){openDlg('コピーしてください',s)}};
 function parseTSV(s){const rows=[];let row=[],cur='',q=false;for(let i=0;i<s.length;i++){const ch=s[i];if(q){if(ch==='"'){if(s[i+1]==='"'){cur+='"';i++}else q=false}else cur+=ch}else if(ch==='"'&&cur==='')q=true;else if(ch==='\t'){row.push(cur);cur=''}else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&s[i+1]==='\n')i++;row.push(cur);rows.push(row);row=[];cur=''}else cur+=ch}
   if(cur!==''||row.length){row.push(cur);rows.push(row)}return rows}
@@ -360,6 +387,7 @@ function applyView(){
   $('wrap').style.display=(tv&&has)?'':'none';$('hint').style.display=tv?'':'none';$('bar').style.display=tv?'':'none';
   $('cv').hidden=!(VIEW==='c'&&has);$('fv').hidden=!(VIEW==='f'&&has);$('dv').hidden=!(VIEW==='d'&&has);$('lv').hidden=!(VIEW==='l'&&has);$('sv').hidden=!(VIEW==='s'&&has);$('xv').hidden=!(VIEW==='x'&&has);$('zv').hidden=!(VIEW==='z'&&has);$('rv').hidden=VIEW!=='r';
   if(has&&VIEW==='c')renderChart();if(has&&VIEW==='f')renderFlow();if(has&&VIEW==='d')renderDash();if(has&&VIEW==='l')renderList();if(has&&VIEW==='s')renderStock();if(has&&VIEW==='x')renderCalc();if(has&&VIEW==='z')renderSets();
+  $('tsl').style.display=(tv&&has)?'':'none';slBanner();if(tv&&has)slRender();
 }
 $('views').onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;VIEW=b.dataset.v;applyView();if(VIEW==='r')renderResources($('rSearch').value);window.scrollTo(0,0)};
 
@@ -442,8 +470,8 @@ function dparse(s){s=String(s==null?'':s).trim();{const e=s.match(/^(令和|平�
 function ctype(body,i){const v=body.map(r=>String(r[i]==null?'':r[i]).trim()).filter(x=>x!=='');if(!v.length)return'text';
   if(v.filter(x=>dparse(x)&&num(x)===null).length/v.length>=0.8)return'date';
   if(v.filter(x=>num(x)!==null).length/v.length>=0.8)return'num';return'text'}
-function info(t){const h=t.header,w=t.d[0].length;const body=t.d.slice(h?1:0);
-  const names=t.d[0].map((v,i)=>(h&&String(v).trim())?String(v).trim():colName(i)+'列');
+function info(t){const h=t.header,w=t.d[0].length;let rows=fxGrid(t).v;if(slApplies(t)){const sv=slVis(t);rows=rows.filter((_,r)=>sv[r]!==false)}const body=rows.slice(h?1:0);
+  const names=fxGrid(t).v[0].map((v,i)=>(h&&String(v).trim())?String(v).trim():colName(i)+'列');
   const types=names.map((_,i)=>ctype(body,i));
   const uniq=names.map((_,i)=>[...new Set(body.map(r=>String(r[i]==null?'':r[i]).trim()).filter(x=>x!==''))]);
   return{names,body,types,uniq,w}}
@@ -1051,7 +1079,7 @@ function cmpFor(I,col,dir){const ty=I.types[col];
 let lastSort=null;
 $('sT').onclick=()=>{const t=T();if(!t)return;const I=info(t),off=t.header?1:0;if(t.d.length-off<2){toast('並べ替える行がありません');return}
   const dir=(lastSort&&lastSort.id===t.id&&lastSort.c===sel.c&&lastSort.dir===1)?-1:1;lastSort={id:t.id,c:sel.c,dir};
-  push();const head=t.d.slice(0,off),body=t.d.slice(off).sort(cmpFor(I,sel.c,dir));t.d=head.concat(body);touch();render();
+  push();const head=t.d.slice(0,off),body=fxSortRows(t,off,cmpFor(I,sel.c,dir),dir,I);t.d=head.concat(body);GEN++;touch();render();
   toast(I.names[sel.c]+' を'+(I.types[sel.c]==='text'?(dir===1?'あいうえお順':'逆順'):(dir===1?'小さい順':'大きい順'))+'に並べ替えました（もう一度押すと逆）')};
 
 // ===================== 一覧（カード・列の要約・集計表） =====================
@@ -1490,7 +1518,44 @@ const PH=[
 ['現代物理','debro','ド・ブロイ波長','λ = h / (m v)',['lam:波長:m','m:質量:kg','v:速さ:m/s'],{lam:'h/(m*v)',m:'h/(lam*v)',v:'h/(m*lam)'}],
 ['現代物理','photo','光電効果','K = h f − W₀',['K:最大の運動エネルギー:J','f:振動数:Hz','W0:仕事関数:J'],{K:'h*f-W0',f:'(K+W0)/h',W0:'h*f-K'}],
 ['現代物理','decay','放射性崩壊（半減期）','N = N₀ (1/2)^(t/T)',['N:残りの量:','N0:最初の量:','t:経過時間:','T:半減期:'],{N:'N0*0.5^(t/T)',N0:'N/0.5^(t/T)',t:'T*log(N/N0)/log(0.5)',T:'t*log(0.5)/log(N/N0)'}],
-['現代物理','schw','シュワルツシルト半径','rₛ = 2 G M / c²',['rs:半径:m','M:質量:kg'],{rs:'2*G*M/c^2',M:'rs*c^2/(2*G)'}]
+['現代物理','schw','シュワルツシルト半径','rₛ = 2 G M / c²',['rs:半径:m','M:質量:kg'],{rs:'2*G*M/c^2',M:'rs*c^2/(2*G)'}],
+['ネットワーク','nTx','伝送遅延（送り出す時間）','d = L / R',['d:伝送遅延:s','L:パケット長:bit','R:回線速度:bit/s'],{d:'L/R',L:'d*R',R:'L/d'}],
+['ネットワーク','nProp','伝搬遅延（届くまでの時間）','d = D / s',['d:伝搬遅延:s','D:距離:m','s:伝搬速度:m/s'],{d:'D/s',D:'d*s',s:'D/d'}],
+['ネットワーク','nSaf','ストア＆フォワードの転送時間','T = N L / R',['T:合計時間:s','N:リンクの数:','L:パケット長:bit','R:回線速度:bit/s'],{T:'N*L/R',N:'T*R/L',L:'T*R/N',R:'N*L/T'}],
+['ネットワーク','nFib','光ファイバの伝搬速度','v = c / n',['v:速度:m/s','n:屈折率:'],{v:'c/n',n:'c/v'}],
+['ネットワーク','nBdp','帯域幅遅延積（BDP）','BDP = R × RTT',['BDP:回線に入りきる量:bit','R:回線速度:bit/s','RTT:往復時間:s'],{BDP:'R*RTT',R:'BDP/RTT',RTT:'BDP/R'}],
+['ネットワーク','nWin','TCPウィンドウとスループット','Th = W / RTT',['Th:スループット:bit/s','W:ウィンドウ:bit','RTT:往復時間:s'],{Th:'W/RTT',W:'Th*RTT',RTT:'W/Th'}],
+['ネットワーク','nUtil','停止待ち方式の利用率','U = (L/R) / (L/R + RTT)',['U:利用率:','L:パケット長:bit','R:回線速度:bit/s','RTT:往復時間:s'],{U:'(L/R)/(L/R+RTT)',L:'U*R*RTT/(1-U)',R:'L*(1-U)/(U*RTT)',RTT:'(L/R)*(1-U)/U'}],
+['ネットワーク','nMathis','TCPのスループット上限（Mathis）','Th ≈ 1.22 MSS / (RTT √p)',['Th:スループット:bit/s','MSS:最大セグメント:bit','RTT:往復時間:s','pl:パケット損失率:'],{Th:'1.22*MSS/(RTT*sqrt(pl))',MSS:'Th*RTT*sqrt(pl)/1.22',RTT:'1.22*MSS/(Th*sqrt(pl))',pl:'(1.22*MSS/(Th*RTT))^2'}],
+['ネットワーク','nCsma','CSMA/CDの最短フレーム長','L = 2 D R / s',['L:最短フレーム:bit','D:最大距離:m','R:回線速度:bit/s','s:伝搬速度:m/s'],{L:'2*D*R/s',D:'L*s/(2*R)',R:'L*s/(2*D)',s:'2*D*R/L'}],
+['ネットワーク','nAloha','純ALOHAの効率','S = G e^(−2G)',['S:スループット:','G:試行量:'],{S:'G*exp(-2*G)'}],
+['ネットワーク','nSlot','スロットALOHAの効率','S = G e^(−G)',['S:スループット:','G:試行量:'],{S:'G*exp(-G)'}],
+['ネットワーク','nMm1','待ち行列 M/M/1 の平均滞在時間','T = 1 / (μ − λ)',['T:平均滞在時間:s','mu:処理率:個/s','la:到着率:個/s'],{T:'1/(mu-la)',mu:'la+1/T',la:'mu-1/T'}],
+['ネットワーク','nRho','トラフィック強度','ρ = L a / R（1を超えると詰まる）',['rho:強度:','L:パケット長:bit','a:到着率:個/s','R:回線速度:bit/s'],{rho:'L*a/R',L:'rho*R/a',a:'rho*R/L',R:'L*a/rho'}],
+['ネットワーク','nAddr','IPv4のアドレス数','N = 2^(32 − p)',['N:アドレス数:','p:プレフィックス長:'],{N:'2^(32-p)',p:'32-log2(N)'}],
+['ネットワーク','nHost','サブネットの使えるホスト数','H = 2^(32 − p) − 2',['H:ホスト数:','p:プレフィックス長:'],{H:'2^(32-p)-2',p:'32-log2(H+2)'}],
+['ネットワーク','nSub','サブネットの分割数','S = 2^b',['S:分割数:','b:借りるビット:'],{S:'2^b',b:'log2(S)'}],
+['ネットワーク','nShan','シャノンの通信路容量','C = B log₂(1 + S/N)',['C:最大伝送速度:bit/s','B:帯域幅:Hz','sn:信号÷雑音（倍）:'],{C:'B*log2(1+sn)',B:'C/log2(1+sn)',sn:'2^(C/B)-1'}],
+['ネットワーク','nNyq','ナイキストの最大速度（雑音なし）','C = 2 B log₂ M',['C:最大伝送速度:bit/s','B:帯域幅:Hz','M:信号の段階数:'],{C:'2*B*log2(M)',B:'C/(2*log2(M))',M:'2^(C/(2*B))'}],
+['ネットワーク','nDb','デシベル（電力の比）','dB = 10 log₁₀(P₂/P₁)',['dB:比:dB','P1:基準の電力:','P2:電力:'],{dB:'10*log10(P2/P1)',P2:'P1*10^(dB/10)',P1:'P2/10^(dB/10)'}],
+['ネットワーク','nFspl','自由空間の電波の損失','L = 20log₁₀(d) + 20log₁₀(f) + 32.44',['L:損失:dB','d:距離:km','f:周波数:MHz'],{L:'20*log10(d)+20*log10(f)+32.44',d:'10^((L-20*log10(f)-32.44)/20)',f:'10^((L-20*log10(d)-32.44)/20)'}],
+['ネットワーク','nAvail','稼働率','A = MTBF / (MTBF + MTTR)',['A:稼働率:','MTBF:平均故障間隔:h','MTTR:平均修復時間:h'],{A:'MTBF/(MTBF+MTTR)',MTBF:'A*MTTR/(1-A)',MTTR:'MTBF*(1-A)/A'}],
+['ネットワーク','nPar','並列（冗長）構成の稼働率','A = 1 − (1 − a)^n',['A:全体の稼働率:','a:1台の稼働率:','n:台数:'],{A:'1-(1-a)^n',a:'1-(1-A)^(1/n)',n:'log(1-A)/log(1-a)'}],
+['ネットワーク','nSer','直列構成の稼働率','A = a₁ × a₂',['A:全体の稼働率:','a1:1つ目の稼働率:','a2:2つ目の稼働率:'],{A:'a1*a2',a1:'A/a2',a2:'A/a1'}],
+['ネットワーク','nHam','ハミング距離と誤り訂正','d = 2t + 1（t個まで訂正）',['d:符号間の最小距離:','t:訂正できる誤り数:'],{d:'2*t+1',t:'(d-1)/2'}],
+['ネットワーク','nPcm','音声などのビットレート','R = fs × bit × ch',['R:ビットレート:bit/s','fs:標本化周波数:Hz','bit:量子化ビット数:','ch:チャンネル数:'],{R:'fs*bit*ch',fs:'R/(bit*ch)',bit:'R/(fs*ch)',ch:'R/(fs*bit)'}],
+['ネットワーク','nRto','RTT推定（指数移動平均）','SRTT′ = (1 − α) SRTT + α R',['S2:新しい推定値:s','S1:前の推定値:s','al:重み（普通0.125）:','Rm:測った往復時間:s'],{S2:'(1-al)*S1+al*Rm',S1:'(S2-al*Rm)/(1-al)',Rm:'(S2-(1-al)*S1)/al'}],
+['ネットワーク','nXfer','ファイル転送のおおよその時間','t = RTT + F / R',['t:所要時間:s','RTT:往復時間:s','F:ファイルの大きさ:bit','R:回線速度:bit/s'],{t:'RTT+F/R',RTT:'t-F/R',F:'(t-RTT)*R',R:'F/(t-RTT)'}],
+['コーディング','cBits','表せる値の数（ビット）','N = 2^b',['N:値の数:','b:ビット数:'],{N:'2^b',b:'log2(N)'}],
+['コーディング','cByte','データ量（ビットとバイト）','B = bit / 8',['B:バイト:B','bit:ビット:bit'],{B:'bit/8',bit:'B*8'}],
+['コーディング','cArr','配列のメモリ量','M = n × s',['M:メモリ:B','n:要素の数:','s:1要素の大きさ:B'],{M:'n*s',n:'M/s',s:'M/n'}],
+['コーディング','cBin','二分探索の最大の比較回数','k = floor(log₂ n) + 1',['k:比較回数:','n:データの数:'],{k:'floor(log2(n))+1'}],
+['コーディング','cOn2','O(n²) の処理時間の目安','t = n² / ops',['t:時間:s','n:データの数:','ops:1秒の演算回数:回/s'],{t:'n^2/ops',n:'sqrt(t*ops)',ops:'n^2/t'}],
+['コーディング','cBirth','ハッシュの衝突確率（誕生日問題）','p ≈ 1 − e^(−n² / 2N)',['p:衝突確率:','n:データの数:','N:取りうる値の数:'],{p:'1-exp(-n^2/(2*N))',N:'n^2/(2*ln(1/(1-p)))',n:'sqrt(2*N*ln(1/(1-p)))'}],
+['コーディング','cBrute','パスワードの総当たり時間（平均）','t = c^L / (2R)',['t:時間:s','c:文字の種類:','L:長さ:','R:1秒の試行回数:回/s'],{t:'c^L/(2*R)',R:'c^L/(2*t)',L:'log(2*t*R)/log(c)',c:'(2*t*R)^(1/L)'}],
+['コーディング','cAmd','並列化で速くなる上限（アムダール）','S = 1 / ((1−p) + p/n)',['S:速くなる倍率:','p:並列にできる割合:','n:並列の数:'],{S:'1/((1-p)+p/n)',n:'p/(1/S-(1-p))',p:'(1-1/S)/(1-1/n)'}],
+['コーディング','cFps','フレームレートと1コマの時間','ms = 1000 / fps',['ms:1コマの時間:ms','fps:コマ数:fps'],{ms:'1000/fps',fps:'1000/ms'}],
+['コーディング','cCmp','圧縮率','r = 圧縮後 / 圧縮前 × 100',['r:圧縮率:%','out:圧縮後:B','inp:圧縮前:B'],{r:'out/inp*100',out:'r*inp/100',inp:'out*100/r'}]
 ];
 const PHCAT=[...new Set(PH.map(f=>f[0]))];
 const phF=id=>PH.find(f=>f[1]===id);
@@ -1895,6 +1960,1522 @@ async function jqaCliRequest(path){const r=await fetch('http://127.0.0.1:8765'+p
 async function jqaCliFetch(){const code=jqaCleanCode($('jqa-code').value||$('jqa-search').value),btn=$('jqa-cli-fetch');btn.disabled=true;try{jqaStatus('WindowsのJ-Quants CLIで取得中…');const d=await jqaCliRequest('/stock?code='+encodeURIComponent(code));const parsed=jqaParseCsv(d.csv||'');if(parsed.length<2)throw new Error('CLIからCSVデータが返りませんでした。');const h=parsed[0].map(x=>String(x).trim()),ix={date:jqaFindHeader(h,['Date']),code:jqaFindHeader(h,['Code']),o:jqaFindHeader(h,['O']),hi:jqaFindHeader(h,['H']),lo:jqaFindHeader(h,['L']),c:jqaFindHeader(h,['C']),v:jqaFindHeader(h,['Vo'])};if(ix.date<0||ix.c<0)throw new Error('CLIのCSV列を認識できません。');const rows=[['日付','銘柄','コード','始値','高値','安値','終値','出来高']];for(const r of parsed.slice(1)){const val=k=>ix[k]>=0?(r[ix[k]]??''):'';if(val('date'))rows.push([String(val('date')).replace(/-/g,'/'),code,code,val('o'),val('hi'),val('lo'),val('c'),val('v')])}if(rows.length<3)throw new Error('株価データが2行未満です。');rows.splice(1,rows.length-1,...rows.slice(1).sort((a,b)=>a[0].localeCompare(b[0])));newTable('J-Quants CLI '+code+' 株価日足（'+(rows.length-1)+'件）',rows);VIEW='s';applyView();jqaStatus('取得完了：'+(rows.length-1)+'件。','ok');$('jqa-links').innerHTML='<a href="'+jqaYahooUrl(code)+'" target="_blank" rel="noopener noreferrer">Yahoo!ファイナンスで確認 ↗</a>'}finally{btn.disabled=false}}
 function jqaLoadBundled(key,title,code){const data=JQA_BUNDLED[key];if(!data||!data.length)throw new Error('内蔵データが見つかりません');const rows=[['日付','銘柄','コード','始値','高値','安値','終値','出来高'],...data.map(r=>[String(r[0]).replace(/-/g,'/'),title,code,r[2],r[3],r[4],r[5],r[6]])];newTable(title+' 株価履歴（'+data.length+'件・2026/7/31まで）',rows);VIEW='s';applyView();window.scrollTo(0,0);jqaStatus('表示しました：'+title+' '+data.length+'件。これは保存済みの履歴データで、最新株価ではありません。','ok')}
 $('sv').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.jqaCode){$('jqa-code').value=b.dataset.jqaCode;$('jqa-search').value=b.dataset.jqaCode+' '+(TP_STOCKS.find(x=>x[0]===b.dataset.jqaCode)||[])[1];jqaStatus('選択しました：'+b.dataset.jqaCode+'。Yahoo!で確認するか、Windows CLIから取得できます。');return}if(b.id==='jqa-yahoo'){const q=$('jqa-search').value.trim()||$('jqa-code').value.trim();if(!q){jqaStatus('銘柄名かコードを入力してください。','error');return}window.open(jqaYahooUrl(/^\d{4,5}$/.test(q)?q:q),'_blank','noopener,noreferrer');return}if(b.id==='jqa-cli-check'){try{const d=await jqaCliRequest('/health');jqaStatus(d.message||'Windows CLIに接続できました。','ok')}catch(err){jqaStatus(err.message,'error')}return}if(b.id==='jqa-cli-fetch'){try{await jqaCliFetch()}catch(err){jqaStatus(err.message||String(err),'error')}return}if(b.id==='jqa-csv-import'){try{await jqaImportCsv()}catch(err){jqaStatus(err.message||String(err),'error')}return}if(b.id==='jqa-demo-disco'){try{jqaLoadBundled('DISCO','ディスコ','6146')}catch(err){jqaStatus(err.message,'error')}return}if(b.id==='jqa-demo-kioxia'){try{jqaLoadBundled('KIOXIA','キオクシア','285A')}catch(err){jqaStatus(err.message,'error')}return}});
+// ===================== r8: 関数（セルの計算式）・スライサー =====================
+// 先頭が = のセルは計算式。他の表は '表名'!B2:B9 、列の見出し名は 金額 や 売上表[金額] でも書ける。
+const fxCELL=/^(\$?)([A-Za-z]{1,3})(\$?)(\d+)$/, fxCOL=/^\$?([A-Za-z]{1,3})$/;
+const fxFW={'（':'(','）':')','，':',','、':',','：':':','＋':'+','－':'-','＊':'*','／':'/','＝':'=','＜':'<','＞':'>','＆':'&','％':'%','；':';','＾':'^'};
+let fxCTX={gen:-1,memo:new Map(),busy:new Set()};
+const fxGC=new Map(), fxVC=new Map(), fxPC=new Map();
+function fxIsF(v){return typeof v==='string'&&v.length>1&&v[0]==='='&&v[1]!=='='}
+function fxTxt(v){return(typeof v==='string'&&v.charCodeAt(0)===39&&v[1]==='=')?v.slice(1):v}
+function fxE(m){return{err:m}}
+function fxIsErr(x){return x!==null&&typeof x==='object'&&x.err!==undefined}
+function fxIsRng(x){return x!==null&&typeof x==='object'&&x.rng===true}
+function fxColIdx(s){s=s.toUpperCase();let n=0;for(const ch of s)n=n*26+(ch.charCodeAt(0)-64);return n-1}
+
+// ---- 字句
+function fxLex(src){
+  const out=[],n=src.length;let i=0;
+  const RXN=/(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?/y;
+  const RXI=/[A-Za-z_$À-ɏぁ-ヿ㐀-鿿Ａ-Ｚａ-ｚｦ-ﾟ][A-Za-z0-9_.$À-ɏぁ-ヿ㐀-鿿０-９Ａ-Ｚａ-ｚｦ-ﾟ]*/y;
+  while(i<n){
+    const ch=src[i];
+    if(ch===' '||ch==='\t'||ch==='\n'||ch==='\r'||ch==='　'){i++;continue}
+    const s=i;
+    if(ch==='"'){let j=i+1,v='';for(;;){if(j>=n)throw'#ERROR!';if(src[j]==='"'){if(src[j+1]==='"'){v+='"';j+=2;continue}break}v+=src[j++]}out.push({t:'str',v,s,e:j+1});i=j+1;continue}
+    if(ch==="'"){const j=src.indexOf("'",i+1);if(j<0||src[j+1]!=='!')throw'#ERROR!';out.push({t:'sheet',v:src.slice(i+1,j),s,e:j+2});i=j+2;continue}
+    if(ch==='#'){const m=/^#(?:REF!|N\/A|VALUE!|DIV\/0!|NAME\?|NUM!)/.exec(src.slice(i,i+8));if(m){out.push({t:'err',v:m[0],s,e:i+m[0].length});i+=m[0].length;continue}throw'#ERROR!'}
+    if(ch==='['){const j=src.indexOf(']',i+1);if(j<0)throw'#ERROR!';out.push({t:'tcol',table:null,col:src.slice(i+1,j),s,e:j+1});i=j+1;continue}
+    if(ch>='0'&&ch<='9'||ch==='.'){RXN.lastIndex=i;const m=RXN.exec(src);if(m&&m.index===i){out.push({t:'num',v:parseFloat(m[0]),s,e:i+m[0].length});i+=m[0].length;continue}}
+    RXI.lastIndex=i;const mi=RXI.exec(src);
+    if(mi&&mi.index===i){const id=mi[0],e=i+id.length;
+      if(src[e]==='!'){out.push({t:'sheet',v:id,s,e:e+1});i=e+1;continue}
+      if(src[e]==='['){const j=src.indexOf(']',e+1);if(j<0)throw'#ERROR!';out.push({t:'tcol',table:id,col:src.slice(e+1,j),s,e:j+1});i=j+1;continue}
+      out.push({t:'id',v:id,s,e});i=e;continue}
+    const f=fxFW[ch]||ch;
+    if(f==='<'||f==='>'){const nx=fxFW[src[i+1]]||src[i+1];const two=f+nx;if(two==='<>'||two==='<='||two==='>='){out.push({t:'op',v:two,s,e:i+2});i+=2;continue}}
+    if('+-*/^&=<>(),;:%'.indexOf(f)>=0){out.push({t:'op',v:f===';'?',':f,s,e:i+1});i++;continue}
+    throw'#ERROR!'}
+  return out}
+
+// ---- 構文
+function fxParse(src){
+  const c=fxPC.get(src);if(c)return c;
+  const tk=fxLex(src.slice(1));let p=0;
+  const isOp=v=>tk[p]&&tk[p].t==='op'&&tk[p].v===v;
+  const isOps=re=>tk[p]&&tk[p].t==='op'&&re.test(tk[p].v);
+  function cmp(){let a=cat();while(isOps(/^(=|<>|<=|>=|<|>)$/)){const op=tk[p++].v;a={k:'bin',op,a,b:cat()}}return a}
+  function cat(){let a=add();while(isOp('&')){p++;a={k:'bin',op:'&',a,b:add()}}return a}
+  function add(){let a=mul();while(isOps(/^[-+]$/)){const op=tk[p++].v;a={k:'bin',op,a,b:mul()}}return a}
+  function mul(){let a=pow();while(isOps(/^[*/]$/)){const op=tk[p++].v;a={k:'bin',op,a,b:pow()}}return a}
+  function pow(){let a=un();while(isOp('^')){p++;a={k:'bin',op:'^',a,b:un()}}return a}
+  function un(){if(isOp('-')){p++;return{k:'un',x:un()}}if(isOp('+')){p++;return un()}return pct()}
+  function pct(){let a=prim();while(isOp('%')){p++;a={k:'pct',x:a}}return a}
+  function arg(){if(isOp(',')||isOp(')'))return{k:'empty'};return cmp()}
+  function prim(){
+    const t=tk[p++];if(!t)throw'#ERROR!';
+    if(t.t==='num')return{k:'num',v:t.v};
+    if(t.t==='str')return{k:'str',v:t.v};
+    if(t.t==='err')return{k:'err',v:t.v};
+    if(t.t==='tcol')return{k:'tcol',table:t.table,col:t.col};
+    if(t.t==='op'&&t.v==='('){const e=cmp();if(!isOp(')'))throw'#ERROR!';p++;return e}
+    let sheet=null,id=t;
+    if(t.t==='sheet'){sheet=t.v;id=tk[p++];if(!id||id.t!=='id')throw'#ERROR!'}
+    if(id.t!=='id')throw'#ERROR!';
+    if(!sheet&&isOp('(')){p++;const a=[];if(isOp(')')){p++}else{for(;;){a.push(arg());if(isOp(',')){p++;continue}if(isOp(')')){p++;break}throw'#ERROR!'}}return{k:'call',n:id.v.toUpperCase(),a}}
+    const v=id.v;
+    if(!sheet&&/^true$/i.test(v))return{k:'bool',v:true};
+    if(!sheet&&/^false$/i.test(v))return{k:'bool',v:false};
+    const m=fxCELL.exec(v);
+    if(m){const c0=fxColIdx(m[2]),r0=+m[4]-1;
+      if(isOp(':')&&tk[p+1]&&tk[p+1].t==='id'){const m2=fxCELL.exec(tk[p+1].v);if(m2){p+=2;const c1=fxColIdx(m2[2]),r1=+m2[4]-1;return{k:'range',sheet,c0:Math.min(c0,c1),r0:Math.min(r0,r1),c1:Math.max(c0,c1),r1:Math.max(r0,r1)}}}
+      return{k:'cell',sheet,c:c0,r:r0}}
+    if(isOp(':')&&fxCOL.test(v)&&tk[p+1]&&tk[p+1].t==='id'&&fxCOL.test(tk[p+1].v)){p+=2;const a=fxColIdx(v.replace('$','')),b=fxColIdx(tk[p-1].v.replace('$',''));return{k:'range',sheet,c0:Math.min(a,b),r0:null,c1:Math.max(a,b),r1:null}}
+    return{k:'name',v,sheet}}
+  const ast=cmp();if(p<tk.length)throw'#ERROR!';
+  if(fxPC.size>4000)fxPC.clear();fxPC.set(src,ast);return ast}
+
+// ---- 値の変換
+function fxSerial(g){return Math.round(Date.UTC(g.y,g.m-1,g.d)/86400000)+25569}
+function fxDateOf(v){if(typeof v!=='string')return null;const g=dparse(v);return g&&g.y>0&&g.m>=1&&g.m<=12&&g.d>=1&&g.d<=31?fxSerial(g):null}
+function fxYmd(s){const d=new Date(Math.round((s-25569)*86400000));return{y:d.getUTCFullYear(),m:d.getUTCMonth()+1,d:d.getUTCDate(),w:d.getUTCDay()}}
+function fxSerStr(s){const g=fxYmd(s);return g.y+'/'+g.m+'/'+g.d}
+function fxNum(v){if(typeof v==='number')return v;if(typeof v==='boolean')return v?1:0;if(v===''||v==null)return 0;if(fxIsErr(v))return v;
+  if(typeof v==='string'){const n=num(v);if(n!==null)return n;const d=fxDateOf(v);if(d!==null)return d}return fxE('#VALUE!')}
+function fxStr(v){if(v==null)return'';if(typeof v==='boolean')return v?'TRUE':'FALSE';if(typeof v==='number')return fxFmtNum(v);return String(v)}
+function fxFmtNum(x){if(!isFinite(x))return'#NUM!';if(Number.isInteger(x))return String(x);let s=String(+x.toPrecision(12));if(/e/i.test(s))s=x.toFixed(10).replace(/0+$/,'').replace(/\.$/,'');return s}
+function fxFmtVal(v){if(fxIsRng(v))v=fxScalar(v,null);if(fxIsErr(v))return v.err;return fxStr(v)}
+function fxTruthy(v){if(typeof v==='boolean')return v;if(typeof v==='number')return v!==0;if(v===''||v==null)return false;if(typeof v==='string'){if(/^true$/i.test(v))return true;if(/^false$/i.test(v))return false;const n=num(v);if(n!==null)return n!==0}return fxE('#VALUE!')}
+
+// ---- 表・列の解決
+function fxTable(name,home){if(name==null)return home;return tables.find(x=>x.title===name)||tables.find(x=>String(x.title).trim()===String(name).trim())||null}
+function fxColByName(t,name){if(!t.header||!t.d[0])return -1;const k=String(name).trim();for(let i=0;i<t.d[0].length;i++){if(String(fxTxt(t.d[0][i])).trim()===k)return i}return -1}
+function fxCtx(){if(fxCTX.gen!==GEN)fxCTX={gen:GEN,memo:new Map(),busy:new Set()};return fxCTX}
+function fxCellVal(t,r,c){
+  if(r<0||c<0||r>=t.d.length||c>=t.d[0].length)return'';
+  const raw=t.d[r][c];
+  if(!fxIsF(raw)){const x=fxTxt(raw);if(x===''||x==null)return'';
+    if(/^[-+]?0\d/.test(x)||x.length>15)return x;const n=num(x);return n!==null?n:x}
+  const X=fxCtx(),key=t.id+'|'+r+'|'+c;
+  if(X.memo.has(key))return X.memo.get(key);
+  if(X.busy.has(key))return fxE('#CYCLE!');
+  X.busy.add(key);let v;
+  try{v=fxScalar(fxEv(fxParse(raw),{t,r,c}),{t,r,c})}catch(e){v=fxE(typeof e==='string'?e:'#ERROR!')}
+  X.busy.delete(key);X.memo.set(key,v);return v}
+function fxDisp(t,r,c){const raw=t.d[r][c];if(fxIsF(raw))return fxFmtVal(fxCellVal(t,r,c));const x=fxTxt(raw);return x==null?'':x}
+function fxGrid(t){
+  const c=fxGC.get(t.id);if(c&&c.gen===GEN&&c.src===t.d)return c.G;
+  let has=false;
+  outer:for(const row of t.d)for(const v of row){if(typeof v==='string'&&v.length>1&&((v[0]==='='&&v[1]!=='=')||(v.charCodeAt(0)===39&&v[1]==='='))){has=true;break outer}}
+  const G=has?{has:true,v:t.d.map((row,r)=>row.map((x,cc)=>fxDisp(t,r,cc)))}:{has:false,v:t.d};
+  fxGC.set(t.id,{gen:GEN,src:t.d,G});return G}
+
+// ---- 評価
+function fxScalar(x,cx){
+  if(!fxIsRng(x))return x;
+  const R=x;
+  if(R.r0===R.r1&&R.c0===R.c1)return fxCellVal(R.t,R.r0,R.c0);
+  if(cx){
+    if(R.c0===R.c1&&cx.r>=R.r0&&cx.r<=R.r1)return fxCellVal(R.t,cx.r,R.c0);
+    if(R.r0===R.r1&&cx.c>=R.c0&&cx.c<=R.c1)return fxCellVal(R.t,R.r0,cx.c);
+    return fxE('#VALUE!')}
+  return fxCellVal(R.t,R.r0,R.c0)}
+function fxRange(t,c0,r0,c1,r1){
+  const last=t.d.length-1;
+  if(r0==null){r0=0;r1=last}
+  return{rng:true,t,c0,r0,c1:Math.min(c1,t.d[0].length-1),r1:Math.min(r1,last)}}
+function fxEv(n,cx){
+  switch(n.k){
+    case'num':case'str':case'bool':return n.v;
+    case'empty':return undefined;
+    case'err':return fxE(n.v);
+    case'pct':{const a=fxNum(fxScalar(fxEv(n.x,cx),cx));return fxIsErr(a)?a:a/100}
+    case'un':{const a=fxNum(fxScalar(fxEv(n.x,cx),cx));return fxIsErr(a)?a:-a}
+    case'cell':{const t=fxTable(n.sheet,cx.t);if(!t)return fxE('#REF!');return fxRange(t,n.c,n.r,n.c,n.r)}
+    case'range':{const t=fxTable(n.sheet,cx.t);if(!t)return fxE('#REF!');return fxRange(t,n.c0,n.r0,n.c1,n.r1)}
+    case'name':{const t=fxTable(n.sheet,cx.t);if(!t)return fxE('#REF!');const c=fxColByName(t,n.v);if(c<0)return fxE('#NAME?');return fxRange(t,c,t.header?1:0,c,t.d.length-1)}
+    case'tcol':{const t=fxTable(n.table,cx.t);if(!t)return fxE('#REF!');const c=fxColByName(t,n.col);if(c<0)return fxE('#NAME?');return fxRange(t,c,t.header?1:0,c,t.d.length-1)}
+    case'bin':{
+      const a=fxScalar(fxEv(n.a,cx),cx),b=fxScalar(fxEv(n.b,cx),cx);
+      if(fxIsErr(a))return a;if(fxIsErr(b))return b;
+      return fxBin(n.op,a===undefined?'':a,b===undefined?'':b)}
+    case'call':return fxCall(n,cx)}
+  throw'#ERROR!'}
+function fxBin(op,a,b){
+  if(op==='&')return fxStr(a)+fxStr(b);
+  if(op==='='||op==='<>'||op==='<'||op==='>'||op==='<='||op==='>='){const c=fxCmp(a,b);return op==='='?c===0:op==='<>'?c!==0:op==='<'?c<0:op==='>'?c>0:op==='<='?c<=0:c>=0}
+  const da=fxDateOf(a),db=fxDateOf(b);
+  if(op==='-'&&da!==null&&db!==null)return da-db;
+  if(op==='+'&&da!==null&&typeof b==='number')return fxSerStr(da+b);
+  if(op==='+'&&db!==null&&typeof a==='number')return fxSerStr(db+a);
+  if(op==='-'&&da!==null&&typeof b==='number')return fxSerStr(da-b);
+  const x=fxNum(a),y=fxNum(b);if(fxIsErr(x))return x;if(fxIsErr(y))return y;
+  if(op==='+')return x+y;if(op==='-')return x-y;if(op==='*')return x*y;
+  if(op==='/')return y===0?fxE('#DIV/0!'):x/y;
+  if(op==='^'){const r=Math.pow(x,y);return isFinite(r)?r:fxE('#NUM!')}
+  return fxE('#ERROR!')}
+function fxCmp(a,b){
+  if(typeof a==='boolean'||typeof b==='boolean'){const x=fxNum(a),y=fxNum(b);return x-y}
+  if(typeof a==='number'&&typeof b==='number')return a-b;
+  const da=fxDateOf(a),db=fxDateOf(b);if(da!==null&&db!==null)return da-db;
+  if(typeof a==='number'&&typeof b==='string'){if(b==='')return 1;return-1}
+  if(typeof a==='string'&&typeof b==='number'){if(a==='')return-1;return 1}
+  const x=String(a).toLowerCase(),y=String(b).toLowerCase();return x<y?-1:x>y?1:0}
+
+// ---- 範囲の走査
+function fxRowVis(t,r){return fxIsSl(t)?slVis(t)[r]!==false:true}
+function fxIsSl(t){return t.sl&&t.sl.length>0}
+// 数を集める（範囲の文字は無視。直接の文字は数にできなければ #VALUE!）
+function fxNums(args,visOnly){
+  const out=[];
+  for(const a of args){
+    if(a===undefined)continue;
+    if(fxIsErr(a))return a;
+    if(fxIsRng(a)){for(let r=a.r0;r<=a.r1;r++){if(visOnly&&!fxRowVis(a.t,r))continue;for(let c=a.c0;c<=a.c1;c++){const v=fxCellVal(a.t,r,c);if(fxIsErr(v))return v;if(typeof v==='number')out.push(v)}}}
+    else if(typeof a==='number')out.push(a);
+    else if(typeof a==='boolean')out.push(a?1:0);
+    else if(a===''){}
+    else{const v=fxNum(a);if(fxIsErr(v))return v;out.push(v)}}
+  return out}
+function fxCells(a,visOnly){ // 範囲→値の一次元。範囲でなければそのまま1個
+  if(!fxIsRng(a))return a===undefined?[]:[a];
+  const o=[];for(let r=a.r0;r<=a.r1;r++){if(visOnly&&!fxRowVis(a.t,r))continue;for(let c=a.c0;c<=a.c1;c++)o.push(fxCellVal(a.t,r,c))}return o}
+function fxMat(a){ // 範囲→二次元
+  if(!fxIsRng(a))return[[a]];
+  const m=[];for(let r=a.r0;r<=a.r1;r++){const row=[];for(let c=a.c0;c<=a.c1;c++)row.push(fxCellVal(a.t,r,c));m.push(row)}return m}
+function fxFirstErr(vals){for(const v of vals)if(fxIsErr(v))return v;return null}
+
+// ---- 条件（COUNTIF などの条件）
+function fxCrit(c){
+  if(fxIsRng(c))c=fxScalar(c,null);
+  if(typeof c==='number')return v=>typeof v==='number'&&v===c;
+  if(typeof c==='boolean')return v=>v===c;
+  const s=String(c==null?'':c);let op='=',rest=s;
+  const m=/^(<>|<=|>=|=|<|>)([\s\S]*)$/.exec(s);if(m){op=m[1];rest=m[2]}
+  const rn=(!/^[-+]?0\d/.test(rest)&&num(rest)!==null)?num(rest):null;
+  const rd=rn===null?fxDateOf(rest):null;
+  let rx=null;if(rn===null&&/[*?]/.test(rest))rx=new RegExp('^'+rest.replace(/[.+^${}()|[\]\\]/g,'\\$&').replace(/\*/g,'[\\s\\S]*').replace(/\?/g,'[\\s\\S]')+'$','i');
+  const eq=v=>{if(rn!==null)return typeof v==='number'?v===rn:(typeof v==='string'&&num(v)===rn&&!/^[-+]?0\d/.test(v));
+    if(rd!==null)return fxDateOf(v)===rd;
+    if(rx)return rx.test(fxStr(v));
+    return fxStr(v).toLowerCase()===rest.toLowerCase()};
+  if(op==='=')return eq;
+  if(op==='<>')return v=>!eq(v);
+  const cmpv=v=>{if(rn!==null){if(typeof v!=='number')return null;return v-rn}
+    if(rd!==null){const d=fxDateOf(v);return d===null?null:d-rd}
+    if(v===''||typeof v==='number')return null;const a=String(v).toLowerCase(),b=rest.toLowerCase();return a<b?-1:a>b?1:0};
+  return v=>{const x=cmpv(v);if(x===null)return false;return op==='<'?x<0:op==='>'?x>0:op==='<='?x<=0:x>=0}}
+function fxIfRows(pairs){ // pairs: [[range,criteria],...] → 条件をすべて満たす行（範囲内の相対位置）の配列
+  const n=Math.max(...pairs.map(p=>p[0].r1-p[0].r0+1));
+  const fns=pairs.map(p=>fxCrit(p[1])),cols=pairs.map(p=>fxMat(p[0]));
+  const rows=[];
+  for(let i=0;i<n;i++){let ok=true;for(let k=0;k<pairs.length&&ok;k++){const row=cols[k][i];if(!row){ok=false;break}if(!row.some(v=>fns[k](v)))ok=false}if(ok)rows.push(i)}
+  return rows}
+
+// ---- 日付・文字の整形
+function fxText(v,f){
+  f=String(f);
+  if(fxIsErr(v))return v;
+  const d=typeof v==='number'?null:fxDateOf(v);
+  if(d!==null||/[yYmMdDhHsSaA]/.test(f)&&/yy|dd|mm|hh|aaa/i.test(f)){
+    const s=d!==null?d:fxNum(v);if(fxIsErr(s))return s;
+    const g=fxYmd(Math.floor(s)),frac=s-Math.floor(s),hh=Math.floor(frac*24),mi=Math.floor(frac*1440)%60;
+    const W=['日','月','火','水','木','金','土'],WE=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    return f.replace(/yyyy|yy|mm|m|dd|d|hh|h|ss|aaaa|aaa|ddd/gi,k=>{const l=k.toLowerCase();
+      if(l==='yyyy')return String(g.y);if(l==='yy')return String(g.y).slice(-2);
+      if(l==='mm')return String(g.m).padStart(2,'0');if(l==='m')return String(g.m);
+      if(l==='dd')return String(g.d).padStart(2,'0');if(l==='d')return String(g.d);
+      if(l==='hh')return String(hh).padStart(2,'0');if(l==='h')return String(hh);
+      if(l==='ss')return'00';if(l==='aaaa')return W[g.w]+'曜日';if(l==='aaa')return W[g.w];if(l==='ddd')return WE[g.w];return k})}
+  const x=fxNum(v);if(fxIsErr(x))return x;
+  const pm=/%/.test(f),dec=(/\.([0#]+)/.exec(f)||[,''])[1].length,th=/,/.test(f);
+  let y=pm?x*100:x;y=+y.toFixed(dec);
+  let s=Math.abs(y).toFixed(dec);if(th){const p=s.split('.');p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');s=p.join('.')}
+  const mz=/^[^0#]*([0]+)/.exec(f);if(mz){const need=(/(0+)(?=\.|,|%|$)/.exec(f.split('.')[0].replace(/,/g,''))||[,''])[1].length;const ip=s.split('.');if(ip[0].replace(/,/g,'').length<need&&!th){ip[0]=ip[0].padStart(need,'0');s=ip.join('.')}}
+  const pre=(/^([^0#,.]*)/.exec(f)||[,''])[1].replace(/%/g,''),suf=(/([^0#,.%]*)%?$/.exec(f)||[,''])[1];
+  return(y<0?'-':'')+pre+s+(pm?'%':'')+suf}
+
+// ---- 関数
+const fxLAZY={IF:1,IFS:1,IFERROR:1,IFNA:1,AND:1,OR:1,CHOOSE:1,SWITCH:1};
+const fxALIAS={'合計':'SUM','平均':'AVERAGE','最大':'MAX','最小':'MIN','個数':'COUNT','件数':'COUNTA','もし':'IF','条件合計':'SUMIF','条件個数':'COUNTIF','条件平均':'AVERAGEIF','四捨五入':'ROUND','切り捨て':'ROUNDDOWN','切り上げ':'ROUNDUP','絶対値':'ABS','小計':'SUBTOTAL','検索':'VLOOKUP','今日':'TODAY','連結':'CONCAT','文字数':'LEN','中央値':'MEDIAN','順位':'RANK','日付':'DATE','年':'YEAR','月':'MONTH','日':'DAY'};
+const fxFN={
+  SUM:a=>{const n=fxNums(a);return fxIsErr(n)?n:n.reduce((s,x)=>s+x,0)},
+  AVERAGE:a=>{const n=fxNums(a);if(fxIsErr(n))return n;return n.length?n.reduce((s,x)=>s+x,0)/n.length:fxE('#DIV/0!')},
+  MIN:a=>{const n=fxNums(a);if(fxIsErr(n))return n;return n.length?Math.min(...n):0},
+  MAX:a=>{const n=fxNums(a);if(fxIsErr(n))return n;return n.length?Math.max(...n):0},
+  COUNT:a=>{let k=0;for(const x of a){if(x===undefined)continue;if(fxIsErr(x)&&!fxIsRng(x))continue;if(fxIsRng(x)){for(const v of fxCells(x))if(typeof v==='number')k++}else if(typeof x==='number'||(typeof x==='string'&&fxNum(x)!==null&&!fxIsErr(fxNum(x))&&x!==''))k++}return k},
+  COUNTA:a=>{let k=0;for(const x of a){if(x===undefined)continue;if(fxIsRng(x)){for(const v of fxCells(x))if(v!==''&&v!=null)k++}else if(x!=='')k++}return k},
+  COUNTBLANK:a=>{let k=0;for(const x of a)for(const v of fxCells(x))if(v===''||v==null)k++;return k},
+  PRODUCT:a=>{const n=fxNums(a);return fxIsErr(n)?n:n.reduce((s,x)=>s*x,1)},
+  MEDIAN:a=>{const n=fxNums(a);if(fxIsErr(n))return n;if(!n.length)return fxE('#NUM!');n.sort((x,y)=>x-y);const m=n.length>>1;return n.length%2?n[m]:(n[m-1]+n[m])/2},
+  MODE:a=>{const n=fxNums(a);if(fxIsErr(n))return n;const m=new Map();n.forEach(x=>m.set(x,(m.get(x)||0)+1));let b=null,k=1;m.forEach((c,x)=>{if(c>k){k=c;b=x}});return b===null?fxE('#N/A'):b},
+  STDEV:a=>{const n=fxNums(a);if(fxIsErr(n))return n;if(n.length<2)return fxE('#DIV/0!');const u=n.reduce((s,x)=>s+x,0)/n.length;return Math.sqrt(n.reduce((s,x)=>s+(x-u)*(x-u),0)/(n.length-1))},
+  STDEVP:a=>{const n=fxNums(a);if(fxIsErr(n))return n;if(!n.length)return fxE('#DIV/0!');const u=n.reduce((s,x)=>s+x,0)/n.length;return Math.sqrt(n.reduce((s,x)=>s+(x-u)*(x-u),0)/n.length)},
+  VAR:a=>{const s=fxFN.STDEV(a);return fxIsErr(s)?s:s*s},
+  LARGE:a=>{const n=fxNums([a[0]]),k=fxNum(fxScalar(a[1],null));if(fxIsErr(n))return n;if(fxIsErr(k))return k;n.sort((x,y)=>y-x);return n[k-1]===undefined?fxE('#NUM!'):n[k-1]},
+  SMALL:a=>{const n=fxNums([a[0]]),k=fxNum(fxScalar(a[1],null));if(fxIsErr(n))return n;if(fxIsErr(k))return k;n.sort((x,y)=>x-y);return n[k-1]===undefined?fxE('#NUM!'):n[k-1]},
+  PERCENTILE:a=>{const n=fxNums([a[0]]),k=fxNum(fxScalar(a[1],null));if(fxIsErr(n))return n;if(fxIsErr(k)||k<0||k>1||!n.length)return fxE('#NUM!');n.sort((x,y)=>x-y);const p=(n.length-1)*k,lo=Math.floor(p),hi=Math.ceil(p);return n[lo]+(n[hi]-n[lo])*(p-lo)},
+  RANK:a=>{const x=fxNum(fxScalar(a[0],null)),n=fxNums([a[1]]),o=a[2]===undefined?0:fxNum(fxScalar(a[2],null));if(fxIsErr(x))return x;if(fxIsErr(n))return n;if(!n.includes(x))return fxE('#N/A');return 1+n.filter(v=>o?v<x:v>x).length},
+  SUMPRODUCT:a=>{const ms=a.map(x=>fxCells(x));const L=ms[0].length;if(ms.some(m=>m.length!==L))return fxE('#VALUE!');let s=0;for(let i=0;i<L;i++){let p=1;for(const m of ms){const v=m[i];if(fxIsErr(v))return v;p*=typeof v==='number'?v:0}s+=p}return s},
+  ABS:a=>{const x=fxNum(fxScalar(a[0],null));return fxIsErr(x)?x:Math.abs(x)},
+  SIGN:a=>{const x=fxNum(fxScalar(a[0],null));return fxIsErr(x)?x:Math.sign(x)},
+  INT:a=>{const x=fxNum(fxScalar(a[0],null));return fxIsErr(x)?x:Math.floor(x)},
+  TRUNC:a=>{const x=fxNum(fxScalar(a[0],null));return fxIsErr(x)?x:Math.trunc(x)},
+  SQRT:a=>{const x=fxNum(fxScalar(a[0],null));if(fxIsErr(x))return x;return x<0?fxE('#NUM!'):Math.sqrt(x)},
+  EXP:a=>{const x=fxNum(fxScalar(a[0],null));return fxIsErr(x)?x:Math.exp(x)},
+  LN:a=>{const x=fxNum(fxScalar(a[0],null));if(fxIsErr(x))return x;return x<=0?fxE('#NUM!'):Math.log(x)},
+  LOG10:a=>{const x=fxNum(fxScalar(a[0],null));if(fxIsErr(x))return x;return x<=0?fxE('#NUM!'):Math.log10(x)},
+  LOG:a=>{const x=fxNum(fxScalar(a[0],null)),b=a[1]===undefined?10:fxNum(fxScalar(a[1],null));if(fxIsErr(x))return x;if(fxIsErr(b))return b;return(x<=0||b<=0||b===1)?fxE('#NUM!'):Math.log(x)/Math.log(b)},
+  PI:()=>Math.PI,
+  POWER:a=>fxBin('^',fxScalar(a[0],null),fxScalar(a[1],null)),
+  MOD:a=>{const x=fxNum(fxScalar(a[0],null)),y=fxNum(fxScalar(a[1],null));if(fxIsErr(x))return x;if(fxIsErr(y))return y;if(y===0)return fxE('#DIV/0!');return x-y*Math.floor(x/y)},
+  ROUND:a=>fxRound(a,Math.round),
+  ROUNDUP:a=>fxRound(a,x=>x<0?-Math.ceil(-x):Math.ceil(x)),
+  ROUNDDOWN:a=>fxRound(a,Math.trunc),
+  CEILING:a=>{const x=fxNum(fxScalar(a[0],null)),s=a[1]===undefined?1:fxNum(fxScalar(a[1],null));if(fxIsErr(x))return x;if(fxIsErr(s))return s;return s===0?0:Math.ceil(x/s)*s},
+  FLOOR:a=>{const x=fxNum(fxScalar(a[0],null)),s=a[1]===undefined?1:fxNum(fxScalar(a[1],null));if(fxIsErr(x))return x;if(fxIsErr(s))return s;return s===0?0:Math.floor(x/s)*s},
+  // 条件つきの集計
+  SUMIF:a=>{if(a.length<2)return fxE('#VALUE!');const R=a[0],S=a[2]||a[0];if(!fxIsRng(R)||!fxIsRng(S))return fxE('#VALUE!');const rows=fxIfRows([[R,a[1]]]);let s=0;for(const i of rows){const v=fxCellVal(S.t,S.r0+i,S.c0);if(fxIsErr(v))return v;if(typeof v==='number')s+=v}return s},
+  SUMIFS:a=>{const S=a[0];if(!fxIsRng(S)||a.length<3||a.length%2===0)return fxE('#VALUE!');const pr=[];for(let i=1;i<a.length;i+=2){if(!fxIsRng(a[i]))return fxE('#VALUE!');pr.push([a[i],a[i+1]])}let s=0;for(const i of fxIfRows(pr)){const v=fxCellVal(S.t,S.r0+i,S.c0);if(fxIsErr(v))return v;if(typeof v==='number')s+=v}return s},
+  COUNTIF:a=>{if(a.length<2||!fxIsRng(a[0]))return fxE('#VALUE!');return fxIfRows([[a[0],a[1]]]).length},
+  COUNTIFS:a=>{if(a.length<2||a.length%2)return fxE('#VALUE!');const pr=[];for(let i=0;i<a.length;i+=2){if(!fxIsRng(a[i]))return fxE('#VALUE!');pr.push([a[i],a[i+1]])}return fxIfRows(pr).length},
+  AVERAGEIF:a=>{if(a.length<2||!fxIsRng(a[0]))return fxE('#VALUE!');const S=a[2]||a[0];const v=fxIfRows([[a[0],a[1]]]).map(i=>fxCellVal(S.t,S.r0+i,S.c0)).filter(x=>typeof x==='number');return v.length?v.reduce((s,x)=>s+x,0)/v.length:fxE('#DIV/0!')},
+  AVERAGEIFS:a=>{const S=a[0];if(!fxIsRng(S)||a.length<3||a.length%2===0)return fxE('#VALUE!');const pr=[];for(let i=1;i<a.length;i+=2)pr.push([a[i],a[i+1]]);const v=fxIfRows(pr).map(i=>fxCellVal(S.t,S.r0+i,S.c0)).filter(x=>typeof x==='number');return v.length?v.reduce((s,x)=>s+x,0)/v.length:fxE('#DIV/0!')},
+  MAXIFS:a=>{const S=a[0];if(!fxIsRng(S)||a.length<3||a.length%2===0)return fxE('#VALUE!');const pr=[];for(let i=1;i<a.length;i+=2)pr.push([a[i],a[i+1]]);const v=fxIfRows(pr).map(i=>fxCellVal(S.t,S.r0+i,S.c0)).filter(x=>typeof x==='number');return v.length?Math.max(...v):0},
+  MINIFS:a=>{const S=a[0];if(!fxIsRng(S)||a.length<3||a.length%2===0)return fxE('#VALUE!');const pr=[];for(let i=1;i<a.length;i+=2)pr.push([a[i],a[i+1]]);const v=fxIfRows(pr).map(i=>fxCellVal(S.t,S.r0+i,S.c0)).filter(x=>typeof x==='number');return v.length?Math.min(...v):0},
+  COUNTUNIQUE:a=>{const s=new Set();for(const x of a)for(const v of fxCells(x))if(v!==''&&v!=null)s.add(fxStr(v).toLowerCase());return s.size},
+  // 絞り込み（スライサー）と連動する集計：隠れた行は数えない
+  SUBTOTAL:a=>{const f=fxNum(fxScalar(a[0],null));if(fxIsErr(f))return f;const g=f>100?f-100:f,r=a.slice(1);
+    const n=fxNums(r,true);if(fxIsErr(n))return n;
+    if(g===1)return n.length?n.reduce((s,x)=>s+x,0)/n.length:fxE('#DIV/0!');
+    if(g===2)return n.length;
+    if(g===3){let k=0;for(const x of r)for(const v of fxCells(x,true))if(v!==''&&v!=null)k++;return k}
+    if(g===4)return n.length?Math.max(...n):0;if(g===5)return n.length?Math.min(...n):0;
+    if(g===6)return n.reduce((s,x)=>s*x,1);
+    if(g===7){if(n.length<2)return fxE('#DIV/0!');const u=n.reduce((s,x)=>s+x,0)/n.length;return Math.sqrt(n.reduce((s,x)=>s+(x-u)*(x-u),0)/(n.length-1))}
+    if(g===9)return n.reduce((s,x)=>s+x,0);
+    return fxE('#VALUE!')},
+  // 引く
+  VLOOKUP:a=>{const k=fxScalar(a[0],null),M=a[1],ci=fxNum(fxScalar(a[2],null));if(fxIsErr(k))return k;if(!fxIsRng(M))return fxE('#VALUE!');if(fxIsErr(ci))return ci;
+    const exact=a[3]!==undefined&&!fxTruthy(fxScalar(a[3],null));const w=M.c1-M.c0+1;if(ci<1||ci>w)return fxE('#REF!');
+    if(exact){const f=fxCrit('='+fxStr(k));const eq=typeof k==='number'?(v=>typeof v==='number'&&v===k):f;for(let r=M.r0;r<=M.r1;r++){if(eq(fxCellVal(M.t,r,M.c0)))return fxCellVal(M.t,r,M.c0+ci-1)}return fxE('#N/A')}
+    let best=-1;for(let r=M.r0;r<=M.r1;r++){const v=fxCellVal(M.t,r,M.c0);if(v===''||fxIsErr(v))continue;if(fxCmp(v,k)<=0)best=r;else break}return best<0?fxE('#N/A'):fxCellVal(M.t,best,M.c0+ci-1)},
+  HLOOKUP:a=>{const k=fxScalar(a[0],null),M=a[1],ri=fxNum(fxScalar(a[2],null));if(!fxIsRng(M))return fxE('#VALUE!');if(fxIsErr(ri))return ri;const exact=a[3]!==undefined&&!fxTruthy(fxScalar(a[3],null));
+    const h=M.r1-M.r0+1;if(ri<1||ri>h)return fxE('#REF!');let hit=-1;
+    for(let c=M.c0;c<=M.c1;c++){const v=fxCellVal(M.t,M.r0,c);if(exact?fxCmp(v,k)===0:(v!==''&&fxCmp(v,k)<=0))hit=c;if(exact&&hit>=0)break}
+    return hit<0?fxE('#N/A'):fxCellVal(M.t,M.r0+ri-1,hit)},
+  XLOOKUP:a=>{const k=fxScalar(a[0],null),L=a[1],R=a[2];if(!fxIsRng(L)||!fxIsRng(R))return fxE('#VALUE!');const eq=fxCrit('='+fxStr(k)),eqn=typeof k==='number'?(v=>typeof v==='number'&&v===k):eq;const cl=fxCells(L);
+    for(let i=0;i<cl.length;i++){if(eqn(cl[i])){const w=R.c1-R.c0+1;const r=R.r0+(w===1?i:0),c=R.c0+(w===1?0:i);return fxCellVal(R.t,r,c)}}
+    return a[3]!==undefined?fxScalar(a[3],null):fxE('#N/A')},
+  INDEX:a=>{const M=a[0];if(!fxIsRng(M))return fxE('#VALUE!');const h=M.r1-M.r0+1,w=M.c1-M.c0+1;let r=a[1]===undefined?0:fxNum(fxScalar(a[1],null)),c=a[2]===undefined?0:fxNum(fxScalar(a[2],null));if(fxIsErr(r))return r;if(fxIsErr(c))return c;
+    if(a[2]===undefined){if(w===1){c=1}else if(h===1){c=r;r=1}else c=1}
+    if(r<1||c<1||r>h||c>w)return fxE('#REF!');return fxCellVal(M.t,M.r0+r-1,M.c0+c-1)},
+  MATCH:a=>{const k=fxScalar(a[0],null),L=a[1],ty=a[2]===undefined?1:fxNum(fxScalar(a[2],null));if(!fxIsRng(L))return fxE('#VALUE!');if(fxIsErr(ty))return ty;const cl=fxCells(L);
+    if(ty===0){const eq=typeof k==='number'?(v=>typeof v==='number'&&v===k):fxCrit('='+fxStr(k));const i=cl.findIndex(eq);return i<0?fxE('#N/A'):i+1}
+    let best=-1;for(let i=0;i<cl.length;i++){const v=cl[i];if(v===''||fxIsErr(v))continue;const c=fxCmp(v,k);if(ty>0?c<=0:c>=0)best=i;else break}return best<0?fxE('#N/A'):best+1},
+  ROW:(a,cx)=>a.length&&fxIsRng(a[0])?a[0].r0+1:cx.r+1,
+  COLUMN:(a,cx)=>a.length&&fxIsRng(a[0])?a[0].c0+1:cx.c+1,
+  ROWS:a=>fxIsRng(a[0])?a[0].r1-a[0].r0+1:1,
+  COLUMNS:a=>fxIsRng(a[0])?a[0].c1-a[0].c0+1:1,
+  // 文字
+  CONCAT:a=>{let s='';for(const x of a)for(const v of fxCells(x)){if(fxIsErr(v))return v;s+=fxStr(v)}return s},
+  TEXTJOIN:a=>{const d=fxStr(fxScalar(a[0],null)),ig=fxTruthy(fxScalar(a[1],null))===true;const o=[];for(const x of a.slice(2))for(const v of fxCells(x)){if(fxIsErr(v))return v;if(ig&&(v===''||v==null))continue;o.push(fxStr(v))}return o.join(d)},
+  LEN:a=>fxStr(fxScalar(a[0],null)).length,
+  LEFT:a=>{const s=fxStr(fxScalar(a[0],null)),n=a[1]===undefined?1:fxNum(fxScalar(a[1],null));return fxIsErr(n)?n:s.slice(0,Math.max(0,n))},
+  RIGHT:a=>{const s=fxStr(fxScalar(a[0],null)),n=a[1]===undefined?1:fxNum(fxScalar(a[1],null));return fxIsErr(n)?n:(n<=0?'':s.slice(-n))},
+  MID:a=>{const s=fxStr(fxScalar(a[0],null)),st=fxNum(fxScalar(a[1],null)),n=fxNum(fxScalar(a[2],null));if(fxIsErr(st))return st;if(fxIsErr(n))return n;return s.substr(Math.max(0,st-1),Math.max(0,n))},
+  UPPER:a=>fxStr(fxScalar(a[0],null)).toUpperCase(),
+  LOWER:a=>fxStr(fxScalar(a[0],null)).toLowerCase(),
+  PROPER:a=>fxStr(fxScalar(a[0],null)).toLowerCase().replace(/(^|[^A-Za-z])([a-z])/g,(m,p,c)=>p+c.toUpperCase()),
+  TRIM:a=>fxStr(fxScalar(a[0],null)).replace(/[\s　]+/g,' ').trim(),
+  SUBSTITUTE:a=>{const s=fxStr(fxScalar(a[0],null)),f=fxStr(fxScalar(a[1],null)),t=fxStr(fxScalar(a[2],null));if(!f)return s;return s.split(f).join(t)},
+  REPLACE:a=>{const s=fxStr(fxScalar(a[0],null)),st=fxNum(fxScalar(a[1],null)),n=fxNum(fxScalar(a[2],null)),t=fxStr(fxScalar(a[3],null));if(fxIsErr(st))return st;if(fxIsErr(n))return n;return s.slice(0,st-1)+t+s.slice(st-1+n)},
+  FIND:a=>{const f=fxStr(fxScalar(a[0],null)),s=fxStr(fxScalar(a[1],null)),st=a[2]===undefined?1:fxNum(fxScalar(a[2],null));const i=s.indexOf(f,st-1);return i<0?fxE('#VALUE!'):i+1},
+  SEARCH:a=>{const f=fxStr(fxScalar(a[0],null)).toLowerCase(),s=fxStr(fxScalar(a[1],null)).toLowerCase(),st=a[2]===undefined?1:fxNum(fxScalar(a[2],null));const i=s.indexOf(f,st-1);return i<0?fxE('#VALUE!'):i+1},
+  REPT:a=>{const n=fxNum(fxScalar(a[1],null));if(fxIsErr(n))return n;return fxStr(fxScalar(a[0],null)).repeat(Math.max(0,Math.min(1000,n)))},
+  EXACT:a=>fxStr(fxScalar(a[0],null))===fxStr(fxScalar(a[1],null)),
+  TEXT:a=>fxText(fxScalar(a[0],null),fxStr(fxScalar(a[1],null))),
+  VALUE:a=>{const v=fxScalar(a[0],null);if(typeof v==='number')return v;const n=num(v);return n!==null?n:fxE('#VALUE!')},
+  // 日付
+  TODAY:()=>{const d=new Date();return d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()},
+  NOW:()=>{const d=new Date();return d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()+' '+d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')},
+  DATE:a=>{const y=fxNum(fxScalar(a[0],null)),m=fxNum(fxScalar(a[1],null)),d=fxNum(fxScalar(a[2],null));if(fxIsErr(y))return y;if(fxIsErr(m))return m;if(fxIsErr(d))return d;const t=new Date(Date.UTC(y,m-1,d));return t.getUTCFullYear()+'/'+(t.getUTCMonth()+1)+'/'+t.getUTCDate()},
+  DATEVALUE:a=>{const d=fxDateOf(fxStr(fxScalar(a[0],null)));return d===null?fxE('#VALUE!'):d},
+  YEAR:a=>fxPart(a,'y'),MONTH:a=>fxPart(a,'m'),DAY:a=>fxPart(a,'d'),
+  WEEKDAY:a=>{const s=fxSer(a[0]);if(fxIsErr(s))return s;const t=a[1]===undefined?1:fxNum(fxScalar(a[1],null));const w=fxYmd(s).w;return t===2?(w===0?7:w):t===3?(w+6)%7:w+1},
+  DAYS:a=>{const e=fxSer(a[0]),s=fxSer(a[1]);if(fxIsErr(e))return e;if(fxIsErr(s))return s;return e-s},
+  EDATE:a=>{const s=fxSer(a[0]),n=fxNum(fxScalar(a[1],null));if(fxIsErr(s))return s;if(fxIsErr(n))return n;const g=fxYmd(s),t=new Date(Date.UTC(g.y,g.m-1+n,1)),last=new Date(Date.UTC(t.getUTCFullYear(),t.getUTCMonth()+1,0)).getUTCDate();return t.getUTCFullYear()+'/'+(t.getUTCMonth()+1)+'/'+Math.min(g.d,last)},
+  EOMONTH:a=>{const s=fxSer(a[0]),n=fxNum(fxScalar(a[1],null));if(fxIsErr(s))return s;if(fxIsErr(n))return n;const g=fxYmd(s),t=new Date(Date.UTC(g.y,g.m+n,0));return t.getUTCFullYear()+'/'+(t.getUTCMonth()+1)+'/'+t.getUTCDate()},
+  DATEDIF:a=>{const s=fxSer(a[0]),e=fxSer(a[1]),u=fxStr(fxScalar(a[2],null)).toUpperCase();if(fxIsErr(s))return s;if(fxIsErr(e))return e;if(e<s)return fxE('#NUM!');const x=fxYmd(s),y=fxYmd(e);
+    let months=(y.y-x.y)*12+(y.m-x.m)-(y.d<x.d?1:0);
+    if(u==='D')return e-s;if(u==='M')return months;if(u==='Y')return Math.floor(months/12);if(u==='YM')return months%12;
+    if(u==='MD'){let d=y.d-x.d;if(d<0){d+=new Date(Date.UTC(y.y,y.m-1,0)).getUTCDate()}return d}return fxE('#NUM!')},
+  // 判定
+  ISNUMBER:a=>typeof fxScalar(a[0],null)==='number',
+  ISTEXT:a=>{const v=fxScalar(a[0],null);return typeof v==='string'&&v!==''},
+  ISBLANK:a=>{const v=fxScalar(a[0],null);return v===''||v==null},
+  ISERROR:a=>fxIsErr(fxScalar(a[0],null)),
+  ISNA:a=>{const v=fxScalar(a[0],null);return fxIsErr(v)&&v.err==='#N/A'},
+  NOT:a=>{const v=fxTruthy(fxScalar(a[0],null));return fxIsErr(v)?v:!v}
+};
+function fxRound(a,f){const x=fxNum(fxScalar(a[0],null)),d=a[1]===undefined?0:fxNum(fxScalar(a[1],null));if(fxIsErr(x))return x;if(fxIsErr(d))return d;const k=Math.pow(10,d);return f(x*k+(f===Math.round&&x<0?-1e-9:1e-9)*Math.sign(x)*0)/k}
+function fxSer(x){const v=fxScalar(x,null);if(fxIsErr(v))return v;if(typeof v==='number')return v;const d=fxDateOf(v);return d===null?fxE('#VALUE!'):d}
+function fxPart(a,k){const s=fxSer(a[0]);if(fxIsErr(s))return s;return fxYmd(s)[k]}
+function fxCall(n,cx){
+  let name=fxALIAS[n.n]||n.n;
+  const a=n.a;
+  if(name==='IF'){const c=fxTruthy(fxScalar(fxEv(a[0],cx),cx));if(fxIsErr(c))return c;const br=c?a[1]:a[2];return br===undefined?(c?true:false):fxEv(br,cx)}
+  if(name==='IFS'){for(let i=0;i+1<a.length;i+=2){const c=fxTruthy(fxScalar(fxEv(a[i],cx),cx));if(fxIsErr(c))return c;if(c)return fxEv(a[i+1],cx)}return fxE('#N/A')}
+  if(name==='IFERROR'){const v=fxScalar(fxEv(a[0],cx),cx);return fxIsErr(v)?fxEv(a[1],cx):v}
+  if(name==='IFNA'){const v=fxScalar(fxEv(a[0],cx),cx);return(fxIsErr(v)&&v.err==='#N/A')?fxEv(a[1],cx):v}
+  if(name==='AND'||name==='OR'){let r=name==='AND';for(const x of a){const vs=fxCells(fxEv(x,cx));for(const v of vs){if(fxIsErr(v))return v;if(v===''||v==null)continue;const t=fxTruthy(v);if(fxIsErr(t))return t;if(name==='AND'){if(!t)r=false}else if(t)r=true}}return r}
+  if(name==='CHOOSE'){const i=fxNum(fxScalar(fxEv(a[0],cx),cx));if(fxIsErr(i))return i;const b=a[i];return b===undefined||i<1?fxE('#VALUE!'):fxEv(b,cx)}
+  if(name==='SWITCH'){const v=fxScalar(fxEv(a[0],cx),cx);if(fxIsErr(v))return v;let i=1;for(;i+1<a.length;i+=2){const c=fxScalar(fxEv(a[i],cx),cx);if(fxCmp(v,c)===0)return fxEv(a[i+1],cx)}return i<a.length?fxEv(a[i],cx):fxE('#N/A')}
+  const f=fxFN[name];if(!f)return fxE('#NAME?');
+  const args=a.map(x=>fxEv(x,cx));
+  for(const v of args)if(fxIsErr(v)&&['SUM','AVERAGE'].indexOf(name)<0&&!fxIsRng(v)){/* 引数の誤りは各関数で拾う */}
+  return f(args,cx)}
+// 式の文字を、この表のこのセルとして計算する（試し計算用）
+function fxEvalText(t,r,c,text){
+  try{const s=text.trim();const src=s[0]==='='?s:'='+s;const X=fxCtx();return fxFmtVal(fxScalar(fxEv(fxParse(src),{t,r,c}),{t,r,c}))}catch(e){return typeof e==='string'?e:'#ERROR!'}}
+
+// ---- 表のセルの見せ方
+function fxHint(){const t=T();if(!t||!t.d[sel.r])return'';const raw=t.d[sel.r][sel.c];if(!fxIsF(raw))return'';return'　／　ƒ '+raw+' → '+fxGrid(t).v[sel.r][sel.c]}
+function fxIsErrStr(s){return typeof s==='string'&&/^#(REF!|N\/A|VALUE!|DIV\/0!|NAME\?|NUM!|CYCLE!|ERROR!)$/.test(s)}
+function fxRefresh(skip){
+  const t=T();if(!t||VIEW!=='t')return;
+  const G=fxGrid(t);
+  document.querySelectorAll('#tb input').forEach(i=>{
+    if(i===skip)return;const r=+i.dataset.r,c=+i.dataset.c;const raw=t.d[r]&&t.d[r][c];
+    const isF=fxIsF(raw);i.classList.toggle('fx',isF);i.classList.toggle('fe',isF&&fxIsErrStr(G.v[r][c]));
+    if(isF&&i!==document.activeElement&&i.value!==G.v[r][c])i.value=G.v[r][c]})}
+$('tb').addEventListener('focusin',e=>{const i=e.target;if(i.tagName!=='INPUT')return;const t=T(),raw=t.d[+i.dataset.r][+i.dataset.c];if(fxIsF(raw)||(typeof raw==='string'&&raw.charCodeAt(0)===39&&raw[1]==='=')){if(i.value!==raw)i.value=raw}});
+$('tb').addEventListener('focusout',e=>{const i=e.target;if(i.tagName!=='INPUT')return;const t=T();if(!t)return;const r=+i.dataset.r,c=+i.dataset.c,raw=t.d[r]&&t.d[r][c];
+  const isF=fxIsF(raw);i.classList.toggle('fx',isF);if(isF){const G=fxGrid(t);i.value=G.v[r][c];i.classList.toggle('fe',fxIsErrStr(G.v[r][c]))}else if(typeof raw==='string'&&raw.charCodeAt(0)===39&&raw[1]==='='){i.value=raw.slice(1)}
+  fxRefresh(null);$('hint').textContent=$('hint').textContent.split('　／　ƒ')[0]+fxHint()});
+let fxRaf=0;
+function fxAfterInput(i){cancelAnimationFrame(fxRaf);fxRaf=requestAnimationFrame(()=>{fxRefresh(i);const t=T();if(t){const raw=t.d[+i.dataset.r][+i.dataset.c];i.classList.toggle('fx',fxIsF(raw));$('hint').textContent=$('hint').textContent.split('　／　ƒ')[0]+fxHint()}})}
+
+// ---- 構造の変更（行・列の追加／削除／移動）に合わせて、式の中の参照を書き直す
+function fxOpIdx(op,i){switch(op.kind){case'ins':return i>=op.at?i+1:i;case'del':return i===op.at?null:(i>op.at?i-1:i);case'mov':{const a=op.from,b=op.to;if(i===a)return b;if(a<b&&i>a&&i<=b)return i-1;if(a>b&&i>=b&&i<a)return i+1;return i}}return i}
+function fxOpRange(op,a,b){
+  if(op.kind==='del'){if(a===b&&a===op.at)return null;const na=a>op.at?a-1:a,nb=b>=op.at?b-1:b;return nb<na?null:[na,nb]}
+  if(op.kind==='ins')return[a>=op.at?a+1:a,b>=op.at?b+1:b];
+  const x=fxOpIdx(op,a),y=fxOpIdx(op,b);return x<=y?[x,y]:[y,x]}
+function fxLetters(i){let s='';i++;while(i>0){const m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26)}return s}
+function fxRewrite(src,owner,target,op){
+  let tk;try{tk=fxLex(src.slice(1))}catch(e){return src}
+  const edits=[];let k=0;
+  const tgt=sheet=>sheet===null?owner===target:fxTable(sheet,null)===target;
+  while(k<tk.length){
+    let t=tk[k],sheet=null,start=t.s;
+    if(t.t==='sheet'){sheet=t.v;k++;t=tk[k];if(!t||t.t!=='id')continue}
+    if(t.t!=='id'||(tk[k+1]&&tk[k+1].t==='op'&&tk[k+1].v==='('&&sheet===null)){k++;continue}
+    const m=fxCELL.exec(t.v);
+    if(m){
+      let m2=null;if(tk[k+1]&&tk[k+1].t==='op'&&tk[k+1].v===':'&&tk[k+2]&&tk[k+2].t==='id')m2=fxCELL.exec(tk[k+2].v);
+      const end=m2?tk[k+2].e:t.e;
+      if(tgt(sheet)){
+        const pre=sheet===null?'':src.slice(1).slice(start,t.s);
+        if(op.kind==='sort'){
+          if(!m2&&sheet===null&&m[3]!=='$'&&+m[4]-1===op.from)edits.push({s:t.s,e:end,txt:m[1]+m[2]+m[3]+(op.to+1)});
+        }else if(!m2){
+          let c=fxColIdx(m[2]),r=+m[4]-1;
+          if(op.axis==='r')r=fxOpIdx(op,r);else c=fxOpIdx(op,c);
+          edits.push({s:start,e:end,txt:(r===null||c===null)?'#REF!':pre+m[1]+fxLetters(c)+m[3]+(r+1)})
+        }else{
+          let c0=fxColIdx(m[2]),r0=+m[4]-1,c1=fxColIdx(m2[2]),r1=+m2[4]-1,gone=false;
+          if(op.axis==='r'){const q=fxOpRange(op,r0,r1);if(!q)gone=true;else{r0=q[0];r1=q[1]}}else{const q=fxOpRange(op,c0,c1);if(!q)gone=true;else{c0=q[0];c1=q[1]}}
+          edits.push({s:start,e:end,txt:gone?'#REF!':pre+m[1]+fxLetters(c0)+m[3]+(r0+1)+':'+m2[1]+fxLetters(c1)+m2[3]+(r1+1)})}}
+      k+=m2?3:1;continue}
+    if(op.axis==='c'&&op.kind!=='sort'&&tk[k+1]&&tk[k+1].t==='op'&&tk[k+1].v===':'&&fxCOL.test(t.v)&&tk[k+2]&&tk[k+2].t==='id'&&fxCOL.test(tk[k+2].v)&&tgt(sheet)){
+      const q=fxOpRange(op,fxColIdx(t.v.replace('$','')),fxColIdx(tk[k+2].v.replace('$','')));
+      edits.push({s:start,e:tk[k+2].e,txt:q?(sheet===null?'':src.slice(1).slice(start,t.s))+fxLetters(q[0])+':'+fxLetters(q[1]):'#REF!'});k+=3;continue}
+    k++}
+  if(!edits.length)return src;
+  let body=src.slice(1);edits.sort((a,b)=>b.s-a.s).forEach(e=>{body=body.slice(0,e.s)+e.txt+body.slice(e.e)});return'='+body}
+function fxRenameRefs(src,from,to){
+  let tk;try{tk=fxLex(src.slice(1))}catch(e){return src}
+  const q=/^[A-Za-z0-9_ぁ-ヿ㐀-鿿]+$/.test(to)&&!fxCELL.test(to)?to:"'"+to+"'";
+  const edits=[];tk.forEach(t=>{if(t.t==='sheet'&&t.v===from)edits.push({s:t.s,e:t.e,txt:q+'!'});if(t.t==='tcol'&&t.table===from)edits.push({s:t.s,e:t.e,txt:to+'['+t.col+']'})});
+  if(!edits.length)return src;let body=src.slice(1);edits.sort((a,b)=>b.s-a.s).forEach(e=>{body=body.slice(0,e.s)+e.txt+body.slice(e.e)});return'='+body}
+function fxOp(t,op){
+  const ex=[];
+  tables.forEach(x=>{if(x!==t&&x.d.some(r=>r.some(fxIsF)))ex.push({id:x.id,d:JSON.parse(JSON.stringify(x.d))})});
+  tables.forEach(x=>x.d.forEach(row=>row.forEach((v,ci)=>{if(fxIsF(v)){const nv=fxRewrite(v,x,t,op);if(nv!==v)row[ci]=nv}})));
+  if(ex.length&&hist.length){try{const o=JSON.parse(hist[hist.length-1]);o.__x=ex;hist[hist.length-1]=JSON.stringify(o)}catch(e){}}
+  if(t.sl&&t.sl.length){ // 絞り込みの列番号も合わせる
+    if(op.axis==='c'){t.sl=t.sl.map(f=>{const n=fxOpIdx(op,f.c);return n===null?null:Object.assign({},f,{c:n})}).filter(Boolean)}else if(op.kind==='ins'||op.kind==='del'||op.kind==='mov'){}}
+  GEN++}
+
+// ===================== スライサー（表の絞り込み） =====================
+const SLUI={c:-1};
+function slPass(f,v){
+  v=String(v==null?'':v);
+  if(f.k==='in')return f.v.indexOf(v.trim())>=0;
+  if(f.k==='num'){const n=num(v);if(n===null)return false;return(f.min==null||n>=f.min)&&(f.max==null||n<=f.max)}
+  if(f.k==='date'){const g=dparse(v);if(!g||!g.y)return false;const k=g.y*10000+g.m*100+g.d;return(f.from==null||k>=f.from)&&(f.to==null||k<=f.to)}
+  if(f.k==='text')return v.toLowerCase().indexOf(String(f.q||'').toLowerCase())>=0;
+  return true}
+function slVis(t){
+  const c=fxVC.get(t.id);if(c&&c.gen===GEN&&c.src===t.d&&c.sl===t.sl)return c.a;
+  const a=t.d.map(()=>true);
+  if(fxIsSl(t)){const off=t.header?1:0;for(let r=off;r<t.d.length;r++)a[r]=t.sl.every(f=>slPass(f,fxDisp(t,r,f.c)))}
+  fxVC.set(t.id,{gen:GEN,src:t.d,sl:t.sl,a});return a}
+function slApplies(t){return fxIsSl(t)&&t.slAll!==false&&(VIEW==='c'||VIEW==='d'||VIEW==='l'||VIEW==='s')}
+function slCount(t){const off=t.header?1:0,v=slVis(t);let n=0;for(let r=off;r<t.d.length;r++)if(v[r])n++;return{n,all:Math.max(0,t.d.length-off)}}
+function slRows(t){const v=slVis(t),G=fxGrid(t);return G.v.filter((_,r)=>v[r])}
+function slDateKey(s){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||'');return m?(+m[1])*10000+(+m[2])*100+(+m[3]):null}
+function slKeyStr(k){return k==null?'':String(k).slice(0,4)+'-'+String(k).slice(4,6)+'-'+String(k).slice(6,8)}
+function slFindF(t,c){return(t.sl||[]).find(f=>f.c===c)}
+function slSet(t,f){t.sl=(t.sl||[]).filter(x=>x.c!==f.c);if(f)t.sl.push(f);touch()}
+function slDrop(t,c){t.sl=(t.sl||[]).filter(x=>x.c!==c);touch()}
+function slSummary(t,f){
+  const nm=String(fxGrid(t).v[0][f.c]||'').trim()||colName(f.c)+'列',nmv=t.header?nm:colName(f.c)+'列';
+  if(f.k==='in')return nmv+'：'+(f.v.length>3?f.v.slice(0,3).map(x=>x||'(空白)').join('・')+' 他'+(f.v.length-3):f.v.map(x=>x||'(空白)').join('・'));
+  if(f.k==='num')return nmv+'：'+(f.min==null?'':f.min)+' 〜 '+(f.max==null?'':f.max);
+  if(f.k==='date')return nmv+'：'+(f.from==null?'':slKeyStr(f.from))+' 〜 '+(f.to==null?'':slKeyStr(f.to));
+  return nmv+'：「'+f.q+'」を含む'}
+function slRender(){
+  const t=T(),box=$('tslb'),cnt=$('tslCnt');if(!t||!box)return;
+  const off=t.header?1:0,G=fxGrid(t),names=G.v[0].map((v,i)=>(t.header&&String(v).trim())?String(v).trim():colName(i)+'列');
+  const on=fxIsSl(t),c=on?slCount(t):{n:0,all:Math.max(0,t.d.length-off)};
+  cnt.textContent=on?(c.n+' / '+c.all+' 行'):'';
+  $('tsl').classList.toggle('on',on);
+  let h='';
+  if(on)h+='<div class="fchips" style="margin-bottom:8px">'+t.sl.map(f=>'<span class="fchip" data-slx="'+f.c+'">'+esc(slSummary(t,f))+' ✕</span>').join('')+'</div>';
+  h+='<div class="ctl"><div><label>絞り込む列</label><select id="slCol"><option value="-1">（列を選ぶ）</option>'+names.map((n,i)=>'<option value="'+i+'"'+(i===SLUI.c?' selected':'')+'>'+esc(n)+(slFindF(t,i)?' ●':'')+'</option>').join('')+'</select></div></div>';
+  if(SLUI.c>=0&&SLUI.c<names.length){
+    const ci=SLUI.c,body=G.v.slice(off),others=(t.sl||[]).filter(f=>f.c!==ci);
+    const pass=body.filter((row,i)=>others.every(f=>slPass(f,row[f.c])));
+    const I2={types:[]};const ty=ctype(body,ci),cur=slFindF(t,ci);
+    h+='<div style="margin-top:8px">';
+    if(ty==='num'){
+      h+='<div class="ctl"><div><label>最小（以上）</label><input id="slMin" type="text" inputmode="decimal" value="'+(cur&&cur.k==='num'&&cur.min!=null?cur.min:'')+'" style="width:100%;font:inherit;font-size:16px;color:var(--tx);background:var(--p2);border:1px solid var(--bd);border-radius:10px;padding:9px"></div>'+
+        '<div><label>最大（以下）</label><input id="slMax" type="text" inputmode="decimal" value="'+(cur&&cur.k==='num'&&cur.max!=null?cur.max:'')+'" style="width:100%;font:inherit;font-size:16px;color:var(--tx);background:var(--p2);border:1px solid var(--bd);border-radius:10px;padding:9px"></div></div>'+
+        '<div class="chips" style="margin-top:8px"><button class="chip" data-slnum="num">この範囲で絞る</button></div>'}
+    else if(ty==='date'){
+      const ds=body.map(r=>dparse(r[ci])).filter(g=>g&&g.y).map(g=>g.y*10000+g.m*100+g.d).sort((a,b)=>a-b);
+      h+='<div class="ctl"><div><label>この日から</label><input id="slFrom" type="date" value="'+slKeyStr(cur&&cur.k==='date'?cur.from:null)+'" style="width:100%;font:inherit;font-size:16px;color:var(--tx);background:var(--p2);border:1px solid var(--bd);border-radius:10px;padding:9px"></div>'+
+        '<div><label>この日まで</label><input id="slTo" type="date" value="'+slKeyStr(cur&&cur.k==='date'?cur.to:null)+'" style="width:100%;font:inherit;font-size:16px;color:var(--tx);background:var(--p2);border:1px solid var(--bd);border-radius:10px;padding:9px"></div></div>'+
+        '<div class="chips" style="margin-top:8px"><button class="chip" data-sld="m0">今月</button><button class="chip" data-sld="m1">先月</button><button class="chip" data-sld="y0">今年</button><button class="chip" data-sld="y1">去年</button><button class="chip" data-sld="d30">直近30日</button><button class="chip" data-sld="d90">直近90日</button><button class="chip" data-slnum="date">この範囲で絞る</button></div>'+
+        (ds.length?'<div style="font-size:12px;color:var(--dim);margin-top:6px">データの期間：'+slKeyStr(ds[0])+' 〜 '+slKeyStr(ds[ds.length-1])+'</div>':'')}
+    else{
+      const cn=new Map();pass.forEach(r=>{const k=String(r[ci]==null?'':r[ci]).trim();cn.set(k,(cn.get(k)||0)+1)});
+      const items=[...cn.entries()].sort((a,b)=>b[1]-a[1]||String(a[0]).localeCompare(String(b[0]),'ja'));
+      const sel2=cur&&cur.k==='in'?cur.v:[];
+      if(items.length<=60){
+        h+='<div class="chips">'+items.map(([k,n])=>'<button class="chip'+(sel2.indexOf(k)>=0?' on':'')+'" data-slv="'+esc(k)+'">'+esc(k===''?'(空白)':k)+' <small style="opacity:.7">'+n+'</small></button>').join('')+'</div>'+
+          (items.length>1?'<div class="chips" style="margin-top:8px"><button class="chip" data-slall="1">全部選ぶ</button><button class="chip" data-slnone="1">この列の絞り込みを外す</button></div>':'')}
+      else{
+        h+='<label style="font-size:12px;color:var(--dim)">文字を含む行だけ（値が多いので、検索で絞ります：'+items.length+'種類）</label><input id="slQ" type="text" value="'+esc(cur&&cur.k==='text'?cur.q:'')+'" placeholder="例：営業" style="width:100%;font:inherit;font-size:16px;color:var(--tx);background:var(--p2);border:1px solid var(--bd);border-radius:10px;padding:9px;margin-top:4px">'+
+          '<div class="chips" style="margin-top:8px"><button class="chip" data-slnum="text">この言葉で絞る</button></div>'}}
+    h+='</div>'}
+  h+='<label class="ck" style="display:block;font-size:13px;margin:10px 0 4px"><input type="checkbox" id="slAll"'+(t.slAll!==false?' checked':'')+'> グラフ・一覧・ダッシュ・株価にも反映する</label>';
+  h+='<div class="chips" style="margin-top:6px"><button class="chip" id="slCopy">📋 結果をコピー</button><button class="chip" id="slNew">▦ 結果を新しい表にする</button><button class="chip" id="slClr2">絞り込みを全部外す</button></div>';
+  h+='<div style="font-size:12px;color:var(--dim);margin-top:8px;line-height:1.6">ヒント：表の中で <b>SUBTOTAL(9, 金額)</b> のように書くと、絞り込んだ行だけの合計になります。</div>';
+  box.innerHTML=h}
+function slBanner(){
+  const t=T(),b=$('slBan');if(!b)return;
+  if(!t||!fxIsSl(t)||!(VIEW==='c'||VIEW==='d'||VIEW==='l'||VIEW==='s')){b.hidden=true;return}
+  const c=slCount(t);b.hidden=false;
+  b.innerHTML='<span>🔪 表の絞り込み：<b>'+c.n+' / '+c.all+' 行</b>'+(t.slAll!==false?'をこの画面に反映中':'（この画面には反映していません）')+'</span><button data-slb="edit">表で変える</button><button data-slb="tog">'+(t.slAll!==false?'反映しない':'反映する')+'</button><button data-slb="clr">外す</button>'}
+$('slBan').addEventListener('click',e=>{const b=e.target.closest('[data-slb]');if(!b)return;const t=T();if(!t)return;
+  if(b.dataset.slb==='edit'){VIEW='t';applyView();$('tsl').open=true;window.scrollTo(0,0);return}
+  if(b.dataset.slb==='tog'){t.slAll=t.slAll===false;touch();applyView();return}
+  if(b.dataset.slb==='clr'){t.sl=[];touch();render()}});
+function slApplyEdit(){const t=T();touch();render();slRender()}
+$('tsl').addEventListener('toggle',()=>{if($('tsl').open)slRender()});
+$('tsl').addEventListener('change',e=>{const t=T();if(!t)return;
+  if(e.target.id==='slCol'){SLUI.c=+e.target.value;slRender();return}
+  if(e.target.id==='slAll'){t.slAll=e.target.checked;touch();slRender();return}});
+$('tsl').addEventListener('click',e=>{const t=T();if(!t)return;const ci=SLUI.c;
+  let b;
+  if(b=e.target.closest('[data-slx]')){slDrop(t,+b.dataset.slx);render();slRender();return}
+  if(b=e.target.closest('[data-slv]')){const cur=slFindF(t,ci);const v=b.dataset.slv;let arr=cur&&cur.k==='in'?cur.v.slice():[];const i=arr.indexOf(v);if(i>=0)arr.splice(i,1);else arr.push(v);
+    if(arr.length)slSet(t,{c:ci,k:'in',v:arr});else slDrop(t,ci);render();slRender();return}
+  if(b=e.target.closest('[data-slall]')){const G=fxGrid(t),off=t.header?1:0;const all=[...new Set(G.v.slice(off).map(r=>String(r[ci]==null?'':r[ci]).trim()))];slSet(t,{c:ci,k:'in',v:all});render();slRender();return}
+  if(b=e.target.closest('[data-slnone]')){slDrop(t,ci);render();slRender();return}
+  if(b=e.target.closest('[data-sld]')){const d=new Date(),y=d.getFullYear(),m=d.getMonth();const k=x=>x.getFullYear()*10000+(x.getMonth()+1)*100+x.getDate();let f,to;
+    switch(b.dataset.sld){case'm0':f=new Date(y,m,1);to=new Date(y,m+1,0);break;case'm1':f=new Date(y,m-1,1);to=new Date(y,m,0);break;case'y0':f=new Date(y,0,1);to=new Date(y,11,31);break;case'y1':f=new Date(y-1,0,1);to=new Date(y-1,11,31);break;case'd30':f=new Date(Date.now()-29*864e5);to=d;break;default:f=new Date(Date.now()-89*864e5);to=d}
+    slSet(t,{c:ci,k:'date',from:k(f),to:k(to)});render();slRender();return}
+  if(b=e.target.closest('[data-slnum]')){const kind=b.dataset.slnum;
+    if(kind==='num'){const mn=num($('slMin').value),mx=num($('slMax').value);if(mn==null&&mx==null)slDrop(t,ci);else slSet(t,{c:ci,k:'num',min:mn,max:mx})}
+    else if(kind==='date'){const a=slDateKey($('slFrom').value),z=slDateKey($('slTo').value);if(a==null&&z==null)slDrop(t,ci);else slSet(t,{c:ci,k:'date',from:a,to:z})}
+    else{const q=$('slQ').value.trim();if(!q)slDrop(t,ci);else slSet(t,{c:ci,k:'text',q})}
+    render();slRender();return}
+  if(e.target.closest('#slClr2')){t.sl=[];touch();render();slRender();return}
+  if(e.target.closest('#slCopy')){const rows=slRows(t);const s=fxTsv(rows);navigator.clipboard.writeText(s).then(()=>toast('絞り込んだ '+(rows.length-(t.header?1:0))+' 行をコピーしました')).catch(()=>openDlg('コピーしてください',s));return}
+  if(e.target.closest('#slNew')){const rows=slRows(t);if(rows.length<=(t.header?1:0)){toast('絞り込み結果が0行です');return}
+    const nt={id:uid(),title:(t.title||'表')+'（絞り込み）',d:rows.map(r=>r.slice()),header:t.header,at:Date.now()};tables.push(nt);cur=nt.id;hist=[];sel={r:0,c:0};save();VIEW='t';render();window.scrollTo(0,0);toast('新しい表を作りました（式は値になっています）');return}});
+function fxTsv(rows){return rows.map(r=>r.map(v=>/[\t\n"]/.test(v)?'"'+String(v).replace(/"/g,'""')+'"':v).join('\t')).join('\n')}
+
+// ===================== 関数ダイアログ =====================
+const FXH=[
+ ['SUM','集計','SUM(範囲)','合計','=SUM(B2:B9)'],['AVERAGE','集計','AVERAGE(範囲)','平均','=AVERAGE(金額)'],['MIN','集計','MIN(範囲)','最小','=MIN(B2:B9)'],['MAX','集計','MAX(範囲)','最大','=MAX(B2:B9)'],
+ ['COUNT','集計','COUNT(範囲)','数字のセルの個数','=COUNT(B2:B9)'],['COUNTA','集計','COUNTA(範囲)','空でないセルの個数','=COUNTA(A2:A9)'],['COUNTBLANK','集計','COUNTBLANK(範囲)','空のセルの個数','=COUNTBLANK(A2:A9)'],['COUNTUNIQUE','集計','COUNTUNIQUE(範囲)','重複を除いた種類の数','=COUNTUNIQUE(部署)'],
+ ['MEDIAN','集計','MEDIAN(範囲)','中央値','=MEDIAN(金額)'],['MODE','集計','MODE(範囲)','最頻値','=MODE(B2:B9)'],['STDEV','集計','STDEV(範囲)','標準偏差（標本）','=STDEV(金額)'],['LARGE','集計','LARGE(範囲, 順位)','大きい方から数えた値','=LARGE(金額, 2)'],['SMALL','集計','SMALL(範囲, 順位)','小さい方から数えた値','=SMALL(金額, 1)'],
+ ['RANK','集計','RANK(値, 範囲, 順序)','順位（順序0=大きい順）','=RANK(B2, B2:B9)'],['PERCENTILE','集計','PERCENTILE(範囲, 0〜1)','パーセンタイル','=PERCENTILE(金額, 0.9)'],['SUMPRODUCT','集計','SUMPRODUCT(範囲1, 範囲2)','掛けてから合計','=SUMPRODUCT(単価, 数量)'],
+ ['SUBTOTAL','集計','SUBTOTAL(9, 範囲)','絞り込んだ行だけで集計（9=合計 1=平均 2=個数 4=最大 5=最小）','=SUBTOTAL(9, 金額)'],
+ ['SUMIF','条件','SUMIF(条件の範囲, 条件, 合計の範囲)','条件に合う行の合計','=SUMIF(部署, "営業", 金額)'],['SUMIFS','条件','SUMIFS(合計の範囲, 範囲1, 条件1, ...)','条件を全部満たす行の合計','=SUMIFS(金額, 部署, "営業", 月, ">=4")'],
+ ['COUNTIF','条件','COUNTIF(範囲, 条件)','条件に合う個数（">10" "営業*" など）','=COUNTIF(部署, "営業")'],['COUNTIFS','条件','COUNTIFS(範囲1, 条件1, ...)','条件を全部満たす個数','=COUNTIFS(部署, "営業", 金額, ">1000")'],
+ ['AVERAGEIF','条件','AVERAGEIF(条件の範囲, 条件, 平均の範囲)','条件に合う行の平均','=AVERAGEIF(部署, "営業", 金額)'],['AVERAGEIFS','条件','AVERAGEIFS(平均の範囲, 範囲1, 条件1, ...)','条件を全部満たす行の平均','=AVERAGEIFS(金額, 部署, "営業")'],
+ ['MAXIFS','条件','MAXIFS(最大の範囲, 範囲1, 条件1)','条件に合う行の最大','=MAXIFS(金額, 部署, "営業")'],['MINIFS','条件','MINIFS(最小の範囲, 範囲1, 条件1)','条件に合う行の最小','=MINIFS(金額, 部署, "営業")'],
+ ['IF','判定','IF(条件, 真のとき, 偽のとき)','条件で値を変える','=IF(B2>=100, "合格", "不合格")'],['IFS','判定','IFS(条件1, 値1, 条件2, 値2, ...)','上から順に当てはまる最初の値','=IFS(B2>=90,"A",B2>=70,"B",TRUE,"C")'],['IFERROR','判定','IFERROR(式, エラーのとき)','エラーのときに別の値','=IFERROR(B2/C2, 0)'],
+ ['AND','判定','AND(条件1, 条件2, ...)','すべて成り立つ','=AND(B2>0, C2>0)'],['OR','判定','OR(条件1, 条件2, ...)','どれかが成り立つ','=OR(B2>0, C2>0)'],['NOT','判定','NOT(条件)','成り立たない','=NOT(ISBLANK(B2))'],['CHOOSE','判定','CHOOSE(番号, 値1, 値2, ...)','番号で選ぶ','=CHOOSE(2, "A", "B", "C")'],['SWITCH','判定','SWITCH(値, 比べる値1, 結果1, ..., 既定)','値で結果を選ぶ','=SWITCH(A2, "東京", 1, "大阪", 2, 0)'],
+ ['ISNUMBER','判定','ISNUMBER(値)','数字か','=ISNUMBER(B2)'],['ISBLANK','判定','ISBLANK(セル)','空か','=ISBLANK(B2)'],['ISERROR','判定','ISERROR(値)','エラーか','=ISERROR(B2/C2)'],
+ ['VLOOKUP','引く','VLOOKUP(探す値, 範囲, 列番号, FALSE)','左端の列で探して、その行の指定列を返す（4つ目はFALSE=完全一致）','=VLOOKUP(A2, 商品!A:C, 3, FALSE)'],['HLOOKUP','引く','HLOOKUP(探す値, 範囲, 行番号, FALSE)','上端の行で探す','=HLOOKUP("4月", A1:M5, 3, FALSE)'],
+ ['XLOOKUP','引く','XLOOKUP(探す値, 探す範囲, 返す範囲, 無いとき)','探して返す（左右どちらでも）','=XLOOKUP(A2, 商品[名前], 商品[価格], "なし")'],['INDEX','引く','INDEX(範囲, 行, 列)','範囲のn番目','=INDEX(B2:B9, 3)'],['MATCH','引く','MATCH(探す値, 範囲, 0)','何番目にあるか（0=完全一致）','=MATCH("東京", A2:A9, 0)'],
+ ['ROW','引く','ROW()','このセルの行番号','=ROW()'],['COLUMN','引く','COLUMN()','このセルの列番号','=COLUMN()'],['ROWS','引く','ROWS(範囲)','行数','=ROWS(金額)'],['COLUMNS','引く','COLUMNS(範囲)','列数','=COLUMNS(A1:D1)'],
+ ['ROUND','数','ROUND(数, 桁)','四捨五入','=ROUND(B2*1.1, 0)'],['ROUNDUP','数','ROUNDUP(数, 桁)','切り上げ','=ROUNDUP(B2, 0)'],['ROUNDDOWN','数','ROUNDDOWN(数, 桁)','切り捨て','=ROUNDDOWN(B2, 0)'],['INT','数','INT(数)','小数を切り捨て（小さい方の整数）','=INT(B2)'],['ABS','数','ABS(数)','絶対値','=ABS(B2-C2)'],['MOD','数','MOD(数, 割る数)','余り','=MOD(B2, 7)'],['POWER','数','POWER(底, 指数)','べき乗（B2^2 と同じ）','=POWER(B2, 2)'],['SQRT','数','SQRT(数)','平方根','=SQRT(B2)'],['CEILING','数','CEILING(数, 単位)','単位で切り上げ','=CEILING(B2, 100)'],['FLOOR','数','FLOOR(数, 単位)','単位で切り捨て','=FLOOR(B2, 100)'],['LN','数','LN(数)','自然対数','=LN(B2)'],['LOG10','数','LOG10(数)','常用対数','=LOG10(B2)'],['PI','数','PI()','円周率','=PI()'],
+ ['CONCAT','文字','CONCAT(文字1, 文字2, ...)','つなげる（A2&B2 と同じ）','=CONCAT(A2, "-", B2)'],['TEXTJOIN','文字','TEXTJOIN(区切り, 空を除く, 範囲)','区切ってつなげる','=TEXTJOIN("、", TRUE, A2:A9)'],['LEN','文字','LEN(文字)','文字数','=LEN(A2)'],['LEFT','文字','LEFT(文字, 数)','左から取り出す','=LEFT(A2, 3)'],['RIGHT','文字','RIGHT(文字, 数)','右から取り出す','=RIGHT(A2, 2)'],['MID','文字','MID(文字, 開始, 数)','途中から取り出す','=MID(A2, 2, 3)'],
+ ['TRIM','文字','TRIM(文字)','前後と重なった空白を除く','=TRIM(A2)'],['SUBSTITUTE','文字','SUBSTITUTE(文字, 探す, 置く)','置き換え','=SUBSTITUTE(A2, "株式会社", "")'],['UPPER','文字','UPPER(文字)','大文字にする','=UPPER(A2)'],['LOWER','文字','LOWER(文字)','小文字にする','=LOWER(A2)'],['FIND','文字','FIND(探す, 文字)','何文字目にあるか','=FIND("-", A2)'],['TEXT','文字','TEXT(値, 書式)','書式をつけた文字にする','=TEXT(B2, "#,##0")　=TEXT(A2, "yyyy年m月d日")'],['VALUE','文字','VALUE(文字)','文字を数にする','=VALUE("1,234")'],['REPT','文字','REPT(文字, 回数)','くり返す','=REPT("★", 3)'],
+ ['TODAY','日付','TODAY()','今日','=TODAY()'],['NOW','日付','NOW()','いま','=NOW()'],['DATE','日付','DATE(年, 月, 日)','日付を作る','=DATE(2026, 4, 1)'],['YEAR','日付','YEAR(日付)','年','=YEAR(A2)'],['MONTH','日付','MONTH(日付)','月','=MONTH(A2)'],['DAY','日付','DAY(日付)','日','=DAY(A2)'],['WEEKDAY','日付','WEEKDAY(日付, 2)','曜日の番号（2=月曜が1）','=WEEKDAY(A2, 2)'],['DAYS','日付','DAYS(終わり, 始め)','日数','=DAYS(B2, A2)'],['EDATE','日付','EDATE(日付, 月数)','月を足す','=EDATE(A2, 3)'],['EOMONTH','日付','EOMONTH(日付, 月数)','月末','=EOMONTH(A2, 0)'],['DATEDIF','日付','DATEDIF(始め, 終わり, "Y")','期間（"D" 日 "M" 月 "Y" 年）','=DATEDIF(A2, TODAY(), "Y")']];
+function fxDlgList(q){
+  q=(q||'').trim().toLowerCase();let last='',h='';
+  FXH.filter(x=>!q||x[0].toLowerCase().includes(q)||x[3].includes(q)||x[1].includes(q)).forEach(x=>{
+    if(x[1]!==last){h+='<div class="shead">'+x[1]+'</div>';last=x[1]}
+    h+='<button class="fxrow" data-fxn="'+x[0]+'"><b>'+x[0]+'</b> <span>'+esc(x[3])+'</span><small>'+esc(x[2])+'<br>例 '+esc(x[4])+'</small></button>'});
+  $('fxList').innerHTML=h||'<div style="color:var(--dim);padding:8px">見つかりません</div>'}
+function fxColRange(t){ // 選んだセルの列の、見出しの下〜選んだセルの上（または最後まで）
+  const off=t.header?1:0;let r1=sel.r-1;if(sel.r<=off||t.d[sel.r].every(v=>v===''||v==null)===false&&sel.r<off)r1=t.d.length-1;
+  if(sel.r<=off)r1=t.d.length-1;
+  return fxLetters(sel.c)+(off+1)+':'+fxLetters(sel.c)+(r1+1)}
+function fxPut(text,append){
+  const t=T();if(!t)return;push();const raw=t.d[sel.r][sel.c];
+  t.d[sel.r][sel.c]=(append&&fxIsF(raw))?raw+text:text;touch();$('fxd').close();render();
+  const i=document.querySelector('#tb input[data-r="'+sel.r+'"][data-c="'+sel.c+'"]');if(i){i.focus();try{i.setSelectionRange(i.value.length,i.value.length)}catch(e){}}}
+function fxOpenDlg(){
+  const t=T();if(!t)return;const G=fxGrid(t),nm=(t.header&&String(G.v[0][sel.c]).trim())||(colName(sel.c)+'列'),rg=fxColRange(t);
+  $('fxQuick').innerHTML='<div style="font-size:12px;color:var(--dim);margin-bottom:6px">選んだセル（'+(sel.r+1)+'行 '+colName(sel.c)+'列）に、「'+esc(nm)+'」の列で入れる：</div><div class="chips">'+
+    [['合計','SUM'],['平均','AVERAGE'],['最大','MAX'],['最小','MIN'],['個数','COUNT']].map(([l,f])=>'<button class="chip" data-fxq="=' +f+'('+rg+')">'+l+'</button>').join('')+
+    [['合計','SUBTOTAL(9,'],['個数','SUBTOTAL(2,']].map(([l,f])=>'<button class="chip" data-fxq="='+f+rg+')">'+l+'（絞り込み連動）</button>').join('')+'</div>';
+  $('fxTest').value=fxIsF(t.d[sel.r][sel.c])?t.d[sel.r][sel.c]:'';$('fxRes').textContent='';$('fxS').value='';fxDlgList('');
+  $('fxd').showModal()}
+$('fxB').onclick=fxOpenDlg;
+$('fxX').onclick=()=>$('fxd').close();
+$('fxS').oninput=()=>fxDlgList($('fxS').value);
+$('fxRun').onclick=()=>{const t=T();$('fxRes').textContent=$('fxTest').value.trim()?('→ '+fxEvalText(t,sel.r,sel.c,$('fxTest').value)):''};
+$('fxPutBtn').onclick=()=>{const v=$('fxTest').value.trim();if(!v)return;fxPut(v[0]==='='?v:'='+v,false)};
+$('fxd').addEventListener('click',e=>{let b;
+  if(b=e.target.closest('[data-fxq]')){fxPut(b.dataset.fxq,false);return}
+  if(b=e.target.closest('[data-fxn]')){const t=T(),raw=t.d[sel.r][sel.c];fxPut(fxIsF(raw)?b.dataset.fxn+'(':'='+b.dataset.fxn+'(',true)}});
+
+// ---- 取り消し・並べ替え・名前の変更に合わせる
+let fxTTL='';
+$('title').addEventListener('focus',()=>{const t=T();fxTTL=t?t.title:''});
+$('title').addEventListener('change',()=>{const t=T();if(!t||!fxTTL||fxTTL===t.title)return;const from=fxTTL,to=t.title;fxTTL=to;let n=0;
+  tables.forEach(x=>x.d.forEach(row=>row.forEach((v,ci)=>{if(fxIsF(v)){const nv=fxRenameRefs(v,from,to);if(nv!==v){row[ci]=nv;n++}}})));if(n){GEN++;save();toast('他の表の式 '+n+' 件の表名も書き換えました')}});
+function fxSortRows(t,off,cmp,dir,I){ // 値で並べ、式は同じ行の参照だけ行に合わせて直す
+  const G=fxGrid(t);const items=t.d.slice(off).map((row,i)=>({row,ev:G.v[i+off],from:i+off}));
+  items.sort((a,b)=>cmp(a.ev,b.ev));
+  items.forEach((it,j)=>{const to=j+off;if(to!==it.from)it.row=it.row.map(v=>fxIsF(v)?fxRewrite(v,t,t,{kind:'sort',from:it.from,to}):v)});
+  return items.map(x=>x.row)}
+// ===================== 学習表（ひな形） =====================
+function tplProg(rows,col){return['','進捗','=COUNTIF('+col+'2:'+col+(rows.length+1)+',"済")&" / "&COUNTA('+col+'2:'+col+(rows.length+1)+')','','','']}
+const TPL=[
+ {id:'netflow',name:'ネットワーク構築ワークフロー',desc:'要件定義 → 設計 → 構築 → 試験 → 運用の24手順。やった所は「済」にすると、いちばん下に進捗が出ます。',
+  head:['順','フェーズ','やること','確認・コマンド例','関連（🧮計算の公式）','状態'],
+  rows:[
+['1','要件定義','利用者数・拠点・用途・必要な稼働率を書き出す','要件表を作り、関係者と合意する','稼働率','未'],
+['2','要件定義','予算・納期・運用担当を決める','見積と役割分担表','','未'],
+['3','設計：回線','ピーク時の同時利用から必要な帯域と回線の種類を見積もる','同時利用数 × 1人あたり速度 に余裕を足す','トラフィック強度／帯域幅遅延積','未'],
+['4','設計：アドレス','IPアドレス計画（プライベートアドレス、部署ごとのサブネット）','例 192.168.10.0/24 を部署ごとに分ける','サブネットの使えるホスト数／分割数／IPv4のアドレス数','未'],
+['5','設計：VLAN','部署・用途ごとにVLANを分け、IDの一覧表を作る','VLAN ID・名前・サブネット・ゲートウェイ','','未'],
+['6','設計：構成図','論理構成図と物理構成図を描く（機器・ケーブル・ポート番号）','フロー画面で作り、配線表とそろえる','','未'],
+['7','設計：冗長化','回線・コア機器・電源の二重化を決め、単一障害点を洗い出す','1台止めても止まらないか','並列（冗長）構成の稼働率／直列構成の稼働率','未'],
+['8','設計：セキュリティ','FW方針・ACL・管理用ネットワークの分離（既定は全部拒否、必要な物だけ許可）','通信許可の表を作る','','未'],
+['9','調達','機器・ケーブル・ライセンスを手配する','型番・数量・納期の一覧','','未'],
+['10','構築：配線','ケーブルを敷設し、両端にラベルを付ける','ケーブルテスタで導通確認','光ファイバの伝搬速度／伝搬遅延','未'],
+['11','構築：設置','ルータ・スイッチ・無線APを設置し電源を入れる','LEDとログを確認','','未'],
+['12','構築：基本設定','ホスト名・管理IP・管理者パスワード・SSHを設定（Telnetは使わない）','ssh で入れる／パスワードは強い物に','','未'],
+['13','構築：VLANとルーティング','VLAN・トランク・デフォルトルート（必要なら OSPF）','show vlan／show ip route','','未'],
+['14','構築：DHCPとDNS','配布範囲・固定割当・DNSサーバを設定','ipconfig /all／nslookup','','未'],
+['15','構築：NATとFW','NAT・FWルール・ACLを入れる','内から外へ通る／外から内へ通らない','','未'],
+['16','構築：無線','SSID・WPA3・チャンネル設計・出力を決める','電波強度を測る','自由空間の電波の損失／デシベル','未'],
+['17','試験：疎通','全経路を ping／traceroute で確認','tracert 宛先','伝送遅延／伝搬遅延','未'],
+['18','試験：性能','帯域と遅延・損失を測る','iperf3 -c サーバ','TCPのスループット上限／帯域幅遅延積','未'],
+['19','試験：切替','片系を止めて、切り替わる時間を測る','切替時間を記録','稼働率','未'],
+['20','運用：監視','SNMP・syslog・死活監視としきい値、通知の試験','通知が届くか','','未'],
+['21','運用：バックアップ','設定のバックアップを世代で残す','復元の手順も試す','','未'],
+['22','運用：記録','構成図・IP台帳・設定値を最新に保つ','変更のたびに更新','','未'],
+['23','運用：保守','ファームウェア更新・脆弱性対応・定期見直し','月1回の確認日を決める','','未'],
+['24','改善','障害と性能を振り返り、容量計画に反映する','ピークの伸びを見る','待ち行列 M/M/1 の平均滞在時間','未']],prog:5},
+ {id:'cryptoflow',name:'暗号 習得ワークフロー',desc:'基礎 → 共通鍵 → ハッシュ → 公開鍵 → 署名・証明書 → TLS → 実装 → 運用の20段階。手を動かす課題つき。',
+  head:['順','段階','学ぶこと','手を動かす','関連','状態'],
+  rows:[
+['1','基礎','目的：機密性・完全性・認証・否認防止','自分のアプリで何を守りたいか書く','','未'],
+['2','基礎','用語：平文・暗号文・鍵・アルゴリズム、ケルクホフスの原理（鍵以外は公開しても安全）','用語を自分の言葉で説明する','','未'],
+['3','古典暗号','シーザー暗号・ヴィジュネル暗号と、頻度分析での解読','手で暗号化して解読する','','未'],
+['4','数学','剰余演算（mod）・素数・最大公約数・拡張ユークリッド','7^5 mod 13 などを手計算','','未'],
+['5','共通鍵','ブロック暗号 AES、ストリーム暗号 ChaCha20','AES-GCM で文字を暗号化・復号','','未'],
+['6','利用モード','ECB が危険な理由、CBC、CTR、GCM（改ざん検知つき）','同じ平文が同じ暗号文になる例を見る','','未'],
+['7','乱数','暗号用の乱数、IV／nonce は使い回さない','crypto.getRandomValues で生成','','未'],
+['8','ハッシュ','SHA-256、衝突耐性、パスワード保存はソルト＋ストレッチ','1文字変えると全部変わるのを見る','','未'],
+['9','MAC','HMAC：改ざんされていないことの確認','HMAC-SHA256 を計算して検証','','未'],
+['10','鍵導出','PBKDF2・HKDF：パスワードから鍵を作る','反復回数を変えて時間を測る','quick-ref のパスコード暗号化','未'],
+['11','公開鍵','RSA（大きな2つの素数の積）、楕円曲線暗号','小さな素数で RSA を手計算','','未'],
+['12','鍵交換','Diffie-Hellman・ECDH、前方秘匿性','小さな数で鍵交換を手計算','','未'],
+['13','署名','RSA／ECDSA／Ed25519：署名して検証する','署名を1文字変えて検証が失敗するのを見る','','未'],
+['14','証明書','X.509・認証局・証明書チェーン・失効','ブラウザで証明書を開いて見る','','未'],
+['15','TLS','TLS 1.3 のハンドシェイクと暗号スイート','openssl s_client -connect ホスト:443','','未'],
+['16','実装','Web Crypto API で AES-GCM を書く','shared-core の暗号部品を読む','','未'],
+['17','鍵管理','生成・保管・ローテーション・廃棄','鍵を失ったとき何が起きるか書く','','未'],
+['18','攻撃','総当たり・辞書・サイドチャネル・パディングオラクル・中間者','それぞれ何で防げるか書く','シャノンの通信路容量','未'],
+['19','これから','量子コンピュータの影響（Shor／Grover）と耐量子暗号','AES-256 と RSA で影響が違う理由','','未'],
+['20','運用','自作の暗号は作らない、定評のあるライブラリを使う、推奨鍵長に従う','自分のアプリの暗号を点検する','','未']],prog:5},
+ {id:'cryptocmp',name:'暗号方式の比較表',desc:'どれをいつ使うか／使ってはいけないものを一覧にした表。',
+  head:['方式','種類','鍵','主な用途','強み','注意','いま'],
+  rows:[
+['AES-GCM','共通鍵（AEAD）','128／256bit','データの暗号化','速い・改ざん検知つき','nonce の使い回しは致命的','推奨'],
+['ChaCha20-Poly1305','共通鍵（AEAD）','256bit','TLS・モバイル','専用回路なしでも速い','nonce の使い回し禁止','推奨'],
+['AES-CBC','共通鍵','128／256bit','古いシステム','広く対応','改ざん検知がない（別にMAC）','要注意'],
+['AES-ECB','共通鍵','128／256bit','（使わない）','単純','同じ平文が同じ暗号文になる','使用禁止'],
+['3DES','共通鍵','112bit相当','古い機器','','弱く遅い','非推奨'],
+['RSA','公開鍵','2048bit以上','暗号化・署名','広く対応','鍵が長い・遅い','可（3072bit以上が望ましい）'],
+['ECDSA／Ed25519','公開鍵（署名）','256bit級','署名','鍵が短く速い','乱数の質に注意（ECDSA）','推奨'],
+['ECDH／X25519','公開鍵（鍵交換）','256bit級','鍵交換','短く速い・前方秘匿性','相手の確認は別に必要','推奨'],
+['Diffie-Hellman','鍵交換','2048bit以上','鍵交換','原理が学びやすい','鍵が長い','可'],
+['SHA-256／SHA-3','ハッシュ','なし','指紋・整合性','衝突しにくい','パスワード保存には単独で使わない','推奨'],
+['SHA-1／MD5','ハッシュ','なし','（使わない）','','衝突が作れる','使用禁止'],
+['HMAC-SHA256','MAC','共通鍵','改ざん検知・認証','単純で安全','鍵の管理が必要','推奨'],
+['PBKDF2','鍵導出','パスワード','パスワードから鍵を作る','標準・どこでも使える','GPUに弱い（回数を多く）','可'],
+['Argon2id','鍵導出','パスワード','パスワード保存','メモリを食わせて総当たりに強い','対応する環境が限られる','推奨'],
+['bcrypt','鍵導出','パスワード','パスワード保存','実績が長い','72バイトまで','可'],
+['TLS 1.3','プロトコル','—','通信の暗号化','ハンドシェイクが短く安全','1.0／1.1 は無効にする','推奨']],prog:null},
+ {id:'ports',name:'ネットワークの主なプロトコルとポート',desc:'暗記したい名前とポート番号。暗号化されているか／代わりに何を使うかも書いてあります。',
+  head:['プロトコル','ポート','層','役割','暗号化','代わりに'],
+  rows:[
+['HTTP','80/TCP','アプリ','Webの通信','なし','HTTPS'],
+['HTTPS','443/TCP','アプリ','Webの通信（TLS）','あり',''],
+['SSH','22/TCP','アプリ','安全な遠隔操作・転送','あり',''],
+['Telnet','23/TCP','アプリ','遠隔操作','なし（丸見え）','SSH'],
+['FTP','21/TCP','アプリ','ファイル転送','なし','SFTP／FTPS'],
+['SFTP','22/TCP','アプリ','SSH上のファイル転送','あり',''],
+['SMTP','25／587/TCP','アプリ','メール送信','587はSTARTTLS',''],
+['IMAP／IMAPS','143／993/TCP','アプリ','メール受信','993はあり',''],
+['DNS','53/UDP・TCP','アプリ','名前からIPを引く','なし','DoT(853)／DoH(443)'],
+['DHCP','67・68/UDP','アプリ','IPアドレスの自動配布','なし',''],
+['NTP','123/UDP','アプリ','時刻合わせ','なし','NTS'],
+['SNMP','161/UDP','アプリ','機器の監視','v3はあり','SNMPv3'],
+['syslog','514/UDP','アプリ','ログの集約','なし','TLSつきsyslog(6514)'],
+['LDAP／LDAPS','389／636/TCP','アプリ','ディレクトリ','636はあり',''],
+['SMB','445/TCP','アプリ','ファイル共有','SMB3はあり','外部に公開しない'],
+['RDP','3389/TCP','アプリ','Windowsの遠隔操作','あり','外部に直接公開しない'],
+['IKE（IPsec）','500・4500/UDP','ネットワーク','VPNの鍵交換','あり',''],
+['WireGuard','51820/UDP','ネットワーク','VPN','あり',''],
+['ICMP','（ポートなし）','ネットワーク','ping・到達確認','なし',''],
+['TCP','（層の名前）','トランスポート','順番・再送のある通信','なし','TLSを重ねる'],
+['UDP','（層の名前）','トランスポート','速さ重視の通信','なし','']],prog:null}];
+function tplMake(id){const T0=TPL.find(x=>x.id===id);if(!T0)return;const d=[T0.head.slice()].concat(T0.rows.map(r=>r.slice()));if(T0.prog!==null)d.push(tplProg(T0.rows,'F'));newTable(T0.name,d)}
+function tplList(q){q=(q||'').trim().toLowerCase();$('tplList').innerHTML=TPL.filter(x=>!q||(x.name+x.desc).toLowerCase().indexOf(q)>=0).map(x=>'<div class="lcard"><b>'+esc(x.name)+'</b><div style="font-size:13px;color:var(--dim);line-height:1.6;margin-bottom:8px">'+esc(x.desc)+'（'+x.rows.length+'行）</div><button class="chip pri" data-tpl="'+x.id+'">＋ この表を追加</button></div>').join('')}
+$('tplB').onclick=()=>{$('tplQ').value='';tplList();$('tpld').showModal()};
+$('tplQ').oninput=()=>tplList($('tplQ').value);
+$('tplX').onclick=()=>$('tpld').close();
+$('tpld').addEventListener('click',e=>{const b=e.target.closest('[data-tpl]');if(!b)return;$('tpld').close();tplMake(b.dataset.tpl)});
+// ===================== 学習の道具：暗記カード・サブネット図解・シーケンス図 =====================
+const LQ=(s,o)=>(o||document).querySelector(s);
+// ---------- シーケンス図のひな形（学習表に追加） ----------
+const SQH=['順','送信側','受信側','メッセージ','説明'];
+TPL.push(
+{id:'seqtcp',name:'図：TCPの接続と切断',desc:'3ウェイハンドシェイクで接続し、4ウェイで切る流れ。表の上で「↔ シーケンス」を押すと図になります。',head:SQH,prog:null,rows:[
+['1','クライアント','サーバ','SYN（seq=x）','「接続したい」と最初の番号を送る'],
+['2','サーバ','クライアント','SYN+ACK（seq=y, ack=x+1）','「いいよ」と、こちらの最初の番号を返す'],
+['3','クライアント','サーバ','ACK（ack=y+1）','ここで接続が成立（3ウェイ完了）'],
+['4','クライアント','サーバ','データ','アプリのデータを送る'],
+['5','サーバ','クライアント','ACK','受け取れたことを知らせる。届かなければ再送される'],
+['6','クライアント','サーバ','FIN','「送るものは終わり」'],
+['7','サーバ','クライアント','ACK','FINを受け取った'],
+['8','サーバ','クライアント','FIN','サーバ側も終わり'],
+['9','クライアント','サーバ','ACK','最後のACK。クライアントはしばらく待ってから閉じる（TIME_WAIT）']]},
+{id:'seqtls',name:'図：TLS 1.3 のハンドシェイク',desc:'HTTPS の最初に行う、鍵を作って相手を確かめる流れ。',head:SQH,prog:null,rows:[
+['1','クライアント','サーバ','ClientHello','対応する暗号スイートと、自分の鍵共有用の値（key_share）を送る'],
+['2','サーバ','クライアント','ServerHello','選んだ暗号スイートと、サーバ側の key_share を返す。ここで共通鍵が作れる'],
+['3','サーバ','クライアント','証明書＋署名＋Finished','ここから先は暗号化。証明書で「本物のサーバ」と示し、秘密鍵で署名する'],
+['4','クライアント','クライアント','証明書を検証','認証局の署名・有効期限・ドメイン名を確認する'],
+['5','クライアント','サーバ','Finished','ここまでのやり取りが改ざんされていないことを確認'],
+['6','クライアント','サーバ','アプリのデータ（暗号化）','HTTPのリクエスト'],
+['7','サーバ','クライアント','アプリのデータ（暗号化）','HTTPのレスポンス']]},
+{id:'seqdhcp',name:'図：DHCP（IPアドレスの自動取得）',desc:'DORA と呼ばれる4手順。',head:SQH,prog:null,rows:[
+['1','クライアント','DHCPサーバ','Discover（ブロードキャスト）','「誰かIPアドレスをください」'],
+['2','DHCPサーバ','クライアント','Offer','「このアドレスを貸せます」と提案'],
+['3','クライアント','DHCPサーバ','Request','「それをください」'],
+['4','DHCPサーバ','クライアント','Ack','貸出が確定。期間（リース）も伝える']]},
+{id:'seqdns',name:'図：DNSの名前解決',desc:'www.example.com のIPアドレスを調べる流れ（再帰問い合わせ）。',head:SQH,prog:null,rows:[
+['1','端末','リゾルバ','www.example.com は？','まず自分のキャッシュに無ければ、DNSリゾルバに聞く'],
+['2','リゾルバ','ルート','www.example.com は？','ルートサーバへ'],
+['3','ルート','リゾルバ','.com の担当はこちら','TLDサーバの場所を教える'],
+['4','リゾルバ','TLD(.com)','www.example.com は？',''],
+['5','TLD(.com)','リゾルバ','example.com の担当はこちら','権威サーバの場所を教える'],
+['6','リゾルバ','権威サーバ','www.example.com は？',''],
+['7','権威サーバ','リゾルバ','IPアドレス 93.184.216.34','答え。TTLの間キャッシュされる'],
+['8','リゾルバ','端末','IPアドレス 93.184.216.34','端末はこのIPへ接続する']]},
+{id:'seqarp',name:'図：ARP（IPからMACアドレスを調べる）',desc:'同じLAN内で、IPアドレスの持ち主のMACアドレスを見つける。',head:SQH,prog:null,rows:[
+['1','端末A','全員（ブロードキャスト）','192.168.1.20 は誰？','LAN全体に聞く'],
+['2','端末B','端末A','それは私。MACは aa:bb:cc:dd:ee:ff','持ち主だけが答える'],
+['3','端末A','端末A','ARPテーブルに保存','次からは聞かずに使う']]},
+{id:'seqdh',name:'図：Diffie-Hellman 鍵交換',desc:'秘密を送らずに、同じ共通鍵を作る。',head:SQH,prog:null,rows:[
+['1','Alice','Bob','公開する値 p, g','誰に見られてもよい'],
+['2','Alice','Alice','秘密の a を決め A = g^a mod p','a は誰にも見せない'],
+['3','Bob','Bob','秘密の b を決め B = g^b mod p','b は誰にも見せない'],
+['4','Alice','Bob','A','途中で盗み見られても a は分からない'],
+['5','Bob','Alice','B',''],
+['6','Alice','Alice','K = B^a mod p','同じ値になる'],
+['7','Bob','Bob','K = A^b mod p','(g^b)^a = (g^a)^b なので同じ鍵になる']]});
+
+// ---------- 暗記カード ----------
+const CDK='tp_cards_v1',CD={mode:'f',qc:0,ac:-1,rev:false,cur:null,flip:false,last:-1,picked:null,opts:[]};
+function cdStore(){try{return JSON.parse(localStorage.getItem(CDK)||'{}')}catch(e){return{}}}
+function cdPut(o){try{localStorage.setItem(CDK,JSON.stringify(o))}catch(e){}}
+const CDSKIP=/^(順|状態|No\.?|#|番号)$/;
+function cdCols(t){const G=fxGrid(t).v,h=t.header;return G[0].map((v,i)=>({i,name:(h&&String(v).trim())||colName(i)+'列'}))}
+function cdAns(t,row,qc,ac){
+  const cols=cdCols(t);
+  if(ac>=0)return String(row[ac]==null?'':row[ac]).trim();
+  return cols.filter(c=>c.i!==qc&&!CDSKIP.test(c.name)&&String(row[c.i]||'').trim()!=='').map(c=>c.name+'：'+String(row[c.i]).trim()).join('\n')}
+function cdCards(t){
+  const G=fxGrid(t).v,off=t.header?1:0,out=[];
+  for(let r=off;r<G.length;r++){const row=G[r];if(String(row[0]||'').trim()===''&&String(row[CD.qc]||'').trim()==='')continue;
+    let q=String(row[CD.qc]==null?'':row[CD.qc]).trim(),a=cdAns(t,row,CD.qc,CD.ac);
+    if(CD.rev&&CD.ac>=0){const x=q;q=a;a=x}
+    if(!q||!a)continue;if(/^進捗$/.test(String(row[CD.qc]).trim()))continue;
+    out.push({q,a,key:t.id+'|'+CD.qc+'|'+CD.ac+'|'+(CD.rev?1:0)+'|'+q.slice(0,60)})}
+  return out}
+function cdPick(cards,st){
+  const W=[8,4,2,1,.25];let tot=0;const ws=cards.map((c,i)=>{const w=i===CD.last&&cards.length>1?0:W[Math.min(4,st[c.key]||0)];tot+=w;return w});
+  let x=Math.random()*tot;for(let i=0;i<cards.length;i++){x-=ws[i];if(x<=0)return i}return cards.length-1}
+function cdRender(){
+  const t=T();if(!t)return;const st=cdStore(),cols=cdCols(t);
+  if(CD.qc>=cols.length)CD.qc=0;if(CD.ac>=cols.length)CD.ac=-1;
+  const cards=cdCards(t),n=cards.length,known=cards.filter(c=>(st[c.key]||0)>=2).length;
+  let h='<div class="ctl"><div><label>問題にする列</label><select id="lcdQ">'+cols.map(c=>'<option value="'+c.i+'"'+(c.i===CD.qc?' selected':'')+'>'+esc(c.name)+'</option>').join('')+'</select></div>'+
+   '<div><label>答えにする列</label><select id="lcdA"><option value="-1"'+(CD.ac<0?' selected':'')+'>（他の列を全部）</option>'+cols.map(c=>'<option value="'+c.i+'"'+(c.i===CD.ac?' selected':'')+'>'+esc(c.name)+'</option>').join('')+'</select></div></div>'+
+   '<div class="chips" style="margin:8px 0"><button class="chip'+(CD.mode==='f'?' on':'')+'" data-lcm="f">カード</button><button class="chip'+(CD.mode==='q'?' on':'')+'" data-lcm="q">4択</button>'+
+   '<button class="chip'+(CD.rev?' on':'')+'" data-lcm="rev"'+(CD.ac<0?' disabled style="opacity:.4"':'')+'>↔ 逆から（答え→問題）</button></div>';
+  h+='<div style="font-size:13px;color:var(--dim);margin-bottom:6px">「'+esc(t.title)+'」 ／ 覚えた '+known+' ／ '+n+' 枚（まだ '+(n-known)+'）</div>';
+  h+='<div style="height:6px;background:var(--p2);border-radius:4px;overflow:hidden;margin-bottom:10px"><div style="height:100%;width:'+(n?Math.round(known/n*100):0)+'%;background:var(--gold)"></div></div>';
+  if(!n){$('lcdBody').innerHTML=h+'<div style="color:var(--dim)">カードにできる行がありません。問題の列と答えの列を変えてみてください。</div>';return}
+  if(!CD.cur||CD.cur.key===undefined||!cards.some(c=>c.key===CD.cur.key)){CD.last=-1;const i=cdPick(cards,st);CD.cur=cards[i];CD.last=i;CD.flip=false;CD.picked=null;CD.opts=[]}
+  const c=CD.cur;
+  h+='<div style="background:var(--p2);border:1px solid var(--bd);border-radius:14px;padding:16px;min-height:90px"><div style="font-size:12px;color:var(--dim)">問題</div><div style="font-size:20px;font-weight:700;margin:4px 0;word-break:break-word;white-space:pre-wrap">'+esc(c.q)+'</div>';
+  let q4=CD.mode==='q';
+  if(q4){
+    if(!CD.opts.length){const pool=[...new Set(cards.map(x=>x.a).filter(a=>a!==c.a))].sort(()=>Math.random()-.5).slice(0,3);CD.opts=pool.concat([c.a]).sort(()=>Math.random()-.5)}
+    if(CD.opts.length<2)q4=false}
+  if(q4){
+    h+='</div><div style="margin-top:10px">'+CD.opts.map((o,i)=>{let cls='chip',sty='display:block;width:100%;text-align:left;margin:6px 0;white-space:pre-wrap';
+      if(CD.picked!==null){if(o===c.a)sty+=';border-color:#3fb950;background:rgba(63,185,80,.18)';else if(i===CD.picked)sty+=';border-color:#f85149;background:rgba(248,81,73,.15)'}
+      return '<button class="'+cls+'" style="'+sty+'" data-lco="'+i+'"'+(CD.picked!==null?' disabled':'')+'>'+esc(o.length>140?o.slice(0,140)+'…':o)+'</button>'}).join('')+'</div>';
+    if(CD.picked!==null)h+='<div style="margin:8px 0;font-size:14px">'+(CD.opts[CD.picked]===c.a?'⭕ 正解':'❌ 正解は↓')+'<div style="white-space:pre-wrap;color:var(--gold);margin-top:4px">'+esc(c.a)+'</div></div><button class="chip pri" data-lcn="1">次へ</button>'}
+  else{
+    if(!CD.flip)h+='</div><div class="chips" style="margin-top:10px"><button class="chip pri" data-lcf="1">答えを見る</button></div>';
+    else h+='<div style="font-size:12px;color:var(--dim);margin-top:10px">答え</div><div style="font-size:16px;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:var(--gold)">'+esc(c.a)+'</div></div><div class="chips" style="margin-top:10px"><button class="chip" data-lcr="0">😵 まだ</button><button class="chip pri" data-lcr="1">⭕ 覚えた</button></div>'}
+  $('lcdBody').innerHTML=h}
+function cdGrade(ok){const st=cdStore(),k=CD.cur.key;st[k]=ok?Math.min(4,Math.max(2,(st[k]||0)+1)):0;cdPut(st);CD.cur=null;cdRender()}
+$('cdB').onclick=()=>{const t=T();if(!t)return;CD.cur=null;CD.picked=null;CD.opts=[];CD.flip=false;cdRender();$('lcd').showModal()};
+$('lcdX').onclick=()=>$('lcd').close();
+$('lcdReset').onclick=()=>{const t=T(),st=cdStore();Object.keys(st).forEach(k=>{if(k.indexOf(t.id+'|')===0)delete st[k]});cdPut(st);CD.cur=null;cdRender();toast('この表の進み具合を戻しました')};
+$('lcd').addEventListener('change',e=>{if(e.target.id==='lcdQ'){CD.qc=+e.target.value;CD.cur=null;cdRender()}if(e.target.id==='lcdA'){CD.ac=+e.target.value;if(CD.ac<0)CD.rev=false;CD.cur=null;cdRender()}});
+$('lcd').addEventListener('click',e=>{let b;
+  if(b=e.target.closest('[data-lcm]')){const m=b.dataset.lcm;if(m==='rev'){if(CD.ac>=0)CD.rev=!CD.rev}else CD.mode=m;CD.cur=null;cdRender();return}
+  if(e.target.closest('[data-lcf]')){CD.flip=true;cdRender();return}
+  if(b=e.target.closest('[data-lcr]')){cdGrade(b.dataset.lcr==='1');return}
+  if(b=e.target.closest('[data-lco]')){const i=+b.dataset.lco;CD.picked=i;const ok=CD.opts[i]===CD.cur.a;const st=cdStore(),k=CD.cur.key;st[k]=ok?Math.min(4,Math.max(2,(st[k]||0)+1)):0;cdPut(st);cdRender();return}
+  if(e.target.closest('[data-lcn]')){CD.cur=null;cdRender()}});
+
+// ---------- サブネット図解 ----------
+const SN={rows:[]};
+function snIp(s){const m=/^\s*(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\s*(?:\/\s*(\d{1,2}))?\s*$/.exec(s);if(!m)return null;const o=[+m[1],+m[2],+m[3],+m[4]];if(o.some(x=>x>255))return null;return{n:((o[0]*16777216)+(o[1]<<16)+(o[2]<<8)+o[3])>>>0,p:m[5]===undefined?null:+m[5]}}
+function snS(n){return[(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255].join('.')}
+function snMask(p){return p===0?0:((0xFFFFFFFF<<(32-p))>>>0)}
+function snRow(name,net,p){const size=Math.pow(2,32-p),bc=(net+size-1)>>>0;
+  return{name,net,p,size,first:p>=31?net:net+1,last:p>=31?bc:bc-1,bc,hosts:p>=31?(p===31?2:1):size-2,mask:snS(snMask(p))}}
+function snCalc(){
+  const base=snIp($('lsnIn').value),msg=$('lsnMsg');
+  if(!base||base.p===null||base.p<8||base.p>30){msg.textContent='「192.168.10.0/24」のように、アドレス/プレフィックス（8〜30）で入れてください。';SN.rows=[];$('lsnBar').innerHTML='';$('lsnTbl').innerHTML='';return}
+  const p=base.p,net=(base.n&snMask(p))>>>0;let note='';
+  if(net!==base.n)note='（入力はネットワークの先頭 '+snS(net)+' に合わせました）';
+  const need=$('lsnNeed').value.trim(),rows=[];
+  if(need){
+    const reqs=need.split(/[,、，\n]+/).map(s=>s.trim()).filter(Boolean).map((s,i)=>{const m=/^(?:(.*?)\s*[:：=]\s*)?(\d+)$/.exec(s);return m?{name:m[1]||('サブネット'+(i+1)),h:+m[2]}:null});
+    if(reqs.some(x=>!x)){msg.textContent='必要なホスト数は「営業:50, 開発:20, 10」のように入れてください。';return}
+    reqs.sort((a,b)=>b.h-a.h);let cur=net;const end=net+Math.pow(2,32-p);let over=false;
+    for(const r of reqs){let k=2;while(Math.pow(2,k)-2<r.h)k++;const pp=32-k,size=Math.pow(2,k);if(pp<p){over=true;break}
+      if(cur+size>end){over=true;break}rows.push(snRow(r.name+'（'+r.h+'台）',cur,pp));cur+=size}
+    const used=cur-net,total=Math.pow(2,32-p);
+    msg.innerHTML=(over?'<b style="color:var(--red)">入りきりません。</b>':'')+'大きい順に割り当てました。使用 '+used+' ／ '+total+' アドレス（余り '+(total-used)+'）'+note;
+    if(!over&&cur<end){const left=end-cur;rows.push(Object.assign(snRow('（空き）',cur,Math.max(p,32-Math.floor(Math.log2(left)))),{free:true,size:left}))}
+  }else{
+    const sp=+$('lsnSplit').value,k=Math.log2(sp),np=p+k;
+    if(np>30){msg.textContent='分けすぎです（/30 より小さくはできません）。';$('lsnBar').innerHTML='';$('lsnTbl').innerHTML='';return}
+    for(let i=0;i<sp;i++)rows.push(snRow('サブネット'+(i+1),net+i*Math.pow(2,32-np),np));
+    msg.textContent='全体 '+snS(net)+'/'+p+'（ホスト '+(Math.pow(2,32-p)-2)+'台・マスク '+snS(snMask(p))+'）を '+sp+' 個に分けました。1個あたり /'+np+'（ホスト '+(Math.pow(2,32-np)-2)+'台）。'+note}
+  SN.rows=rows;const tot=Math.pow(2,32-p),col=['#4c8bf5','#3fb950','#f5c842','#e5734f','#b07cf0','#2fc4c4','#e06c9f','#9aa5b1'];
+  $('lsnBar').innerHTML=rows.map((r,i)=>'<div title="'+esc(r.name)+'" style="flex:'+r.size+' 1 0;min-width:'+(r.size/tot>.03?0:6)+'px;background:'+(r.free?'transparent':col[i%col.length])+';border:1px solid '+(r.free?'var(--bd)':'transparent')+';color:#111;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap">'+(r.size/tot>.08?esc(r.free?'空き':'/'+r.p):'')+'</div>').join('');
+  $('lsnTbl').innerHTML='<div style="overflow-x:auto"><table class="lsnt"><tr><th>名前</th><th>ネットワーク</th><th>使える範囲</th><th>ブロードキャスト</th><th>ホスト数</th><th>マスク</th></tr>'+rows.map(r=>'<tr><td>'+esc(r.name)+'</td><td>'+snS(r.net)+(r.free?' 〜':'/'+r.p)+'</td><td>'+(r.free?'—':snS(r.first)+' 〜 '+snS(r.last))+'</td><td>'+(r.free?'—':snS(r.bc))+'</td><td>'+(r.free?r.size:r.hosts)+'</td><td>'+r.mask+'</td></tr>').join('')+'</table></div>'}
+$('snB').onclick=()=>{if(!$('lsnIn').value)$('lsnIn').value='192.168.10.0/24';snCalc();$('lsn').showModal()};
+$('lsnX').onclick=()=>$('lsn').close();
+['lsnIn','lsnNeed'].forEach(i=>$(i).addEventListener('input',snCalc));
+$('lsnSplit').addEventListener('change',snCalc);
+$('lsnMake').onclick=()=>{const rows=SN.rows.filter(r=>!r.free);if(!rows.length)return;$('lsn').close();
+  newTable('サブネット計画 '+$('lsnIn').value.trim(),[['名前','ネットワーク','最初のホスト','最後のホスト','ブロードキャスト','ホスト数','マスク']].concat(rows.map(r=>[r.name,snS(r.net)+'/'+r.p,snS(r.first),snS(r.last),snS(r.bc),String(r.hosts),r.mask])))};
+
+// ---------- シーケンス図 ----------
+const SQ={f:1,t:2,m:3,n:4,i:0,all:false,max:0};
+function sqGuess(t){const G=fxGrid(t).v[0].map(v=>String(v));const f=(re,d)=>{const i=G.findIndex(x=>re.test(x));return i>=0?i:d};
+  const w=G.length;SQ.f=f(/送信|from|src|送り|発/i,Math.min(1,w-1));SQ.t=f(/受信|to|dst|宛|着/i,Math.min(2,w-1));SQ.m=f(/メッセ|message|msg|内容/i,Math.min(3,w-1));SQ.n=f(/説明|note|補足|意味/i,-1)}
+function sqSteps(t){const G=fxGrid(t).v,off=t.header?1:0,o=[];for(let r=off;r<G.length;r++){const a=String(G[r][SQ.f]||'').trim(),b=String(G[r][SQ.t]||'').trim();if(!a||!b)continue;o.push({a,b,m:String(G[r][SQ.m]||'').trim(),n:SQ.n>=0?String(G[r][SQ.n]||'').trim():''})}return o}
+function sqRender(){
+  const t=T();if(!t)return;const cols=cdCols(t),sel0=(id,v,none)=>'<select id="'+id+'">'+(none?'<option value="-1"'+(v<0?' selected':'')+'>（なし）</option>':'')+cols.map(c=>'<option value="'+c.i+'"'+(c.i===v?' selected':'')+'>'+esc(c.name)+'</option>').join('')+'</select>';
+  const steps=sqSteps(t);
+  let h='<div class="ctl"><div><label>送る側</label>'+sel0('lsqF',SQ.f)+'</div><div><label>受ける側</label>'+sel0('lsqT',SQ.t)+'</div></div><div class="ctl" style="margin-top:6px"><div><label>メッセージ</label>'+sel0('lsqM',SQ.m)+'</div><div><label>説明</label>'+sel0('lsqN',SQ.n,true)+'</div></div>';
+  if(!steps.length){$('lsqBody').innerHTML=h+'<div style="color:var(--dim);margin-top:10px">図にできる行がありません。「送る側」「受ける側」の列を選んでください。ひな形は「📚 学習表」の「図：…」で追加できます。</div>';return}
+  if(SQ.i>=steps.length)SQ.i=steps.length-1;
+  const P=[];steps.forEach(s=>{[s.a,s.b].forEach(x=>{if(P.indexOf(x)<0)P.push(x)})});const n=P.length,colW=Math.max(104,Math.min(150,Math.floor(360/Math.max(1,n-1))+40)),W=Math.max(320,n*colW),RH=58,top=44,H=top+steps.length*RH+16;
+  const X=p=>colW/2+P.indexOf(p)*colW,vis=SQ.all?steps.length-1:SQ.i;
+  let s='<svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" style="display:block;font:12px system-ui,sans-serif"><defs><marker id="lsqAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8b93a1"/></marker><marker id="lsqAg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f5c842"/></marker></defs>';
+  P.forEach(p=>{const x=X(p);s+='<line x1="'+x+'" y1="'+(top-8)+'" x2="'+x+'" y2="'+(H-6)+'" stroke="var(--bd)" stroke-dasharray="4 4"/><rect x="'+(x-colW/2+6)+'" y="4" width="'+(colW-12)+'" height="28" rx="8" fill="var(--p2)" stroke="var(--bd)"/><text x="'+x+'" y="23" text-anchor="middle" fill="var(--tx)" font-weight="700">'+esc(p.length>9?p.slice(0,9)+'…':p)+'</text>'});
+  steps.forEach((st,i)=>{if(i>vis)return;const y=top+i*RH+30,x1=X(st.a),x2=X(st.b),cur=i===SQ.i&&!SQ.all,col=cur?'#f5c842':'#8b93a1';
+    s+='<g data-lsi="'+i+'" style="cursor:pointer">';
+    if(x1===x2){s+='<path d="M'+x1+' '+(y-14)+'h34v26h-34" fill="none" stroke="'+col+'" stroke-width="'+(cur?2.5:1.5)+'" marker-end="url(#'+(cur?'lsqAg':'lsqAr')+')"/><text x="'+(x1+40)+'" y="'+(y+3)+'" fill="'+(cur?'#f5c842':'var(--tx)')+'" font-weight="'+(cur?700:400)+'">'+esc(st.m.length>22?st.m.slice(0,22)+'…':st.m)+'</text>'}
+    else{const mx=(x1+x2)/2,lab=st.m.length>Math.floor(Math.abs(x2-x1)/7)?st.m.slice(0,Math.max(4,Math.floor(Math.abs(x2-x1)/7)))+'…':st.m;
+      s+='<line x1="'+x1+'" y1="'+y+'" x2="'+(x2>x1?x2-2:x2+2)+'" y2="'+y+'" stroke="'+col+'" stroke-width="'+(cur?2.5:1.5)+'" marker-end="url(#'+(cur?'lsqAg':'lsqAr')+')"/><text x="'+mx+'" y="'+(y-7)+'" text-anchor="middle" fill="'+(cur?'#f5c842':'var(--tx)')+'" font-weight="'+(cur?700:400)+'">'+esc(lab)+'</text>'}
+    s+='<rect x="0" y="'+(y-26)+'" width="'+W+'" height="'+RH+'" fill="transparent"/></g>'});
+  s+='</svg>';
+  const cu=steps[SQ.i];
+  h+='<div style="overflow-x:auto;margin:10px 0;border:1px solid var(--bd);border-radius:12px;background:var(--bg)">'+s+'</div>'+
+    '<div style="min-height:64px;background:var(--p2);border:1px solid var(--bd);border-radius:12px;padding:10px;font-size:14px;line-height:1.7"><b>'+(SQ.i+1)+' / '+steps.length+'</b>　'+esc(cu.a)+' → '+esc(cu.b)+'<br><span style="color:var(--gold)">'+esc(cu.m)+'</span>'+(cu.n?'<br><span style="color:var(--dim)">'+esc(cu.n)+'</span>':'')+'</div>'+
+    '<div class="chips" style="margin-top:8px"><button class="chip" data-lsn="prev">◀ 戻る</button><button class="chip pri" data-lsn="next">次へ ▶</button><button class="chip'+(SQ.all?' on':'')+'" data-lsn="all">全部見る</button><button class="chip" data-lsn="auto">▶ 自動再生</button></div>';
+  $('lsqBody').innerHTML=h}
+let sqTimer=0;
+function sqStop(){clearInterval(sqTimer);sqTimer=0}
+$('sqB').onclick=()=>{const t=T();if(!t)return;sqGuess(t);SQ.i=0;SQ.all=false;sqRender();$('lsq').showModal()};
+$('lsqX').onclick=()=>{sqStop();$('lsq').close()};
+$('lsq').addEventListener('close',sqStop);
+$('lsq').addEventListener('change',e=>{const m={lsqF:'f',lsqT:'t',lsqM:'m',lsqN:'n'}[e.target.id];if(m){SQ[m]=+e.target.value;SQ.i=0;sqRender()}});
+$('lsq').addEventListener('click',e=>{const t=T();if(!t)return;const n=sqSteps(t).length;let b;
+  if(b=e.target.closest('[data-lsn]')){const k=b.dataset.lsn;sqStop();
+    if(k==='prev'){SQ.all=false;SQ.i=Math.max(0,SQ.i-1)}
+    else if(k==='next'){SQ.all=false;SQ.i=Math.min(n-1,SQ.i+1)}
+    else if(k==='all')SQ.all=!SQ.all;
+    else if(k==='auto'){SQ.all=false;SQ.i=0;sqRender();sqTimer=setInterval(()=>{if(SQ.i>=n-1){sqStop();return}SQ.i++;sqRender()},1400);return}
+    sqRender();return}
+  if(b=e.target.closest('[data-lsi]')){SQ.all=false;SQ.i=+b.dataset.lsi;sqStop();sqRender()}});
+// ===================== ヘルプデスク学習表 =====================
+TPL.push(
+{id:'hdflow',name:'ヘルプデスク：対応の流れ',desc:'受付からクローズまでの基本手順。やった所は「済」に。',head:['順','段階','やること','ポイント','記録するもの','状態'],prog:5,rows:[
+['1','受付','名前・連絡先・部署・端末（資産番号）を確認する','まず落ち着いた声で名乗り、相手の困りごとを最後まで聞く','受付日時・依頼者・連絡先','未'],
+['2','聞き取り','いつから／何をしたら／エラーの文言／範囲（自分だけか全員か）／最近の変更を聞く','「聞き取りの質問表」を使う。決めつけない','症状・エラー文言・発生時刻','未'],
+['3','優先度','影響の大きさ×急ぎ度で優先度を決める','全社に影響・業務停止はすぐ上へ','優先度（P1〜P4）','未'],
+['4','再現確認','同じ操作で起きるか確認。画面を見せてもらう／スクリーンショットをもらう','再現しないときは条件（時間帯・場所・端末）を聞く','再現の有無・条件','未'],
+['5','切り分け','範囲（1人／部署／全体）→ 層（物理→IP→名前解決→アプリ）の順に絞る','一度に1つだけ変えて確認する','試したことと結果','未'],
+['6','一時対応','業務を止めない代替を案内（別端末・テザリング・別の経路）','恒久対応と分けて記録する','一時対応の内容','未'],
+['7','恒久対応','原因を直す（設定変更・交換・更新・再設定）','変更前に必ず元の設定を控える','変更内容・変更前の値','未'],
+['8','エスカレーション','自分の権限や知識で解決できない／期限が近いときは次の担当へ','これまでの調査を全部書いて渡す（聞き直させない）','引き継ぎメモ','未'],
+['9','確認とクローズ','依頼者に直ったか確認してもらい、了承を得て閉じる','直ったと思い込まず、本人の確認を取る','解決日時・原因・対応','未'],
+['10','再発防止','同じ件が複数あれば、手順書・FAQ・監視に反映する','件数と原因の傾向を月次で見る','ナレッジ記事','未']]},
+{id:'hdask',name:'ヘルプデスク：聞き取りの質問表',desc:'電話・チャットでそのまま使える質問と、聞く理由。',head:['観点','聞くこと','なぜ聞くか','答えの例'],prog:null,rows:[
+['いつから','いつからですか？その前は問題なく使えていましたか？','変更や障害の時刻と結びつける','今朝から／昨日の更新のあと'],
+['何をしたら','何の操作をしたときに起きますか？毎回ですか？','再現手順と頻度を知る','メールを開くと毎回'],
+['エラー','画面に何と出ていますか？そのまま読んでください（写真でも可）','エラー文言は原因の最大の手がかり','0x80070035／DNS_PROBE_FINISHED'],
+['範囲','ご自身だけですか？隣の人は同じですか？他のサイトやアプリは？','個人／部署／全体の切り分け','自分だけ／全員'],
+['場所','どこで使っていますか？有線ですか無線ですか？社内ですか自宅ですか？','経路（Wi-Fi・VPN・有線）を絞る','自宅からVPN'],
+['端末','端末の種類と、資産番号は？OSは？','端末の個別問題か確認','Windows 11／資産番号 A-123'],
+['変更','最近、更新・インストール・パスワード変更・席の移動などありましたか？','直前の変更が原因のことが多い','先週Windows更新'],
+['試したこと','もう試したことはありますか？（再起動など）','同じことを繰り返さない','再起動した'],
+['影響','業務はどのくらい止まっていますか？いつまでに必要ですか？','優先度と一時対応の判断','10時の会議に使いたい'],
+['連絡先','つながらなくなったときの連絡先は？繰り返し電話してよい時間は？','切れても折り返せるように','内線123／携帯']]},
+{id:'hdtrbl',name:'ヘルプデスク：つながらないときの切り分け',desc:'下の層から順に確認すると、原因の場所が絞れます。コマンド例は Windows。',head:['手順','確認すること','コマンド・操作','正常なら','異常なら（原因の候補）'],prog:null,rows:[
+['0','範囲：自分だけか、他の人もか','隣の席・同じ部署の人に聞く','自分だけ→端末側を疑う','全員→回線・ルータ・DNS・サービス側を疑う'],
+['1','物理：ケーブル・Wi-Fi・電源','LANケーブルの抜け、Wi-Fiの接続先、機内モード、機器のLED','リンクランプが点灯','ケーブル・スイッチ・APの電源／故障／機内モード'],
+['2','自分のIP：アドレスは取れているか','ipconfig /all','192.168.x.x など。ゲートウェイとDNSも表示','169.254.x.x→DHCPから取れていない／IP重複／DHCP枯渇'],
+['3','自分自身：ネットワーク機能は動くか','ping 127.0.0.1','応答あり','応答なし→ネットワークドライバ・プロトコルの不具合'],
+['4','同じLAN：ゲートウェイまで届くか','ping ゲートウェイのIP','応答あり','応答なし→LAN内の問題（VLAN違い・スイッチ・AP・ケーブル）'],
+['5','外：インターネットのIPまで届くか','ping 8.8.8.8','応答あり','応答なし→ルータ・回線・プロバイダ・FWの問題'],
+['6','名前解決：名前からIPが引けるか','nslookup www.example.com','IPアドレスが返る','引けない→DNS設定・DNSサーバ障害（ここまでIPで届くなら名前だけが問題）'],
+['7','経路：どこまで届くか','tracert www.example.com','最後まで届く','途中で止まる→そのあたりの機器・回線。*が続くのはICMP拒否のこともある'],
+['8','ポート：目的のサービスに届くか','Test-NetConnection ホスト名 -Port 443','TcpTestSucceeded : True','False→FW・サービス停止・ポート違い'],
+['9','アプリ：ブラウザやソフトの問題か','別ブラウザ／シークレットウィンドウ／別アプリで試す','別の方法で見える','特定のアプリだけ→キャッシュ・拡張機能・プロキシ設定・証明書'],
+['10','証明書・時刻','PCの時刻と日付、ブラウザの証明書エラー','時刻が正しく、警告なし','時刻ずれ・期限切れ・社内プロキシの証明書→証明書エラーになる'],
+['11','認証：サインインできるか','別端末・別の場所で同じアカウントを試す','サインインできる','ロック・パスワード期限・MFAの不具合・権限不足'],
+['12','最近の変更','更新・設定変更・移設・契約変更','変更なし','変更を戻して様子を見る（元の設定を控えてから）']]},
+{id:'hdcase',name:'ヘルプデスク：事例集と対応',desc:'よくある問い合わせ20件。聞くこと・切り分け・対応・エスカレーションの目安。',head:['事象','最初に聞くこと','切り分け','原因の例','対応','エスカレーション目安'],prog:null,rows:[
+['1人だけネットにつながらない','Wi-Fi／有線？ほかの人は？エラーは？','範囲→ipconfig→ゲートウェイ→DNS','Wi-Fiの接続先違い、IP取得失敗（169.254）、機内モード','Wi-Fiの再接続、ipconfig /renew、ドライバ更新、別のポートへ','ほかの人も同じなら、ネットワーク担当へ'],
+['全員がつながらない','いつから？どの階・部署？','範囲→ルータ・コアスイッチ・回線のランプ→プロバイダ障害情報','回線障害、ルータ再起動待ち、DHCP枯渇、スイッチ故障','障害として全体告知、回線事業者へ連絡、予備回線に切替','P1：ただちに上長・ネットワーク担当へ'],
+['Wi-Fiが遅い・切れる','どの場所？何台くらい？時間帯は？','有線は速いか→APの混雑・電波強度・チャンネル','電波干渉、AP台数不足、遠すぎる、端末の省電力設定','APに近づく、5GHz帯へ、AP増設・チャンネル見直し','同じ場所で複数人が再現するなら、ネットワーク担当へ'],
+['特定のサイトだけ見られない','どのサイト？エラー文言は？','別ブラウザ・別端末・スマホ回線で見えるか→nslookup','DNSキャッシュ、ブロック（FW／フィルタ）、サイト側の障害、証明書','キャッシュ削除、ipconfig /flushdns、フィルタ設定の確認','サイト側障害ならユーザーへ状況を伝えて待ってもらう'],
+['メールが送れない','エラーメッセージは？受信はできる？','送信だけか→宛先は？添付が大きい？→サーバ設定','添付の容量超過、認証設定、送信サーバ障害、宛先のアドレス違い','容量を減らす、設定を直す、再送','メールサーバ障害ならシステム担当へ'],
+['メールが届かない','送信者に確認：いつ・どのアドレスから？','迷惑メールフォルダ→メッセージトレース→受信拒否設定','迷惑メール判定、容量満杯、宛先のアドレス違い','迷惑メールから戻す、許可リスト登録、容量の整理','トレースで途中で止まっていたら、メール管理者へ'],
+['パスワードを忘れた','本人確認：社員番号・部署・登録情報','本人か確認してから再設定','期限切れ、変更後の旧パスワード、MFAの引き継ぎ漏れ','本人確認のうえで再発行（初期パスワードは一度で変更）','本人確認ができない・多数回の試行は、セキュリティ担当へ'],
+['アカウントがロックされた','何回失敗？どの端末で？','ロック理由（失敗回数／不審なサインイン）を確認','スマホなどに古いパスワードが残っている','ロック解除、古い設定を直してもらう','不審なサインインがあれば、セキュリティ担当へ'],
+['VPNにつながらない','エラーは？Wi-Fiは？自宅のネット自体は？','VPNなしでネットは→認証→VPNクライアントの版','パスワード期限、MFA、クライアント古い、ポートがブロックされる','再起動、クライアント更新、別回線で試す','複数人が同じならVPN装置を疑い、ネットワーク担当へ'],
+['プリンターで印刷できない','どのプリンター？ほかの人は？紙やエラー表示は？','プリンター本体の表示→ネットワーク→ドライバ→キュー','用紙・トナー、ネット切断、キューの詰まり、ドライバ','キューを消す、プリンター再起動、ドライバ再インストール','本体故障は保守業者へ'],
+['PCが遅い','いつから？どの操作で？再起動は最近した？','タスクマネージャーでCPU・メモリ・ディスク→起動項目','メモリ不足、常駐ソフト、ディスク空き不足、更新中、ウイルス','不要ソフト停止、再起動、空き容量確保、スキャン','ハード劣化なら交換手配'],
+['PCが起動しない','電源ランプは？画面に何か出る？','電源→ACアダプタ→画面→BIOS/回復画面','バッテリー切れ、ディスク障害、更新の失敗','電源を抜いて放電、回復環境から修復、代替機を貸し出す','ディスク故障ならデータ救出の手配'],
+['共有フォルダに入れない','エラーは？以前は入れた？','ネットワークに出られるか→権限→資格情報','権限不足、パスワード変更後の資格情報、サーバ停止','資格情報の再入力、権限申請の確認','権限追加は所有者の承認が必要'],
+['Web会議で声が出ない・聞こえない','どのアプリ？ヘッドセットは？','アプリ内のマイク・スピーカー選択→OS設定→物理','入力デバイスの選択違い、ミュート、アクセス許可','デバイスを選び直す、権限を許可、再接続','ハード故障なら交換'],
+['証明書エラーが出る','画面の文言は？どのサイト？','時刻ずれ→別端末→証明書の詳細','PCの時刻ずれ、期限切れ、社内プロキシの証明書、中間者の疑い','時刻を直す。社内サイトなら証明書を配布。不明なら入力させない','不審な場合はセキュリティ担当へ'],
+['不審なメールを受け取った／開いてしまった','開いた？リンクや添付を押した？入力した？','差出人・リンク先・添付の拡張子→被害の有無','フィッシング、なりすまし','押していない→削除・報告。押した／入力した→すぐにパスワード変更とネットから切り離す','P1：押した／入力した場合はすぐセキュリティ担当へ'],
+['ウイルス感染かもしれない','何が起きた？警告は？','警告画面の写真→最近の操作→スキャン','偽警告、マルウェア、不正な拡張機能','ネットから切り離し、スキャン、必要なら端末交換','感染が確かなら、ただちにセキュリティ担当へ'],
+['スマホを変えてMFAが使えない','新旧の端末はある？','本人確認→MFAの再登録手順','旧端末の認証アプリを移していない','本人確認のうえ、MFAをリセットして再登録','本人確認できなければ依頼しない'],
+['ソフトを入れたい','何のため？上長の承認は？','ライセンスと許可リストを確認','承認なし、ライセンス未購入','承認とライセンスを確認して配布。なければ代替を案内','セキュリティ審査が必要なものは担当へ'],
+['ディスクの空きがない','何が容量を使っている？','ディスクの使用量を見る→一時ファイル→ダウンロード','動画・キャッシュ・一時ファイル','ディスククリーンアップ、データ移動、容量増設','容量増設は購買手続き']]},
+{id:'hdsla',name:'ヘルプデスク：優先度の決め方',desc:'影響の大きさ×急ぎ度で優先度を決める。目標時間は目安なので、自社の決まりに合わせて書き換えてください。',head:['優先度','目安となる状況','影響','初回対応の目標','解決の目標','連絡'],prog:null,rows:[
+['P1 緊急','全社・全拠点が止まる、情報漏えいの恐れ','全社','15分以内','4時間以内','上長・関係部署へすぐ連絡。経過を30分ごとに報告'],
+['P2 高','部署や重要な人が業務できない、代替がない','部署','30分以内','8時間以内','依頼者へ状況を随時連絡'],
+['P3 中','個人が使えない、代替手段がある','個人','2時間以内','2営業日以内','進捗は区切りごとに連絡'],
+['P4 低','要望・軽い不便・手続き','個人','翌営業日','5営業日以内','完了時に連絡']]}
+);
+// ===================== 🎧 受電メモ・進捗管理・切り分けガイド =====================
+const HDT='進捗管理表',HDH=['No','受付日','受付時刻','依頼者','部署','連絡先','分野','事象','範囲','優先度','状態','担当','次の対応','期限','切り分けメモ','原因','対応内容','完了日','経過日','期限超過'];
+const HDST=['未着手','調査中','対応中','エスカレ中','保留','完了'];
+const HDCAT=[['ネットワーク（つながらない）','つながらない'],['ネットワーク（遅い・不安定）','遅い'],['端末（PC）','PCの不調'],['アカウント・認証','アカウント'],['メール','：メール'],['セキュリティ','：セキュリティ'],['プリンタ・周辺機器','プリンタ'],['業務アプリ・SaaS','業務アプリ'],['その他','']];
+const GH=['手順','確認すること','コマンド・操作','正常なら','異常なら（原因の候補）'];
+const hdSumRows=(()=>{const r=[];let n=2;HDST.forEach(s=>{r.push(['状態',s,'=COUNTIF('+HDT+'[状態],B'+n+')']);n++});
+  ['P1','P2','P3','P4'].forEach(p=>{r.push(['優先度（未完了）',p,'=COUNTIFS('+HDT+'[優先度],B'+n+','+HDT+'[状態],"<>完了")']);n++});
+  r.push(['期限超過','超過','=COUNTIF('+HDT+'[期限超過],B'+n+')']);n++;
+  HDCAT.forEach(c=>{r.push(['分野別（全件）',c[0],'=COUNTIF('+HDT+'[分野],B'+n+')']);n++});return r})();
+TPL.push(
+{id:'hdtrack',name:HDT,desc:'受電した案件の管理表（番号・状態・期限・経過日）。「🎧 受電」から記録すると1行ずつ増えます。状態の絞り込みは表の画面のスライサーで。',head:HDH,prog:null,rows:[HDH.map(()=>'')]},
+{id:'hdsum',name:'進捗の集計',desc:'進捗管理表の件数を自動で数える表（状態別・優先度別・期限超過・分野別）。進捗管理表を先に作ってください。',head:['項目','区分','件数'],prog:null,rows:hdSumRows},
+{id:'hdg_slow',name:'切り分け：ネットワークが遅い・不安定',desc:'「遅い」「切れる」ときの切り分け。受電メモの切り分けガイドとして使えます。',head:GH,prog:null,rows:[
+['0','範囲：自分だけか、場所・時間帯が決まっているか','同じ場所の人・別の場所・時間帯を聞く','自分だけ／特定の時間→端末や混雑','全員・常に→回線や機器側'],
+['1','有線とWi-Fiで差があるか','LANケーブルで試す（または別の接続）','有線は速い→Wi-Fi側（電波・混雑）','有線も遅い→回線・機器・端末'],
+['2','電波の強さと距離','APに近づく・電波表示を見る','強い→混雑や干渉','弱い→AP増設・置き場所・障害物'],
+['3','遅延と損失を測る','ping -n 20 ゲートウェイ／ping -n 20 8.8.8.8','数ms・損失0%','ゲートウェイで遅い→LAN内。外でだけ遅い→回線・プロバイダ'],
+['4','速度を測る','速度測定サイト／iperf3','契約帯域に近い','大きく低い→混雑・回線・設定（半二重・低速リンク）'],
+['5','帯域を使っている物がないか','タスクマネージャーのネットワーク、大容量の更新・クラウド同期','特になし','更新・バックアップ・動画で占有→時間をずらす・制限'],
+['6','名前解決が遅くないか','nslookup の応答時間／別のDNS（8.8.8.8）で比べる','すぐ返る','遅い→DNSサーバの不調。DNS設定の見直し'],
+['7','経路のどこで遅くなるか','tracert／pathping','段階的に増える','特定の機器から急に増える→その機器・回線'],
+['8','VPN・プロキシ経由か','VPNを切って比べる','差がない','VPN経由だけ遅い→VPN装置・暗号処理・回線の帯域'],
+['9','最近の変更','機器・設定・契約・席の移動','なし','変更を戻して比較（元の設定を控えてから）']]},
+{id:'hdg_pc',name:'切り分け：PCの不調',desc:'遅い・固まる・起動しない、のときの切り分け。',head:GH,prog:null,rows:[
+['0','範囲：その端末だけか、同じ機種・同じ更新の端末もか','同じ機種の人に聞く','その端末だけ→個別の問題','複数台→更新・配布ソフト・ネットワーク'],
+['1','電源と表示','電源ランプ・ACアダプタ・バッテリー・画面の明るさ・外部モニタ','点灯','点かない→電源・アダプタ・バッテリー。映らない→画面・ケーブル'],
+['2','再起動で直るか','完全にシャットダウンして起動（高速スタートアップを切る）','直る→一時的な不具合','直らない→次へ'],
+['3','負荷の高い物がないか','タスクマネージャーでCPU・メモリ・ディスク','低い','高い→常駐ソフト・更新中・メモリ不足'],
+['4','ディスクの空き','エクスプローラーの容量表示','空きに余裕','空きなし→一時ファイル・大きなファイルを整理'],
+['5','最近の更新・インストール','設定→更新履歴／インストールしたソフト','なし','直前の更新・ソフトが原因の疑い→アンインストール・復元'],
+['6','ドライバ・デバイス','デバイスマネージャーの警告マーク','警告なし','警告→ドライバ更新・再インストール'],
+['7','ユーザー固有か','別のユーザーでサインインして再現するか','別ユーザーでは正常→プロファイルの問題','別ユーザーでも→OSやハード'],
+['8','ログ','イベントビューアーの重大・エラー（発生時刻）','特になし','エラーの文言を調べる・ディスク／ドライバの手がかり'],
+['9','ウイルス・不正','セキュリティソフトのスキャン','検出なし','検出→ネットから切り離し・セキュリティ担当へ'],
+['10','ハード診断','メーカー診断・ディスクの健康状態','異常なし','異常→交換・データ救出。代替機を貸し出す']]},
+{id:'hdg_acct',name:'切り分け：アカウント・サインイン',desc:'入れない・ロック・MFA のときの切り分け。本人確認が先。',head:GH,prog:null,rows:[
+['0','本人確認','社員番号・部署・登録情報など決めた方法で確認','本人と確認できた','確認できない→再設定せず、セキュリティ担当へ'],
+['1','入力の誤り','ID・大文字小文字・CapsLock・IME（全角）・コピペの空白','入力し直して入れる','直らない→次へ'],
+['2','パスワードの期限・変更','期限切れ・最近の変更・古いパスワードが残る端末','期限内','期限切れ→再設定。他の端末の保存済み古いパスワードがロックの原因になる'],
+['3','ロックの状態','管理画面でロック・失敗回数を確認','ロックなし','ロック→理由（失敗回数／不審）を見てから解除'],
+['4','多要素認証（MFA）','通知が来るか・端末の時刻・機種変更','通知が届き通る','届かない→時刻ずれ・アプリ未移行・通知設定。本人確認のうえで再登録'],
+['5','別の端末・ブラウザで試す','別端末・シークレットウィンドウ','別では入れる→端末・キャッシュの問題','別でも入れない→アカウント側の問題'],
+['6','サービス側の障害','サービスのステータスページ','正常','障害→ベンダーの復旧待ち。利用者へ状況を連絡'],
+['7','権限・グループ','必要なグループ・ライセンスの割当','割当あり','なし→所有者の承認のうえで追加'],
+['8','不審なサインイン','サインインログの場所・時間・端末','心当たりあり','心当たりなし→パスワード変更・セッション切断・セキュリティ担当へ']]},
+{id:'hdg_mail',name:'切り分け：メール',desc:'送れない・届かない・遅れる、のときの切り分け。',head:GH,prog:null,rows:[
+['0','範囲：自分だけか、全員か。送信か受信か','隣の人・Webメールで試す','自分だけ→設定・端末・メールボックス','全員→メールサーバ・回線'],
+['1','エラーメッセージ（バウンス）','戻ってきたメールの文面・エラーコード（5xx 恒久／4xx 一時）','文面を確認','5xxは宛先・拒否・容量。4xxは一時的で再送される'],
+['2','Webメールで同じことができるか','ブラウザでメールにサインイン','Webでは送受信できる→メールソフト側の設定','Webでもだめ→アカウント・サーバ'],
+['3','メールボックスの容量','容量の使用率','余裕あり','満杯→整理・容量の追加'],
+['4','迷惑メール・ルール','迷惑メールフォルダ、仕分けルール、転送設定','なし','迷惑判定・ルールで別の場所へ→戻す・許可リスト'],
+['5','宛先・添付','アドレスの綴り・添付の合計サイズ','正しい','綴り違い・添付が大きい→直す・共有リンクにする'],
+['6','サービスの障害','ステータスページ','正常','障害→復旧待ち・利用者へ連絡'],
+['7','追跡','メッセージトレース（送信日時・宛先で検索）','配信済み','途中で止まる→止まった箇所（相手側・FW・スパム判定）'],
+['8','相手側の問題','相手のメール管理者に拒否・隔離を確認依頼','問題なし','相手側が拒否→送信元ドメインの認証設定（SPF・DKIM・DMARC）を確認']]},
+{id:'hdg_sec',name:'切り分け：セキュリティ（不審メール・感染）',desc:'不審メール・感染の疑いの初動。判断に迷ったらすぐセキュリティ担当へ。',head:GH,prog:null,rows:[
+['0','何をしたか（最重要）','開いた？リンクを押した？添付を開いた？ID・パスワードを入力した？','何もしていない→削除と報告','押した・入力した→P1。すぐに次の手順へ'],
+['1','ネットワークから切り離す','LANケーブルを抜く／Wi-Fiを切る（電源は切らない）','切り離した','切り離せない→電話で指示し、端末を預かる'],
+['2','入力したアカウントの保護','パスワード変更・サインアウト・MFAの再確認','変更済み','不正利用の兆候→全セッション切断・セキュリティ担当へ'],
+['3','同じメールが他にも届いていないか','メールの検索（件名・送信者）','1通だけ','複数人→一括隔離・全体へ注意喚起'],
+['4','メールの隔離・削除','管理画面で該当メールを隔離','完了','残っている→全員の受信箱から削除'],
+['5','端末の検査','セキュリティソフトのフルスキャン','検出なし','検出→端末の交換・初期化・データの確認'],
+['6','証拠の保全','メール本文・ヘッダ・画面の写真・時刻を記録（消さない）','保存した','なし→今すぐ記録'],
+['7','報告','セキュリティ担当・上長へ（事実のみ：いつ・何を・どこまで）','報告済み','遅れる→重大度を上げて報告'],
+['8','再発防止','全体へ注意喚起・手順書の更新','実施','なし→件数と手口を月次で確認']]},
+{id:'hdg_print',name:'切り分け：プリンタ・周辺機器',desc:'印刷できない・スキャンできない、のときの切り分け。',head:GH,prog:null,rows:[
+['0','範囲：自分だけか、みんなか。どのプリンターか','隣の人に印刷してもらう','自分だけ→PC側の設定','みんな→プリンター本体・ネットワーク'],
+['1','本体の表示','パネルのエラー・紙詰まり・トナー・用紙','正常','表示に従って対処（紙詰まり・補給）'],
+['2','電源とつながり','電源・ケーブル・プリンターのIP（本体パネル）','点灯・IPあり','点かない→電源。IPなし→ネットワーク'],
+['3','ネットワークで届くか','ping プリンターのIP','応答あり','応答なし→LAN・VLAN・スイッチ・IPの重複'],
+['4','印刷キュー','印刷待ちのジョブを削除','空','詰まったジョブ→削除して再試行'],
+['5','ドライバとポート','正しいドライバ・ポート（IPが変わっていないか）','合っている','IP変更・ドライバ違い→再インストール'],
+['6','別のPCから','別のPCで同じプリンターへ','別PCでは印刷できる→元のPC側','別PCでも不可→本体・ネットワーク'],
+['7','再起動','プリンターを電源を切って入れ直す','直る','直らない→保守業者へ']]},
+{id:'hdg_saas',name:'切り分け：業務アプリ・SaaS',desc:'特定のアプリ・Webサービスだけおかしいときの切り分け。',head:GH,prog:null,rows:[
+['0','範囲：自分だけか、他の人もか','同じ部署の人に確認','自分だけ→端末・アカウント','複数人→サービス・社内ネットワーク'],
+['1','サービスの障害情報','提供元のステータスページ','正常','障害→復旧を待ち、利用者へ状況を伝える'],
+['2','ブラウザを変える','別ブラウザ・シークレットウィンドウ','別では動く→キャッシュ・拡張機能','別でも→次へ'],
+['3','キャッシュ・Cookie','キャッシュを消して再読み込み','直る','直らない→次へ'],
+['4','拡張機能・セキュリティソフト','拡張機能を無効にして確認','変わらない','直る→その拡張機能が原因'],
+['5','ネットワークで届くか','nslookup サービスのドメイン／Test-NetConnection ホスト -Port 443','届く','届かない→DNS・FW・プロキシ'],
+['6','認証・権限','別のアカウント・権限の割当','入れる','権限なし→所有者の承認で追加'],
+['7','最近の更新','アプリ・ブラウザ・OSの更新','なし','更新後に発生→戻す・ベンダーへ確認'],
+['8','提供元へ連絡','時刻・エラーID・再現手順・画面の写真を添えて','','提供元の調査結果を依頼者へ伝える']]}
+);
+
+// ---------- 状態 ----------
+const HD={tab:'in',f:{},guide:'',res:{},cat:HDCAT[0][0],open:null};
+function hdToday(){const d=new Date();return d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()}
+function hdAdd(n){const d=new Date();d.setDate(d.getDate()+n);return d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()}
+function hdTime(){const d=new Date();return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')}
+function hdGuides(){return tables.filter(t=>t.header&&t.d[0]&&String(fxTxt(t.d[0][1])||'').trim()==='確認すること')}
+function hdGuideFor(cat){const kw=(HDCAT.find(c=>c[0]===cat)||['',''])[1];if(!kw)return'';const g=hdGuides().find(t=>String(t.title).indexOf(kw)>=0);return g?g.id:''}
+function hdPri(f){const i=+f.imp||1,u=+f.urg||0,s=i+u;return(i===3||s>=4)?'P1':s===3?'P2':s===2?'P3':'P4'}
+function hdDue(p){return p==='P1'||p==='P2'?hdToday():p==='P3'?hdAdd(2):hdAdd(5)}
+function hdSteps(){const g=tables.find(t=>t.id===HD.guide);if(!g)return[];const G=fxGrid(g).v;return G.slice(g.header?1:0).filter(r=>String(r[1]||'').trim()).map(r=>({n:String(r[0]||''),q:String(r[1]||''),how:String(r[2]||''),ok:String(r[3]||''),ng:String(r[4]||'')}))}
+function hdFirstNg(st){for(let i=0;i<st.length;i++)if(HD.res[i]==='ng')return i;return-1}
+function hdMemo(st){const mk=st.map((s,i)=>HD.res[i]?s.n+(HD.res[i]==='ok'?'✔':'✖'):'').filter(Boolean).join(' ');const k=hdFirstNg(st);
+  return mk?('手順 '+mk+(k>=0?' → 最初の異常は手順'+st[k].n+'「'+st[k].q+'」':'')):''}
+function hdCause(st){const k=hdFirstNg(st);return k>=0?st[k].ng:''}
+const hdF=(k)=>String(HD.f[k]==null?'':HD.f[k]).trim();
+function hdText(){const st=hdSteps(),p=hdPri(HD.f);
+  return['【受電メモ】'+hdToday()+' '+hdTime()+'　担当：'+hdF('me'),
+   '依頼者：'+hdF('who')+(hdF('dept')?'（'+hdF('dept')+'）':'')+'　連絡先：'+hdF('tel'),
+   '分野：'+HD.cat+'　優先度：'+p+'　期限：'+(hdF('due')||hdDue(p)),
+   '事象：'+hdF('sym'),hdF('err')?'エラー：'+hdF('err'):'',
+   'いつから：'+hdF('since')+'　範囲：'+hdF('scope')+'　場所・経路：'+hdF('where'),
+   '端末：'+hdF('dev')+'　最近の変更：'+hdF('chg')+'　試したこと：'+hdF('tried'),
+   '切り分け：'+hdMemo(st),hdCause(st)?'想定される原因：'+hdCause(st):'',hdF('next')?'次の対応：'+hdF('next'):''].filter(Boolean).join('\n')}
+
+// ---------- 画面 ----------
+const SEL=(id,v,opts)=>'<select id="'+id+'">'+opts.map(o=>{const a=Array.isArray(o)?o:[o,o];return'<option value="'+esc(a[0])+'"'+(String(a[0])===String(v)?' selected':'')+'>'+esc(a[1])+'</option>'}).join('')+'</select>';
+const INP=(k,label,ph)=>'<label>'+label+'</label><input data-hf="'+k+'" value="'+esc(HD.f[k]||'')+'" placeholder="'+(ph||'')+'" autocomplete="off">';
+function hdRender(){
+  const box=$('lhdBody');let h='<div class="chips" style="margin-bottom:8px"><button class="chip'+(HD.tab==='in'?' on':'')+'" data-hdt="in">🎧 受電メモ</button><button class="chip'+(HD.tab==='tr'?' on':'')+'" data-hdt="tr">📋 進捗（未完了）</button></div>';
+  if(HD.tab==='in')h+=hdFormHtml();else h+=hdTrackHtml();
+  box.innerHTML=h;if(HD.tab==='in')hdGuideUpdate()}
+function hdFormHtml(){
+  const gs=hdGuides(),f=HD.f;
+  let h='<div class="hdf">';
+  if(!gs.length)h+='<div style="background:var(--p2);border:1px solid var(--gold);border-radius:10px;padding:10px;font-size:13px;margin-bottom:8px">切り分けガイド（表）がまだありません。<button class="chip pri" data-hdadd="guides" style="margin-top:6px">＋ 切り分けガイドを全部追加（8種）</button></div>';
+  h+=INP('me','受付者（あなた）','名前')+INP('who','依頼者','名前')+INP('dept','部署','')+INP('tel','連絡先','内線・携帯')+INP('dev','端末・資産番号','例 A-123 / Windows 11');
+  h+='<label>分野</label>'+SEL('hdCat',HD.cat,HDCAT.map(c=>c[0]));
+  h+='<label>事象（困りごと）</label><textarea data-hf="sym" rows="2">'+esc(f.sym||'')+'</textarea>'+INP('err','エラーの文言（そのまま）','')+INP('since','いつから','例 今朝9時から')+
+    '<label>範囲</label>'+SEL('hdScope',f.scope||'自分だけ',['自分だけ','同じ場所の人も','部署全体','全社・全拠点','不明'])+
+    '<label>場所・経路</label>'+SEL('hdWhere',f.where||'社内（有線）',['社内（有線）','社内（Wi-Fi）','自宅（VPN）','自宅（VPNなし）','外出先','不明'])+
+    INP('chg','最近の変更','更新・移動・パスワード変更など')+INP('tried','試したこと','再起動など')+
+    '<div class="ctl"><div><label>影響</label>'+SEL('hdImp',f.imp||1,[[1,'個人'],[2,'部署'],[3,'全社']])+'</div><div><label>緊急度</label>'+SEL('hdUrg',f.urg||0,[[0,'代替手段あり'],[1,'代替手段なし'],[2,'業務が止まっている']])+'</div></div>'+
+    '<div id="hdPri" style="margin:8px 0;font-size:14px"></div>'+INP('due','期限（空なら自動）','')+INP('next','次の対応','例 ネットワーク担当へエスカレ');
+  h+='<div style="font-weight:700;margin:14px 0 4px">🔍 切り分けガイド</div>'+
+    '<label>使うガイド（表）</label>'+SEL('hdGuide',HD.guide,[['','（選ばない）']].concat(gs.map(g=>[g.id,g.title])))+
+    '<div style="font-size:12px;color:var(--dim);margin-top:4px">ほかの分野は、同じ形の表（2列目の見出しが「確認すること」）を作れば、ここに出ます。</div><div id="hdGuideBox" style="margin-top:8px"></div></div>';
+  h+='<div class="chips" style="margin-top:12px"><button class="chip pri" data-hdact="rec">📝 進捗管理表に記録</button><button class="chip" data-hdact="copy">📋 メモをコピー</button><button class="chip" data-hdact="clr">入力を消す</button></div>';
+  return h}
+function hdGuideUpdate(){
+  const f=HD.f,p=hdPri(f);const pe=$('hdPri');if(pe)pe.innerHTML='優先度：<b style="font-size:18px;color:'+(p==='P1'?'var(--red)':p==='P2'?'var(--gold)':'var(--tx)')+'">'+p+'</b>　期限の目安：'+(hdF('due')||hdDue(p));
+  const gb=$('hdGuideBox');if(!gb)return;const st=hdSteps();
+  if(!st.length){gb.innerHTML=HD.guide?'<div style="color:var(--dim)">このガイドに手順がありません。</div>':'';return}
+  const k=hdFirstNg(st);
+  gb.innerHTML=st.map((s,i)=>{const r=HD.res[i];return'<div style="border:1px solid '+(r==='ng'?'#f85149':r==='ok'?'#3fb950':'var(--bd)')+';border-radius:12px;padding:10px;margin:6px 0;background:var(--p2)"><div style="font-weight:700">'+esc(s.n)+'　'+esc(s.q)+'</div>'+
+    (s.how?'<div style="font:13px ui-monospace,Menlo,monospace;color:var(--gold);margin:4px 0;white-space:pre-wrap;word-break:break-all">'+esc(s.how)+'</div>':'')+
+    '<div style="font-size:12px;color:var(--dim);line-height:1.6">✔ 正常：'+esc(s.ok)+'<br>✖ 異常：'+esc(s.ng)+'</div>'+
+    '<div class="chips" style="margin-top:6px"><button class="chip'+(r==='ok'?' on':'')+'" data-hdr="'+i+':ok">✔ 正常</button><button class="chip'+(r==='ng'?' on':'')+'" data-hdr="'+i+':ng">✖ 異常</button></div></div>'}).join('')+
+    '<div style="margin-top:8px;padding:10px;border:1px solid var(--gold);border-radius:12px;font-size:14px;line-height:1.7">'+(k>=0?'▶ <b>最初の異常は手順'+esc(st[k].n)+'</b>「'+esc(st[k].q)+'」<br>この手順より前は正常なので、<b>この層から原因を探す</b>。<br>原因の候補：'+esc(st[k].ng):'異常が見つかるまで、上から順に確認してください。')+'</div>'}
+function hdTrackTable(){return tables.find(t=>t.title===HDT)}
+function hdColMap(t){const m={};fxGrid(t).v[0].forEach((v,i)=>{m[String(v).trim()]=i});return m}
+function hdTrackHtml(){
+  const t=hdTrackTable();if(!t)return'<div style="color:var(--dim);line-height:1.7">「'+HDT+'」の表がまだありません。<br><button class="chip pri" data-hdadd="track" style="margin-top:8px">＋ 進捗管理表と集計表を作る</button></div>';
+  const m=hdColMap(t),G=fxGrid(t).v,off=1;const g=(r,k)=>m[k]===undefined?'':String(G[r][m[k]]==null?'':G[r][m[k]]);
+  const open=[];for(let r=off;r<G.length;r++){if(!g(r,'No')||g(r,'状態')==='完了')continue;open.push(r)}
+  const pr=x=>({P1:1,P2:2,P3:3,P4:4}[x]||5);
+  open.sort((a,b)=>(g(b,'期限超過')==='超過')-(g(a,'期限超過')==='超過')||pr(g(a,'優先度'))-pr(g(b,'優先度'))||(+g(b,'経過日')||0)-(+g(a,'経過日')||0));
+  const over=open.filter(r=>g(r,'期限超過')==='超過').length,p1=open.filter(r=>g(r,'優先度')==='P1').length;
+  let h='<div style="font-size:14px;margin-bottom:8px">未完了 <b>'+open.length+'</b> 件　／　期限超過 <b style="color:'+(over?'var(--red)':'inherit')+'">'+over+'</b>　／　P1 <b>'+p1+'</b></div>';
+  if(!open.length)return h+'<div style="color:var(--dim)">未完了の案件はありません。</div>';
+  h+=open.map(r=>{const p=g(r,'優先度'),ov=g(r,'期限超過')==='超過';return'<div style="border:1px solid '+(ov?'#f85149':'var(--bd)')+';border-radius:12px;padding:10px;margin:8px 0;background:var(--p2)" data-hdrow="'+r+'">'+
+   '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b>'+esc(g(r,'No'))+'</b><span style="padding:1px 8px;border-radius:8px;background:'+(p==='P1'?'#f85149':p==='P2'?'#f5c842':'#4c8bf5')+';color:#111;font-weight:700;font-size:12px">'+esc(p)+'</span><span style="font-size:12px;color:var(--dim)">'+esc(g(r,'分野'))+'</span><span style="font-size:12px;color:'+(ov?'#f85149':'var(--dim)')+'">経過 '+esc(g(r,'経過日'))+'日／期限 '+esc(g(r,'期限'))+(ov?'（超過）':'')+'</span></div>'+
+   '<div style="margin:6px 0;font-size:14px">'+esc(g(r,'依頼者'))+(g(r,'部署')?'（'+esc(g(r,'部署'))+'）':'')+'　'+esc(g(r,'連絡先'))+'<br>'+esc(g(r,'事象'))+'</div>'+
+   '<div class="ctl"><div><label>状態</label>'+SEL('hdS'+r,g(r,'状態')||'未着手',HDST)+'</div><div><label>担当</label><input data-hdc="'+r+':担当" value="'+esc(g(r,'担当'))+'"></div></div>'+
+   '<label style="display:block;font-size:12px;color:var(--dim);margin-top:6px">次の対応</label><input data-hdc="'+r+':次の対応" value="'+esc(g(r,'次の対応'))+'" style="width:100%">'+
+   '<label style="display:block;font-size:12px;color:var(--dim);margin-top:6px">原因（確かめた物に直す）</label><input data-hdc="'+r+':原因" value="'+esc(g(r,'原因'))+'" style="width:100%">'+'<label style="display:block;font-size:12px;color:var(--dim);margin-top:6px">対応内容（完了時に必須）</label><input data-hdc="'+r+':対応内容" value="'+esc(g(r,'対応内容'))+'" style="width:100%">'+
+   '<div class="chips" style="margin-top:8px"><button class="chip pri" data-hdfin="'+r+'">✅ 完了にする</button></div></div>'}).join('');
+  return h}
+function hdCommit(t){GEN++;save()}
+function hdEnsureTrack(){
+  let t=hdTrackTable();if(t)return t;
+  const T0=TPL.find(x=>x.id==='hdtrack');const nt={id:uid(),title:HDT,d:[T0.head.slice(),T0.head.map(()=>'')],header:true,at:Date.now()};tables.push(nt);GEN++;save();return nt}
+function hdRecord(){
+  if(!hdF('sym')&&!hdF('who')){toast('依頼者か事象を入れてください');return}
+  const t=hdEnsureTrack(),m=hdColMap(t),st=hdSteps(),p=hdPri(HD.f),w=t.d[0].length;
+  const blank=t.d.length===2&&t.d[1].every(v=>v===''||v==null);
+  const row=Array(w).fill('');const set=(k,v)=>{if(m[k]!==undefined)row[m[k]]=v};
+  const today=hdToday();let n=0;const d=new Date(),ymd=String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
+  const nc=m['No'];if(nc!==undefined)t.d.slice(1).forEach(r=>{if(String(r[nc]).indexOf('HD-'+ymd)===0)n++});
+  const detail=['端末:'+hdF('dev'),'場所:'+hdF('where'),'いつから:'+hdF('since'),'変更:'+hdF('chg'),'試した:'+hdF('tried')].filter(x=>!/:$/.test(x)).join('／');
+  const memo=[detail,hdMemo(st)].filter(Boolean).join('／');
+  set('No','HD-'+ymd+'-'+String(n+1).padStart(2,'0'));set('受付日',today);set('受付時刻',hdTime());set('依頼者',hdF('who'));set('部署',hdF('dept'));set('連絡先',hdF('tel'));set('分野',HD.cat);
+  set('事象',hdF('sym')+(hdF('err')?'［'+hdF('err')+'］':''));set('範囲',HD.f.scope||'自分だけ');set('優先度',p);set('状態',st.length&&hdFirstNg(st)>=0?'調査中':'未着手');set('担当',hdF('me'));set('次の対応',hdF('next'));set('期限',hdF('due')||hdDue(p));set('切り分けメモ',memo);set('原因',hdCause(st));
+  const rr=blank?2:t.d.length+1,L=k=>m[k]===undefined?null:fxLetters(m[k])+rr;
+  if(L('経過日')&&L('受付日')&&L('状態')&&L('完了日'))set('経過日','=IF('+L('受付日')+'="","",IF(AND('+L('状態')+'="完了",'+L('完了日')+'<>""),DAYS('+L('完了日')+','+L('受付日')+'),IF('+L('状態')+'="完了","",DAYS(TODAY(),'+L('受付日')+'))))');
+  if(L('期限超過')&&L('期限')&&L('状態'))set('期限超過','=IF(AND('+L('状態')+'<>"完了",'+L('期限')+'<>"",DAYS(TODAY(),'+L('期限')+')>0),"超過","")');
+  if(blank)t.d[1]=row;else t.d.push(row);
+  try{localStorage.setItem(HDK,hdF('me'))}catch(e){}
+  hdCommit(t);toast('記録しました：'+row[m['No']]+'（'+p+'）');
+  const keep={me:HD.f.me};HD.f=keep;HD.res={};HD.tab='tr';hdRender()}
+const HDK='tp_hd_me';
+function hdAddGuides(){let n=0;TPL.filter(x=>x.id.indexOf('hdg_')===0||x.id==='hdtrbl').forEach(x=>{if(tables.some(t=>t.title===x.name))return;
+  const d=[x.head.slice()].concat(x.rows.map(r=>r.slice()));const w=x.head.length;tables.push({id:uid(),title:x.name,d:d.map(r=>{r=r.slice();while(r.length<w)r.push('');return r}),header:true,at:Date.now()});n++});
+  GEN++;save();return n}
+function hdOpen(){try{HD.f.me=HD.f.me||localStorage.getItem(HDK)||''}catch(e){}
+  if(!HD.guide||!tables.some(t=>t.id===HD.guide))HD.guide=hdGuideFor(HD.cat);
+  hdRender();$('lhd').showModal()}
+$('hdB').onclick=hdOpen;
+$('lhdX').onclick=()=>{$('lhd').close();render()};
+$('lhd').addEventListener('input',e=>{const k=e.target.dataset&&e.target.dataset.hf;if(k){HD.f[k]=e.target.value;if(k==='due')hdGuideUpdate()}});
+$('lhd').addEventListener('change',e=>{const id=e.target.id,v=e.target.value;
+  if(id==='hdCat'){HD.cat=v;HD.guide=hdGuideFor(v)||HD.guide;HD.res={};hdRender();return}
+  if(id==='hdGuide'){HD.guide=v;HD.res={};hdGuideUpdate();return}
+  if(id==='hdScope'){HD.f.scope=v;return}if(id==='hdWhere'){HD.f.where=v;return}
+  if(id==='hdImp'){HD.f.imp=v;hdGuideUpdate();return}if(id==='hdUrg'){HD.f.urg=v;hdGuideUpdate();return}
+  const c=e.target.dataset&&e.target.dataset.hdc;
+  if(c){const t=hdTrackTable();if(!t)return;const [r,k]=c.split(':'),m=hdColMap(t);if(m[k]!==undefined){t.d[+r][m[k]]=v;hdCommit(t)}return}
+  if(/^hdS\d+$/.test(id)){const t=hdTrackTable();if(!t)return;const r=+id.slice(3),m=hdColMap(t);t.d[r][m['状態']]=v;if(v==='完了'&&m['完了日']!==undefined&&!t.d[r][m['完了日']])t.d[r][m['完了日']]=hdToday();hdCommit(t);if(v==='完了')hdRender()}});
+$('lhd').addEventListener('click',e=>{let b;
+  if(b=e.target.closest('[data-hdt]')){HD.tab=b.dataset.hdt;hdRender();return}
+  if(b=e.target.closest('[data-hdr]')){const [i,v]=b.dataset.hdr.split(':');HD.res[+i]=HD.res[+i]===v?undefined:v;hdGuideUpdate();return}
+  if(b=e.target.closest('[data-hdadd]')){if(b.dataset.hdadd==='guides'){const n=hdAddGuides();HD.guide=hdGuideFor(HD.cat);toast('切り分けガイドを '+n+' 個追加しました')}else{hdEnsureTrack();const T0=TPL.find(x=>x.id==='hdsum');if(!tables.some(t=>t.title===T0.name)){tables.push({id:uid(),title:T0.name,d:[T0.head.slice()].concat(T0.rows.map(r=>r.slice())),header:true,at:Date.now()});GEN++;save()}toast('進捗管理表と進捗の集計を作りました')}hdRender();return}
+  if(b=e.target.closest('[data-hdact]')){const a=b.dataset.hdact;
+    if(a==='rec')hdRecord();
+    else if(a==='copy'){const s=hdText();navigator.clipboard.writeText(s).then(()=>toast('受電メモをコピーしました')).catch(()=>openDlg('コピーしてください',s))}
+    else if(a==='clr'){const me=HD.f.me;HD.f={me};HD.res={};hdRender()}
+    return}
+  if(b=e.target.closest('[data-hdfin]')){const t=hdTrackTable();if(!t)return;const r=+b.dataset.hdfin,m=hdColMap(t);
+    if(!String(t.d[r][m['対応内容']]||'').trim()){toast('「対応内容」を書いてから完了にしてください');return}
+    t.d[r][m['状態']]='完了';if(m['完了日']!==undefined)t.d[r][m['完了日']]=hdToday();hdCommit(t);toast('完了にしました');hdRender()}});
+// ===================== コーディング・英語の学習表 =====================
+TPL.push(
+{id:'cdroad',name:'コーディング習得ロードマップ',desc:'基礎文法からデプロイまでの16段階。やった所は「済」に。',head:['順','段階','学ぶこと','手を動かす','関連の表','状態'],prog:5,rows:[
+['1','基礎','変数・型・条件分岐・繰り返し・関数','FizzBuzz、1〜100の合計、九九','','未'],
+['2','基礎','配列・オブジェクト（辞書）・文字列の操作','単語の出現回数を数える','データ構造の表','未'],
+['3','道具','ターミナルとLinuxコマンド、エディタの使い方','フォルダを作って、ファイルを探して、中身を見る','Linuxコマンド','未'],
+['4','道具','Git：コミット・ブランチ・マージ・プッシュ','自分のリポジトリを作って3回コミット','Git','未'],
+['5','Web','HTML・CSS・JavaScript の役割分担','自己紹介ページを作る','JavaScript','未'],
+['6','Web','HTTP・ブラウザ開発者ツール（Network／Console）','ページを開いて、通信の中身を見る','HTTPステータスコード／図：ブラウザがページを表示するまで','未'],
+['7','データ','SQL：SELECT・WHERE・JOIN・GROUP BY','小さな表を作って、集計する','SQL','未'],
+['8','データ','JSON・CSV・正規表現','CSVを読んで、条件で絞り込む','正規表現','未'],
+['9','設計','関数に分ける・名前の付け方・コメントの書き方','長い処理を3つの関数に分ける','','未'],
+['10','アルゴリズム','計算量（O記法）・探索・並べ替え','線形探索と二分探索の速さを比べる','データ構造と計算量','未'],
+['11','品質','テスト・デバッグ・エラーメッセージの読み方','わざとバグを作って、直す','デバッグの手順／エラーの読み方','未'],
+['12','API','REST・認証（OAuth、トークン）','公開APIを呼んで、結果を表示する','図：OAuth 2.0','未'],
+['13','セキュリティ','入力の検証・XSS・SQLインジェクション・パスワードの扱い','危ない入力を試して、防ぐ','暗号 習得ワークフロー','未'],
+['14','運用','公開（ホスティング）・環境変数・ログ・監視','GitHub Pages に公開する','','未'],
+['15','チーム','プルリクエスト・レビュー・Issue','他人のコードにコメントを書く','Git','未'],
+['16','継続','小さなアプリを作り続ける・読みやすさを直す','毎週1つ、機能を足す','','未']]},
+{id:'cdgit',name:'Git：よく使うコマンド',desc:'場面ごとのコマンドと注意。',head:['コマンド','何をする','いつ使う','注意'],prog:null,rows:[
+['git status','変更の状況を見る','作業の前後・迷ったとき','まずこれ。赤は未ステージ、緑はステージ済み'],
+['git add ファイル','コミット対象に入れる','変更をまとめるとき','git add . は余計な物も入るので、状況を見てから'],
+['git commit -m "メッセージ"','変更を記録する','区切りのよいところ','メッセージは「何を・なぜ」を一行で'],
+['git log --oneline','履歴を短く見る','過去の変更を探す','--graph を付けると枝分かれが見える'],
+['git diff','変更の中身を見る','コミット前の確認','--staged でステージ済みの差分'],
+['git branch 名前','ブランチを作る','機能ごとに作業を分ける','作っただけでは移動しない'],
+['git switch 名前','ブランチを移動する','作業の切り替え','未コミットの変更があると止まることがある'],
+['git merge 名前','別のブランチを取り込む','機能が完成したとき','衝突（conflict）は手で直して commit'],
+['git pull','公開側の最新を取り込む','作業を始める前','手元に変更があると衝突しやすい。先に commit'],
+['git push','手元の記録を公開側へ送る','作業の区切り','拒否されたら、先に pull で取り込む'],
+['git fetch','公開側の最新を見に行く（取り込まない）','状況だけ知りたい','安全。pull は fetch＋merge'],
+['git stash','未コミットの変更を一時避難','急に別の作業が入ったとき','git stash pop で戻す'],
+['git restore ファイル','変更を捨てて元に戻す','ファイルの編集を取り消す','捨てた変更は戻せない'],
+['git reset --soft HEAD~1','直前のコミットを取り消す（変更は残す）','コミットし直したいとき','公開済みのコミットには使わない'],
+['git revert コミット','打ち消すコミットを作る','公開済みの変更を取り消す','履歴は消えず安全'],
+['git rebase main','自分のブランチを最新の上に積み直す','履歴をきれいにしたい','公開済みのブランチには使わない'],
+['git clone URL','リポジトリを手元に複製する','最初の1回','フォルダが新しくできる'],
+['.gitignore','記録しないファイルを決める','鍵・ログ・生成物','鍵やパスワードは絶対にコミットしない（消しても履歴に残る）']]},
+{id:'cdhttp',name:'HTTPステータスコードと原因',desc:'Web・APIの応答コードを、意味と原因と対応で覚える。',head:['コード','意味','よくある原因','対応'],prog:null,rows:[
+['200 OK','成功','正常','—'],
+['201 Created','作成成功','POSTで新規作成','—'],
+['204 No Content','成功（返す中身なし）','DELETEなど','—'],
+['301 Moved Permanently','恒久的に移動','URL変更・http→https','新しいURLへ。リンクを更新'],
+['302 Found','一時的に移動','ログインへの転送など','転送先を確認'],
+['304 Not Modified','変わっていない（キャッシュを使う）','キャッシュ','正常。古く見えるときはキャッシュ削除'],
+['400 Bad Request','リクエストが不正','JSONの書式ミス・必須項目なし','送る内容を確認'],
+['401 Unauthorized','認証が必要／失敗','未ログイン・トークン期限切れ・キー間違い','ログイン・トークン更新'],
+['403 Forbidden','権限がない','権限不足・IP制限・CORS以外の拒否','権限・設定を確認'],
+['404 Not Found','見つからない','URLの誤り・削除された','URL・ルーティングを確認'],
+['405 Method Not Allowed','その方法は使えない','GETで送るべき所にPOSTなど','メソッドを確認'],
+['408 Request Timeout','待ちきれなかった','通信が遅い','再試行・回線確認'],
+['409 Conflict','状態が衝突','同時更新・重複登録','最新を取り直して再実行'],
+['413 Payload Too Large','送る物が大きすぎる','アップロード容量超過','サイズを減らす・上限を上げる'],
+['422 Unprocessable Entity','内容が意味的に不正','入力の検証エラー','エラーの詳細を読む'],
+['429 Too Many Requests','呼び出しすぎ','APIの回数制限','間隔をあける・再試行は待ってから'],
+['500 Internal Server Error','サーバ内部のエラー','サーバのコードのバグ','サーバのログを見る'],
+['502 Bad Gateway','中継が上流から不正な応答','上流のサーバ停止・プロキシ','上流の状態を確認'],
+['503 Service Unavailable','今は使えない','過負荷・メンテナンス','待つ・再試行（Retry-After を見る）'],
+['504 Gateway Timeout','中継が上流を待ちきれない','上流が遅い・タイムアウト設定','上流の処理時間・設定を確認']]},
+{id:'cdsql',name:'SQL：基本の書き方',desc:'やりたいことから引く表。',head:['やりたいこと','書き方','例','注意'],prog:null,rows:[
+['全部の行を取り出す','SELECT * FROM 表','SELECT * FROM users','本番では列を指定する'],
+['列を選ぶ','SELECT 列1, 列2 FROM 表','SELECT name, age FROM users',''],
+['条件で絞る','WHERE 条件','WHERE age >= 20 AND city = \'東京\'','文字は \' で囲む'],
+['並べ替え','ORDER BY 列 [DESC]','ORDER BY age DESC','DESC は大きい順'],
+['件数を絞る','LIMIT n','LIMIT 10','MySQL・SQLite・PostgreSQL'],
+['重複をなくす','SELECT DISTINCT 列','SELECT DISTINCT city FROM users',''],
+['数える','COUNT(*)','SELECT COUNT(*) FROM users','NULL は COUNT(列) では数えない'],
+['合計・平均','SUM(列)／AVG(列)','SELECT AVG(age) FROM users',''],
+['グループごとに集計','GROUP BY 列','SELECT city, COUNT(*) FROM users GROUP BY city','集計しない列は GROUP BY に入れる'],
+['グループを絞る','HAVING 条件','HAVING COUNT(*) >= 5','WHERE は集計の前、HAVING は後'],
+['表をつなぐ','JOIN 表2 ON 条件','FROM orders JOIN users ON orders.user_id = users.id','ON を忘れると全組み合わせになる'],
+['相手がなくても残す','LEFT JOIN','FROM users LEFT JOIN orders ON ...','右側がない行は NULL'],
+['行を追加','INSERT INTO 表 (列) VALUES (値)','INSERT INTO users (name) VALUES (\'田中\')',''],
+['行を更新','UPDATE 表 SET 列 = 値 WHERE 条件','UPDATE users SET age = 30 WHERE id = 1','WHERE を忘れると全行が変わる'],
+['行を削除','DELETE FROM 表 WHERE 条件','DELETE FROM users WHERE id = 1','WHERE を忘れると全行が消える。先に SELECT で確認'],
+['NULL の判定','IS NULL／IS NOT NULL','WHERE email IS NULL','= NULL は使えない'],
+['部分一致','LIKE','WHERE name LIKE \'田%\'','% は任意の文字列、_ は1文字'],
+['SQLインジェクション対策','プレースホルダ（?）で値を渡す','db.query("... WHERE id = ?", [id])','文字列をつなげてSQLを作らない']]},
+{id:'cdjs',name:'JavaScript：基本と落とし穴',desc:'よく使う書き方と、つまずきやすい点。',head:['項目','書き方','例','落とし穴'],prog:null,rows:[
+['変数','const／let','const a = 1; let b = 2;','var は使わない。const は再代入できない'],
+['比較','===（厳密）','1 === \'1\' // false','== は型を変換するので避ける'],
+['配列の変換','map','[1,2,3].map(x => x * 2)','元の配列は変わらない'],
+['配列の絞り込み','filter','nums.filter(x => x > 1)',''],
+['配列の集計','reduce','nums.reduce((a,b) => a + b, 0)','初期値を忘れない'],
+['オブジェクトの取り出し','分割代入','const {a, b} = obj',''],
+['配列・オブジェクトの複製','スプレッド構文','const c = [...arr]; const d = {...obj}','浅いコピー。中の物は共有される'],
+['文字列に埋め込む','テンプレートリテラル','`こんにちは ${name}`','バッククォートで囲む'],
+['関数','アロー関数','const f = (x) => x * 2','this の扱いが通常の関数と違う'],
+['非同期','async／await','const r = await fetch(url)','try/catch で失敗を受ける'],
+['通信','fetch','const j = await (await fetch(url)).json()','404でも例外にならない。r.ok を確認'],
+['存在しない値','?.（オプショナルチェーン）','user?.address?.city','undefined と null を避ける'],
+['既定値','??','const n = value ?? 0','0 や空文字は残る。|| は消える'],
+['ブラウザで保存','localStorage','localStorage.setItem(\'k\', v)','文字列のみ。JSON.stringify で。容量は約5MB'],
+['要素の取得','querySelector','document.querySelector(\'#id\')','見つからないと null'],
+['イベント','addEventListener','btn.addEventListener(\'click\', fn)','同じ関数を二重登録しない'],
+['型の判定','typeof','typeof null // "object"','null の判定は === null'],
+['数値の誤差','0.1 + 0.2','0.1 + 0.2 // 0.30000000000000004','お金は整数（円・銭）で計算']]},
+{id:'cdpy',name:'Python：基本と落とし穴',desc:'よく使う書き方と、つまずきやすい点。',head:['項目','書き方','例','落とし穴'],prog:null,rows:[
+['表示','print()','print("こんにちは")',''],
+['入力','input()','n = int(input())','input は文字列。数にするには int()'],
+['インデント','4つの空白','if x: print(x)（2行目は4つ下げる）','タブと空白を混ぜない（IndentationError）'],
+['リスト','[]','a = [1, 2, 3]; a.append(4)','a[-1] は最後の要素'],
+['辞書','{}','d = {"a": 1}; d["b"] = 2','存在しないキーは KeyError。d.get("x") で安全に'],
+['内包表記','[式 for 要素 in リスト]','[x*2 for x in nums if x > 0]','複雑になったら普通の for に'],
+['繰り返し','for in','for i, x in enumerate(a):','range(n) は 0 から n-1'],
+['文字列に埋め込む','f文字列','f"{name}さん {age}歳"',''],
+['ファイルを読む','with open','with open("a.txt", encoding="utf-8") as f: s = f.read()','文字コードを指定する'],
+['例外','try/except','try: ... / except ValueError as e: ...','except: だけで全部受けない'],
+['関数','def','def add(a, b=0): return a + b','既定値に []（リスト）を使わない（共有される）'],
+['モジュール','import','import json','自分のファイル名を json.py などにしない'],
+['仮想環境','venv','python -m venv .venv','プロジェクトごとに分ける'],
+['パッケージ','pip','pip install requests','venv を有効にしてから'],
+['JSON','json モジュール','json.loads(s) / json.dumps(d, ensure_ascii=False)','日本語は ensure_ascii=False'],
+['通信','requests','r = requests.get(url, timeout=10); r.raise_for_status()','timeout を必ず付ける'],
+['コピー','copy.deepcopy','b = copy.deepcopy(a)','b = a は同じ物を指す'],
+['比較','== と is','a == b（値）／ a is None（同一）','None の判定は is None']]},
+{id:'cdlinux',name:'Linuxコマンド',desc:'ターミナルで最初に覚える20個。',head:['コマンド','意味','例','よく使う指定'],prog:null,rows:[
+['pwd','いまの場所','pwd',''],
+['ls','一覧','ls -la','-l 詳細／-a 隠しファイルも'],
+['cd','移動','cd ~/work','cd .. で一つ上、cd - で前の場所'],
+['mkdir','フォルダを作る','mkdir -p a/b/c','-p は途中も作る'],
+['cp','コピー','cp -r src dst','-r はフォルダごと'],
+['mv','移動・名前の変更','mv old.txt new.txt',''],
+['rm','削除','rm -r tmp','戻せない。-rf は特に注意'],
+['cat','中身を表示','cat a.txt',''],
+['less','ページ送りで表示','less big.log','q で終了、/ で検索'],
+['head／tail','先頭／末尾','tail -f app.log','-f は追記を見続ける'],
+['grep','文字列を探す','grep -rn "error" .','-r 再帰／-n 行番号／-i 大文字小文字無視'],
+['find','ファイルを探す','find . -name "*.js"',''],
+['chmod','権限を変える','chmod +x run.sh','755＝所有者は全部、他は読む・実行'],
+['ps／top','プロセスを見る','ps aux | grep node','top は q で終了'],
+['kill','プロセスを止める','kill 1234','止まらなければ kill -9（最後の手段）'],
+['curl','通信する','curl -I https://example.com','-I ヘッダだけ／-X メソッド'],
+['ping','届くか確認','ping -c 4 8.8.8.8','Windowsは -n'],
+['df／du','ディスクの空き／使用量','df -h; du -sh *','-h は読みやすい単位'],
+['|（パイプ）','出力を次に渡す','cat a.log | grep ERROR | wc -l','小さな部品を組み合わせる'],
+['>／>>','ファイルへ出力（上書き／追記）','echo hi > a.txt','> は上書きなので注意'],
+['sudo','管理者として実行','sudo apt update','何をするか分かってから']]},
+{id:'cdregex',name:'正規表現',desc:'パターンの書き方。試しながら覚える。',head:['パターン','意味','例','一致する物'],prog:null,rows:[
+['.','任意の1文字','a.c','abc, a-c'],
+['*','直前の0回以上','ab*c','ac, abc, abbc'],
+['+','直前の1回以上','ab+c','abc, abbc（acは不一致）'],
+['?','直前の0回か1回','colou?r','color, colour'],
+['{n,m}','n回以上m回以下','\\d{3,4}','123, 1234'],
+['^ と $','行の先頭／末尾','^abc$','abc だけ'],
+['[abc]','いずれかの1文字','[aeiou]','母音'],
+['[^abc]','それ以外の1文字','[^0-9]','数字以外'],
+['\\d','数字','\\d+','2026'],
+['\\w','英数字と_','\\w+','hello_1'],
+['\\s','空白','\\s+','スペース・改行・タブ'],
+['(  )','グループ（取り出し）','(\\d{4})-(\\d{2})','2026-11 → 2026 と 11'],
+['|','または','cat|dog','cat, dog'],
+['\\b','単語の境目','\\bcat\\b','cat（catalog は不一致）'],
+['(?:  )','取り出さないグループ','(?:ab)+','abab'],
+['+?　*?','最短一致','<.+?>','最初のタグだけ'],
+['郵便番号','\\d{3}-\\d{4}','\\d{3}-\\d{4}','123-4567'],
+['メールの簡易版','[\\w.+-]+@[\\w-]+\\.[\\w.]+','[\\w.+-]+@[\\w-]+\\.[\\w.]+','厳密な検証には向かない']]},
+{id:'cdalgo',name:'データ構造と計算量',desc:'選ぶ基準になる、速さの目安（n＝データの数）。',head:['データ構造・方法','得意なこと','探す','追加','消す','覚え方'],prog:null,rows:[
+['配列（リスト）','番号で取り出す','O(n)','末尾 O(1)／途中 O(n)','O(n)','番号アクセスは O(1)。途中の挿入は詰め直し'],
+['連結リスト','途中への追加・削除','O(n)','O(1)（位置が分かれば）','O(1)','番号アクセスは苦手'],
+['スタック','後に入れた物から出す（LIFO）','—','O(1)','O(1)','戻る・元に戻す・括弧の対応'],
+['キュー','先に入れた物から出す（FIFO）','—','O(1)','O(1)','順番待ち・幅優先探索'],
+['ハッシュ表（辞書・Set）','キーで探す','O(1)','O(1)','O(1)','平均。衝突があると遅くなる'],
+['二分探索木','並べて探す','O(log n)','O(log n)','O(log n)','偏ると O(n)'],
+['ヒープ','最大・最小を取り出す','—','O(log n)','O(log n)','優先度つきキュー'],
+['グラフ','つながりを表す','—','—','—','最短経路・つながり・依存関係'],
+['線形探索','前から順に調べる','O(n)','—','—','並んでいなくても使える'],
+['二分探索','並んだ物を半分ずつ絞る','O(log n)','—','—','100万件でも約20回'],
+['バブル・選択・挿入ソート','簡単だが遅い','—','—','—','O(n²)。少数向け'],
+['マージ・クイックソート','速い並べ替え','—','—','—','O(n log n)。ふつうはこちら'],
+['再帰','同じ形に分けて解く','—','—','—','止まる条件（基底）を必ず書く'],
+['動的計画法','同じ計算を覚えて使い回す','—','—','—','フィボナッチ・ナップサック'],
+['O(1)<O(log n)<O(n)<O(n log n)<O(n²)<O(2ⁿ)','計算量の速さの順','—','—','—','n=1000 で 1／10／1000／1万／100万／天文学的']]},
+{id:'cddebug',name:'デバッグの手順',desc:'行き当たりばったりをやめて、順番に絞る。',head:['順','段階','やること','ポイント','状態'],prog:4,rows:[
+['1','症状を言葉にする','何が起きたか・期待した動き・実際の動きを書く','エラー文は最初から最後まで読む（最後の行と、自分のコードの行）','未'],
+['2','再現する','同じ操作で必ず起きる手順を見つける','毎回起きるか／条件があるかを確かめる','未'],
+['3','最小にする','関係のない部分を削って、短いコードで再現','削って直ったら、その部分が原因の近く','未'],
+['4','直前の変更を疑う','最後に動いた状態と比べる（git diff／git bisect）','動いていた版が分かれば、半分ずつ絞れる','未'],
+['5','仮説を立てる','「変数 x が空のはず」など、確かめられる形で書く','一度に1つだけ','未'],
+['6','値を見る','console.log／print／デバッガで途中の値を出す','予想と違う最初の場所が、原因の場所','未'],
+['7','範囲を絞る','入力側と出力側の真ん中で確認して、半分ずつ絞る','二分探索と同じ考え方','未'],
+['8','原因を直す','症状を隠さず、原因を直す','try/catch で握りつぶさない','未'],
+['9','確認する','最初の再現手順で直ったか／他が壊れていないか','関連する機能も試す','未'],
+['10','再発を防ぐ','テストを足す・メモに残す・入力の検証を入れる','同じ間違いを繰り返さない','未']]},
+{id:'cderr',name:'エラーメッセージの読み方',desc:'よく見る文言と、まず疑うこと。',head:['エラー','意味','まず疑うこと','直し方'],prog:null,rows:[
+['TypeError: Cannot read properties of undefined','undefined の中身を読もうとした','前の値が取れていない（通信の前・名前の綴り）','?. で守る／値が入ってから使う'],
+['ReferenceError: x is not defined','変数が見つからない','綴り・宣言の位置・スコープ','宣言を確認'],
+['SyntaxError: Unexpected token','文法の誤り','閉じ忘れ（括弧・引用符・カンマ）','エラーの行の少し前を見る'],
+['Uncaught (in promise)','非同期の失敗を受けていない','await の失敗・fetch の失敗','try/catch か .catch()'],
+['CORS policy: No \'Access-Control-Allow-Origin\'','別のサイトから読むのを、相手が許していない','サーバ側のヘッダ設定','サーバで許可する（ブラウザ側では直せない）'],
+['Failed to fetch','通信自体に失敗','オフライン・URL・証明書・CORS','URLとネットワークを確認'],
+['IndentationError','インデントが揃っていない（Python）','タブと空白の混在','空白4つに統一'],
+['ModuleNotFoundError','モジュールがない（Python）','インストールしていない・仮想環境が違う','pip install（有効な仮想環境で）'],
+['KeyError／IndexError','キー／番号が存在しない','データの形の想定違い','.get() や長さの確認'],
+['NullPointerException','null を使おうとした（Java など）','初期化していない・戻り値が null','null の確認を入れる'],
+['Permission denied','権限がない','ファイル権限・管理者権限','chmod／権限のある場所で実行'],
+['Address already in use','ポートがふさがっている','同じアプリが動いたまま','古いプロセスを止める／ポートを変える'],
+['error: failed to push some refs','push が拒否された','公開側に先に進んだ変更がある','git pull してから push'],
+['CONFLICT (content): Merge conflict','同じ箇所を両方が変更','両方の変更が同じ行','<<<<<<< の印を直して commit'],
+['npm ERR! ERESOLVE','依存関係が合わない','パッケージの版','版を揃える／--legacy-peer-deps（理解してから）']]},
+{id:'seqweb',name:'図：ブラウザがページを表示するまで',desc:'URLを入れてから画面が出るまでの流れ。ネットワークとコーディングをつなぐ図。表の上で「↔ シーケンス」を押すと図になります。',head:['順','送信側','受信側','メッセージ','説明'],prog:null,rows:[
+['1','ブラウザ','DNS','www.example.com のIPは？','名前をIPアドレスに変える'],
+['2','DNS','ブラウザ','93.184.216.34','結果はキャッシュされる'],
+['3','ブラウザ','サーバ','TCP接続（SYN）','3ウェイハンドシェイクで接続'],
+['4','ブラウザ','サーバ','TLSハンドシェイク','HTTPS：証明書の確認と鍵の合意'],
+['5','ブラウザ','サーバ','GET /index.html','HTTPリクエスト'],
+['6','サーバ','ブラウザ','200 OK + HTML','HTTPレスポンス'],
+['7','ブラウザ','サーバ','GET /style.css　GET /app.js','HTMLの中の参照を追加で取得'],
+['8','サーバ','ブラウザ','200 OK + CSS・JS',''],
+['9','ブラウザ','ブラウザ','解析して描画','DOMとCSSから画面を作り、JSを実行する']]},
+{id:'seqoauth',name:'図：OAuth 2.0（認可コードフロー）',desc:'「Googleでログイン」などの仕組み。パスワードを渡さずに権限だけ渡す。',head:['順','送信側','受信側','メッセージ','説明'],prog:null,rows:[
+['1','ユーザー','アプリ','「Googleでログイン」を押す',''],
+['2','アプリ','認可サーバ','認可リクエスト（client_id・scope・state）','ブラウザを認可サーバへ転送'],
+['3','認可サーバ','ユーザー','ログインと許可の画面','パスワードを入れるのは認可サーバだけ'],
+['4','ユーザー','認可サーバ','ログイン＋許可',''],
+['5','認可サーバ','アプリ','認可コード（短命・1回きり）','リダイレクトで届く。stateが一致するか確認'],
+['6','アプリ','認可サーバ','コード＋秘密情報を送る','アプリのサーバ側で行う'],
+['7','認可サーバ','アプリ','アクセストークン','期限つき。リフレッシュトークンも'],
+['8','アプリ','APIサーバ','トークンつきでAPIを呼ぶ','Authorization: Bearer …'],
+['9','APIサーバ','アプリ','データ','権限（scope）の範囲だけ']]},
+{id:'enit',name:'英語：IT・ヘルプデスクの単語',desc:'現場でよく見る英単語。暗記カードの「答えにする列」を「意味」にすると4択になります。',head:['English','意味','例文'],prog:null,rows:[
+['incident','障害・事案','We logged an incident for the outage.'],
+['ticket','問い合わせの管理単位','Please open a ticket.'],
+['escalate','上位の担当へ引き継ぐ','I will escalate this to the network team.'],
+['workaround','回避策','There is a temporary workaround.'],
+['root cause','根本原因','We are investigating the root cause.'],
+['outage','停止・障害','The outage lasted two hours.'],
+['latency','遅延','High latency affects video calls.'],
+['bandwidth','帯域幅','The bandwidth is fully used.'],
+['throughput','実効速度','Throughput dropped after the change.'],
+['packet loss','パケット損失','We saw 5% packet loss.'],
+['reboot / restart','再起動','Please restart your computer.'],
+['credentials','認証情報','Enter your credentials.'],
+['authentication','認証（本人確認）','Multi-factor authentication is required.'],
+['authorization','認可（権限の付与）','You lack the authorization to access it.'],
+['firewall','ファイアウォール','The firewall blocks that port.'],
+['patch','修正プログラム','Apply the latest security patch.'],
+['rollback','元に戻す','We rolled back the update.'],
+['deploy','配備・公開する','We deploy every Friday.'],
+['configuration','設定','Check the configuration file.'],
+['bug','不具合','This is a known bug.'],
+['environment','環境','It works in the test environment.'],
+['dependency','依存関係','A dependency is missing.'],
+['deprecated','非推奨','This API is deprecated.'],
+['timeout','時間切れ','The request timed out.'],
+['SLA (service level agreement)','サービス品質の合意','We must meet the SLA.'],
+['on-premises','自社設置（オンプレ）','The server is on-premises.'],
+['backup','バックアップ','Do you have a recent backup?'],
+['permission','権限','You do not have permission.'],
+['phishing','フィッシング','Report phishing emails.'],
+['resolved','解決済み','The issue has been resolved.']]},
+{id:'enphone',name:'英語：電話・チャット対応のフレーズ',desc:'ヘルプデスクの場面ごとの定番表現。',head:['場面','English','日本語','ポイント'],prog:null,rows:[
+['名乗る','Thank you for calling IT support. This is Sato speaking. How may I help you?','お電話ありがとうございます。IT窓口の佐藤です。どうされましたか。','最初に名乗って、用件を聞く'],
+['名前を聞く','May I have your name and employee number?','お名前と社員番号をお願いします。','May I ～? が丁寧'],
+['聞き返す','I\'m sorry, could you say that again, please?','もう一度お願いします。','聞き取れないまま進めない'],
+['綴りを確認する','Could you spell that for me?','綴りを教えてください。','A for Alpha などで確認'],
+['ゆっくり頼む','Could you speak a little more slowly, please?','もう少しゆっくりお願いします。',''],
+['問題を聞く','Could you tell me what the problem is?','どのような問題か教えてください。',''],
+['いつから','When did the problem start?','いつから起きていますか。',''],
+['エラーを聞く','What error message do you see on the screen?','画面にどんなエラーが出ていますか。','そのまま読んでもらう'],
+['範囲','Is anyone else having the same problem?','ほかの方も同じですか。','範囲の切り分け'],
+['変更','Did anything change recently, such as an update?','最近、更新などの変更はありましたか。',''],
+['試したこと','Have you tried restarting it?','再起動はお試しですか。',''],
+['操作を頼む','Could you open the command prompt and type ipconfig?','コマンドプロンプトで ipconfig と入力してください。','1回に1操作'],
+['待ってもらう','Could you hold on for a moment, please?','少々お待ちください。','長くなる前に一言'],
+['待たせた後','Thank you for waiting.','お待たせしました。',''],
+['調べる','Let me check that for you.','確認しますね。',''],
+['原因を伝える','It looks like the network cable is not connected.','ネットワークケーブルが抜けているようです。','断定せず It looks like'],
+['手順を案内','First, click Start. Then, select Settings.','まず「スタート」を押し、次に「設定」を選びます。','First / Then / Next / Finally'],
+['できないとき','I\'m afraid I can\'t do that, but I can offer an alternative.','申し訳ありませんが、それはできません。代わりに…','No と言うより代案を'],
+['引き継ぐ','I will escalate this to the network team.','ネットワークの担当へ引き継ぎます。','誰が・いつまでに、を添える'],
+['折り返し','We will call you back by 3 p.m.','15時までに折り返します。','約束した時刻を守る'],
+['謝る','I apologize for the inconvenience.','ご不便をおかけし申し訳ありません。',''],
+['直ったか確認','Is it working now?','いま動いていますか。','本人の確認を取る'],
+['ほかにあるか','Is there anything else I can help you with?','ほかにお手伝いできることはありますか。',''],
+['終わり','Thank you for contacting us. Have a nice day.','ご連絡ありがとうございました。','最後まで丁寧に']]},
+{id:'engram',name:'英語：文法の型',desc:'ITの説明・報告で使う型。',head:['型','形','例','ポイント'],prog:null,rows:[
+['現在形','動詞（三単現の s）','The server restarts every night.','習慣・いつもの事実'],
+['現在進行形','be + ing','We are investigating the issue.','いま進行中'],
+['過去形','動詞の過去形','The error occurred at 9:00.','過去に起きた事'],
+['現在完了','have + 過去分詞','I have already restarted it.','いまに影響が続く（since/for/already）'],
+['未来','will／be going to','I will send it today.','その場の決定は will、予定は be going to'],
+['受動態','be + 過去分詞','The file was deleted.','誰が、が分からない・重要でないとき'],
+['助動詞（義務）','must／have to／should','You should change your password.','must は強い、should は助言'],
+['助動詞（許可・依頼）','can／could／may','Could you send the log?','could・may のほうが丁寧'],
+['不定詞','to + 動詞','I need to update the software.','目的・「～すること」'],
+['動名詞','動詞 + ing','Thanks for waiting.','前置詞のあとは ing'],
+['関係代名詞','who／which／that','The user who reported it','名詞を後ろから説明'],
+['条件（現実）','If + 現在形, will','If it fails, we will roll back.','未来のことも if の中は現在形'],
+['仮定法','If + 過去形, would','If we had more time, we would test it.','現実と違う仮定'],
+['比較','比較級／最上級','It is faster than before.','than／the most'],
+['理由・結果','because／so／therefore','The server was down, so we restarted it.','報告は結論→理由の順で'],
+['報告の型','状況・原因・対応・次','The issue was caused by … We fixed it by … Next, we will …','過去形で簡潔に']]},
+{id:'enmail',name:'英語：メールの定型句',desc:'仕事の英語メールでそのまま使える表現。',head:['場面','English','日本語'],prog:null,rows:[
+['書き出し（初めて）','I am writing to ask about …','…についてお尋ねしたくご連絡します。'],
+['書き出し（返信）','Thank you for your email.','メールありがとうございます。'],
+['依頼','Could you please send me the report by Friday?','金曜までにレポートを送っていただけますか。'],
+['確認','Could you confirm the schedule?','日程をご確認いただけますか。'],
+['添付','Please find the attached file.','添付ファイルをご確認ください。'],
+['催促（やわらかく）','I just wanted to follow up on my previous email.','先日のメールの件で確認です。'],
+['謝罪','I apologize for the delay.','遅れてしまい申し訳ありません。'],
+['お礼','I appreciate your help.','ご協力に感謝します。'],
+['日程調整','Would Tuesday at 3 p.m. work for you?','火曜15時はいかがですか。'],
+['断る','Unfortunately, I will not be able to attend.','あいにく出席できません。'],
+['不明点','Could you clarify what you mean by …?','…の意味を教えていただけますか。'],
+['報告','Here is a summary of the incident.','障害の概要です。'],
+['対応中','We are currently looking into this issue.','現在、調査中です。'],
+['完了','The issue has been resolved.','問題は解決しました。'],
+['締め（依頼）','I look forward to hearing from you.','ご連絡をお待ちしています。'],
+['結び','Best regards,','よろしくお願いします（敬具）']]},
+{id:'enroot',name:'英語：接頭辞・語根でIT英語を増やす',desc:'意味の部品を覚えると、初めての単語も推測できる。',head:['部品','意味','例（IT）'],prog:null,rows:[
+['re-','もう一度・戻す','restart, reboot, retry, rollback, refresh'],
+['un-','打ち消し','undo, unlock, unzip, unsupported'],
+['dis-','否定・分離','disable, disconnect, disallow'],
+['pre-','前の・事前に','preview, prefix, precompile'],
+['post-','後の','postfix, post-mortem（事後検証）'],
+['sub-','下・副','subnet, subdirectory, subscribe'],
+['inter-','間','internet, interface, interrupt'],
+['intra-','内部','intranet'],
+['trans-','越えて・変換','transfer, transmit, translate, transaction'],
+['multi-','多くの','multi-factor, multitask, multicast'],
+['auto-','自動','automatic, autosave, autocomplete'],
+['over-','超えて','overflow, override, overwrite'],
+['under-','下に','underflow, underscore'],
+['non-','～でない','non-null, non-blocking'],
+['-able','できる','available, compatible, scalable'],
+['-ware','物（ソフト）','software, hardware, firmware, malware'],
+['mal-','悪い','malware, malformed, malfunction'],
+['sync / chron','時間（同時）','synchronize, asynchronous, chronological'],
+['port','運ぶ','import, export, portable, transport'],
+['crypt','隠す・秘密','encrypt, decrypt, cryptography']]}
+);
+
+
+$('tb').addEventListener('input',e=>{if(e.target.tagName==='INPUT')fxAfterInput(e.target)});
 load();setTimeout(()=>pullInbox(false),600);if(!tables.length){const t=mk('はじめての表',4,3);t.d[0]=['項目','内容','メモ'];tables.push(t);cur=t.id;save()}if(!T())cur=tables[0].id;render();ssTransferIn();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){navigator.serviceWorker.register('sw.js').catch(function(){})}
 })();
